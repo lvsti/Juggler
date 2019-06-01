@@ -11,17 +11,22 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet weak var window: NSWindow!
-
-
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+    private var statusItem: NSStatusItem!
+    private var menuController: MenuController!
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        let statusBar = NSStatusBar.system
+        statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
+        
+//        statusItem.image = #imageLiteral(resourceName: "statusicon")
+//        statusItem.image?.isTemplate = true
+        statusItem.button!.title = "JG"
+        statusItem.menu = NSMenu(title: statusItem.button!.title)
+        
+        NSMenu.setMenuBarVisible(false)
+        
+        menuController = MenuController(menu: statusItem.menu!)
     }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
-    }
-
-
+    
 }
 

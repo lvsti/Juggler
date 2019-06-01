@@ -11,6 +11,7 @@
 		BEC042ED22A2CCD700EFF50C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC042EC22A2CCD700EFF50C /* Assets.xcassets */; };
 		BEC042F022A2CCD700EFF50C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC042EE22A2CCD700EFF50C /* MainMenu.xib */; };
 		BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */; };
+		BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042FA22A2D12700EFF50C /* MenuController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		BEC042EF22A2CCD700EFF50C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		BEC042F122A2CCD700EFF50C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMenuItem+Handler.swift"; sourceTree = "<group>"; };
+		BEC042FA22A2D12700EFF50C /* MenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */,
+				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
 				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
 				BEC042EC22A2CCD700EFF50C /* Assets.xcassets */,
 				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
@@ -132,6 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */,
+				BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
