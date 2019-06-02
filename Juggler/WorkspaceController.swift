@@ -37,6 +37,7 @@ struct Workspace {
     var gitStatus: Git.WorkingCopyStatus
     var ticket: Ticket?
     var pullRequest: PullRequest?
+    var projectURL: URL?
 }
 
 
@@ -107,7 +108,8 @@ class WorkspaceController {
                          description: nil,
                          gitStatus: gitStatus,
                          ticket: nil,
-                         pullRequest: nil)
+                         pullRequest: nil,
+                         projectURL: xcodeProjectURL(for: url))
     }
     
     private func loadWorkspace(at url: URL, with gitStatus: Git.WorkingCopyStatus) -> Workspace? {
@@ -150,7 +152,8 @@ class WorkspaceController {
                          description: serializedWS["desc"] as? String,
                          gitStatus: gitStatus,
                          ticket: ticket,
-                         pullRequest: pr)
+                         pullRequest: pr,
+                         projectURL: (serializedWS["proj"] as? String).flatMap({ URL(fileURLWithPath: $0) }) ?? xcodeProjectURL(for: url))
     }
     
     private func saveWorkspace(_ workspace: Workspace) {
@@ -161,6 +164,9 @@ class WorkspaceController {
         }
         if let desc = workspace.description {
             serializedWS["desc"] = desc
+        }
+        if let proj = workspace.projectURL {
+            serializedWS["proj"] = proj.path
         }
         if let ticket = workspace.ticket {
             serializedWS["ticket"] = [
@@ -180,4 +186,21 @@ class WorkspaceController {
         userDefaults.set(serializedWS, forKey: workspace.folderURL.path)
     }
 
+    private func xcodeProjectURL(for folderURL: URL) -> URL? {
+        let enumerator = fileManager.enumerator(at: folderURL,
+                                                includingPropertiesForKeys: [],
+                                                options: [.skipsHiddenFiles, .skipsPackageDescendants])!
+        var projects: [URL] = []
+        for entry in enumerator {
+            let url = entry as! URL
+            if url.pathExtension == "xcworkspace" {
+                return url
+            }
+            else if url.pathExtension == "xcodeproj" {
+                projects.append(url)
+            }
+        }
+        
+        return projects.first
+    }
 }
