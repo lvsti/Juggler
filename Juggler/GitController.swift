@@ -12,11 +12,59 @@ enum Git {
     struct Branch {
         let name: String
     }
+    
+    struct Remote {
+        enum URLKind {
+            case ssh, https
+        }
 
+        private static let sshURIRegex = try! NSRegularExpression(pattern: #"^(?<user>[^@]+)@(?<host>[^:]+):(?<org>[^/]+)/(?<repo>[^/]+)\.git"#, options: [])
+        private static let httpsURIRegex = try! NSRegularExpression(pattern: #"^https://(?<host>[^/]+)/(?<org>[^/]+)/(?<repo>[^/]+)\.git$"#, options: [])
+
+        let repoURI: String
+        let urlKind: URLKind
+        
+        let userName: String?
+        let host: String
+        let orgName: String
+        let repoName: String
+
+        init?(repoURI: String) {
+            self.repoURI = repoURI
+            
+            let uriMatch: NSTextCheckingResult?
+            if repoURI.hasPrefix("https://") {
+                urlKind = .https
+                uriMatch = Remote.httpsURIRegex.firstMatch(in: repoURI, options: [], range: NSRangeFromString(repoURI))
+            }
+            else {
+                urlKind = .ssh
+                uriMatch = Remote.sshURIRegex.firstMatch(in: repoURI, options: [], range: NSRangeFromString(repoURI))
+            }
+
+            guard let match = uriMatch else {
+                return nil
+            }
+            
+            let userRange = match.range(withName: "user")
+            if userRange.location != NSNotFound {
+                userName = String(repoURI[Range(userRange, in: repoURI)!])
+            }
+            else {
+                userName = nil
+            }
+            
+            host = String(repoURI[Range(match.range(withName: "host"), in: repoURI)!])
+            orgName = String(repoURI[Range(match.range(withName: "org"), in: repoURI)!])
+            repoName = String(repoURI[Range(match.range(withName: "repo"), in: repoURI)!])
+        }
+    }
+    
     struct WorkingCopyStatus {
         let folderURL: URL
         let hasLocalChanges: Bool
         let currentBranch: Branch?
+        let remote: Remote?
     }
 }
 
@@ -32,12 +80,13 @@ class GitController {
     
     func workingCopyStatus(at folderURL: URL) -> Git.WorkingCopyStatus? {
         guard gitFolderExists(in: folderURL) else {
-            return Git.WorkingCopyStatus(folderURL: folderURL, hasLocalChanges: false, currentBranch: nil)
+            return Git.WorkingCopyStatus(folderURL: folderURL, hasLocalChanges: false, currentBranch: nil, remote: nil)
         }
         
         return Git.WorkingCopyStatus(folderURL: folderURL,
                                      hasLocalChanges: hasLocalChanges(in: folderURL),
-                                     currentBranch: try? currentBranch(in: folderURL))
+                                     currentBranch: try? currentBranch(in: folderURL),
+                                     remote: try? remote(in: folderURL))
     }
     
     func setCurrentBranchForWorkingCopy(at folderURL: URL, toExisting branch: Git.Branch) throws {
@@ -83,6 +132,11 @@ class GitController {
     private func currentBranch(in folderURL: URL) throws -> Git.Branch? {
         let branchName = try executeGitCommand("symbolic-ref", args: ["HEAD", "-q", "--short"], in: folderURL)
         return branchName.isEmpty ? nil : Git.Branch(name: branchName)
+    }
+    
+    private func remote(in folderURL: URL) throws -> Git.Remote? {
+        let uri = try executeGitCommand("config", args: ["--get", "remote.origin.url"], in: folderURL)
+        return uri.isEmpty ? nil : Git.Remote(repoURI: uri)
     }
     
     @discardableResult
