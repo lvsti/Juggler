@@ -18,8 +18,8 @@ enum Git {
             case ssh, https
         }
 
-        private static let sshURIRegex = try! NSRegularExpression(pattern: #"^(?<user>[^@]+)@(?<host>[^:]+):(?<org>[^/]+)/(?<repo>[^/]+)\.git"#, options: [])
-        private static let httpsURIRegex = try! NSRegularExpression(pattern: #"^https://(?<host>[^/]+)/(?<org>[^/]+)/(?<repo>[^/]+)\.git$"#, options: [])
+        private static let sshURIRegex = try! NSRegularExpression(pattern: #"^(?<user>[^@]+)@(?<host>[^:]+):(?<org>[^\/]+)\/(?<repo>[^\/]+)\.git$"#, options: [])
+        private static let httpsURIRegex = try! NSRegularExpression(pattern: #"^https:\/\/(?<host>[^\/]+)\/(?<org>[^\/]+)\/(?<repo>[^\/]+)\.git$"#, options: [])
 
         let repoURI: String
         let urlKind: URLKind
@@ -35,11 +35,11 @@ enum Git {
             let uriMatch: NSTextCheckingResult?
             if repoURI.hasPrefix("https://") {
                 urlKind = .https
-                uriMatch = Remote.httpsURIRegex.firstMatch(in: repoURI, options: [], range: NSRangeFromString(repoURI))
+                uriMatch = Remote.httpsURIRegex.firstMatch(in: repoURI, options: [], range: NSRange(location: 0, length: repoURI.count))
             }
             else {
                 urlKind = .ssh
-                uriMatch = Remote.sshURIRegex.firstMatch(in: repoURI, options: [], range: NSRangeFromString(repoURI))
+                uriMatch = Remote.sshURIRegex.firstMatch(in: repoURI, options: [], range: NSRange(location: 0, length: repoURI.count))
             }
 
             guard let match = uriMatch else {
@@ -80,7 +80,7 @@ class GitController {
     
     func workingCopyStatus(at folderURL: URL) -> Git.WorkingCopyStatus? {
         guard gitFolderExists(in: folderURL) else {
-            return Git.WorkingCopyStatus(folderURL: folderURL, hasLocalChanges: false, currentBranch: nil, remote: nil)
+            return nil
         }
         
         return Git.WorkingCopyStatus(folderURL: folderURL,
@@ -131,16 +131,18 @@ class GitController {
     
     private func currentBranch(in folderURL: URL) throws -> Git.Branch? {
         let branchName = try executeGitCommand("symbolic-ref", args: ["HEAD", "-q", "--short"], in: folderURL)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         return branchName.isEmpty ? nil : Git.Branch(name: branchName)
     }
     
     private func remote(in folderURL: URL) throws -> Git.Remote? {
         let uri = try executeGitCommand("config", args: ["--get", "remote.origin.url"], in: folderURL)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         return uri.isEmpty ? nil : Git.Remote(repoURI: uri)
     }
     
     @discardableResult
     private func executeGitCommand(_ command: String, args: [String], in folderURL: URL) throws -> String {
-        return try shell("bash", args: ["-c", "cd \"\(folderURL.path)\" ; \"\(gitURL.path)\" \(command) \(args.joined(separator: " "))"])
+        return try shell("/bin/bash", args: ["-c", "cd \"\(folderURL.path)\" ; \"\(gitURL.path)\" \(command) \(args.joined(separator: " "))"])
     }
 }
