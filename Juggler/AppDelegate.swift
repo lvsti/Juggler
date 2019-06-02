@@ -14,6 +14,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var menuController: MenuController!
     
+    private let workspaceController: WorkspaceController
+    private let gitController: GitController
+    private let jiraURLProvider: JIRAURLProvider
+    private let gitHubURLProvider: GitHubURLProvider
+    
+    override init() {
+        gitController = GitController(gitURL: URL(fileURLWithPath: "/usr/bin/git"),
+                                      fileManager: FileManager.default)
+        jiraURLProvider = JIRAURLProvider(userDefaults: UserDefaults.standard)
+        gitHubURLProvider = GitHubURLProvider()
+        workspaceController = WorkspaceController(fileManager: FileManager.default,
+                                                  gitController: gitController,
+                                                  userDefaults: UserDefaults.standard,
+                                                  jiraURLProvider: jiraURLProvider,
+                                                  gitHubURLProvider: gitHubURLProvider)
+        super.init()
+    }
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         let statusBar = NSStatusBar.system
         statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
@@ -25,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         NSMenu.setMenuBarVisible(false)
         
-        menuController = MenuController(menu: statusItem.menu!)
+        menuController = MenuController(menu: statusItem.menu!, workspaceController: workspaceController)
     }
     
 }

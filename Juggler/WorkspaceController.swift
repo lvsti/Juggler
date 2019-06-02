@@ -38,6 +38,21 @@ struct Workspace {
     var ticket: Ticket?
     var pullRequest: PullRequest?
     var projectURL: URL?
+    
+    var resolvedTitle: String {
+        return title ??
+            ticket?.title ??
+            pullRequest?.title ??
+            gitDescription
+    }
+    
+    private var gitDescription: String {
+        let branchSpec = gitStatus.currentBranch?.name ?? "HEAD"
+        if let remote = gitStatus.remote {
+            return branchSpec + " on \(remote.orgName)/\(remote.repoName)"
+        }
+        return branchSpec
+    }
 }
 
 
