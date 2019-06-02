@@ -20,6 +20,7 @@ class GitHubURLProvider {
         return URL(string: "https://github.com")!
             .appendingPathComponent(remote.orgName)
             .appendingPathComponent(remote.repoName)
+            .appendingPathComponent("pull")
             .appendingPathComponent(prID)
     }
 }
