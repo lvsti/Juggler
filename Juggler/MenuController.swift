@@ -11,21 +11,24 @@ import AppKit
 
 protocol MenuControllerDelegate: class {
     func menuControllerDidInvokePreferences()
+    func menuControllerDidInvokeSetup(for workspace: Workspace)
 }
 
 class MenuController: NSObject, NSMenuDelegate {
     // dependencies
     private let menu: NSMenu
     private let workspaceController: WorkspaceController
+    private let jiraURLProvider: JIRAURLProvider
 
     // state
     private var menuItems: [NSMenuItem]
     
     weak var delegate: MenuControllerDelegate?
     
-    init(menu: NSMenu, workspaceController: WorkspaceController) {
+    init(menu: NSMenu, workspaceController: WorkspaceController, jiraURLProvider: JIRAURLProvider) {
         self.menu = menu
         self.workspaceController = workspaceController
+        self.jiraURLProvider = jiraURLProvider
         
         menuItems = []
         
@@ -116,9 +119,50 @@ class MenuController: NSObject, NSMenuDelegate {
         }
         
         menu.addItem(NSMenuItem.separator())
-        
-        menu.addItem(NSMenuItem(title: "Configure...") { _ in
+
+        menu.addItem(NSMenuItem(title: "Link to JIRA ticket...") { _ in
+            let alert = NSAlert()
+            let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+            ticketField.placeholderString = "Ticket ID"
+            alert.messageText = "Enter JIRA ticket ID:"
+            alert.accessoryView = ticketField
+            alert.addButton(withTitle: "OK")
+            alert.addButton(withTitle: "Cancel")
+            alert.window.initialFirstResponder = ticketField
             
+            if alert.runModal() == .alertFirstButtonReturn {
+                let ticketID = ticketField.stringValue
+                let ticketURL = self.jiraURLProvider.ticketURL(for: ticketID)
+                let ticket = JIRATicket(id: ticketID, title: ticketID, url: ticketURL)
+                self.workspaceController.setTicket(ticket, for: workspace)
+            }
+        })
+
+        
+        if let remote = workspace.gitStatus.remote {
+            menu.addItem(NSMenuItem(title: "Link to GitHub PR...") { _ in
+                let alert = NSAlert()
+                let prField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+                prField.placeholderString = "PR number"
+                alert.messageText = "Enter GitHub PR number:"
+                alert.accessoryView = prField
+                alert.addButton(withTitle: "OK")
+                alert.addButton(withTitle: "Cancel")
+                alert.window.initialFirstResponder = prField
+
+                if alert.runModal() == .alertFirstButtonReturn {
+                    let prID = prField.stringValue
+                    let prURL = GitHubURLProvider().pullRequestURL(for: prID, in: remote)
+                    let pr = GitHubPullRequest(id: prID,
+                                               title: "PR #\(prID) (\(workspace.gitStatus.currentBranch?.name ?? "N/A"))",
+                                               url: prURL)
+                    self.workspaceController.setPullRequest(pr, for: workspace)
+                }
+            })
+        }
+
+        menu.addItem(NSMenuItem(title: "Set Up...") { _ in
+            self.delegate?.menuControllerDidInvokeSetup(for: workspace)
         })
         menu.addItem(NSMenuItem(title: "Reset") { _ in
             

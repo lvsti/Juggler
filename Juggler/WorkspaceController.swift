@@ -121,6 +121,20 @@ class WorkspaceController {
         workspaces = foundWorkspaces
     }
     
+    func setPullRequest(_ pr: PullRequest?, for workspace: Workspace) {
+        var newWorkspace = workspace
+        newWorkspace.pullRequest = pr
+        saveWorkspace(newWorkspace)
+        reload()
+    }
+
+    func setTicket(_ ticket: Ticket?, for workspace: Workspace) {
+        var newWorkspace = workspace
+        newWorkspace.ticket = ticket
+        saveWorkspace(newWorkspace)
+        reload()
+    }
+
     private func createWorkspace(for url: URL, with gitStatus: Git.WorkingCopyStatus) -> Workspace {
         return Workspace(folderURL: url,
                          title: nil,

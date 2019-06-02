@@ -45,13 +45,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         NSMenu.setMenuBarVisible(false)
         
-        menuController = MenuController(menu: statusItem.menu!, workspaceController: workspaceController)
+        menuController = MenuController(menu: statusItem.menu!,
+                                        workspaceController: workspaceController,
+                                        jiraURLProvider: jiraURLProvider)
         menuController.delegate = self
     }
     
 }
 
 extension AppDelegate: MenuControllerDelegate {
+    func menuControllerDidInvokeSetup(for workspace: Workspace) {
+        
+    }
+    
     func menuControllerDidInvokePreferences() {
         if preferencesCoordinator == nil {
             preferencesCoordinator = PreferencesCoordinator(workspaceController: workspaceController,
