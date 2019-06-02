@@ -15,13 +15,13 @@ struct JIRATicket: Ticket {
     let url: URL
 }
 
-class JIRATicketURLProvider {
+class JIRAURLProvider {
     private let userDefaults: UserDefaults
     private static let jiraBaseURLKey = "JIRABaseURL"
     
     var baseURL: URL {
         get {
-            guard var baseURLStr = userDefaults.string(forKey: JIRATicketURLProvider.jiraBaseURLKey) else {
+            guard var baseURLStr = userDefaults.string(forKey: JIRAURLProvider.jiraBaseURLKey) else {
                 return URL(string: "https://example.com/")!
             }
             
@@ -40,7 +40,7 @@ class JIRATicketURLProvider {
                 return
             }
             
-            userDefaults.set(newValue.absoluteString, forKey: JIRATicketURLProvider.jiraBaseURLKey)
+            userDefaults.set(newValue.absoluteString, forKey: JIRAURLProvider.jiraBaseURLKey)
         }
     }
     
@@ -48,7 +48,7 @@ class JIRATicketURLProvider {
         self.userDefaults = userDefaults
     }
     
-    func url(for ticketID: String) -> URL {
+    func ticketURL(for ticketID: String) -> URL {
         return baseURL.appendingPathComponent("browse").appendingPathComponent(ticketID)
     }
 }

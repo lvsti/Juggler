@@ -14,7 +14,7 @@
 		BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042FA22A2D12700EFF50C /* MenuController.swift */; };
 		BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430222A2E2D100EFF50C /* ShellUtils.swift */; };
 		BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430622A2EB6F00EFF50C /* GitController.swift */; };
-		BEC0430922A2FB9F00EFF50C /* JIRATicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430822A2FB9F00EFF50C /* JIRATicket.swift */; };
+		BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430822A2FB9F00EFF50C /* JIRA.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 		BEC042FA22A2D12700EFF50C /* MenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		BEC0430222A2E2D100EFF50C /* ShellUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellUtils.swift; sourceTree = "<group>"; };
 		BEC0430622A2EB6F00EFF50C /* GitController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitController.swift; sourceTree = "<group>"; };
-		BEC0430822A2FB9F00EFF50C /* JIRATicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIRATicket.swift; sourceTree = "<group>"; };
+		BEC0430822A2FB9F00EFF50C /* JIRA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIRA.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,13 +61,13 @@
 			isa = PBXGroup;
 			children = (
 				BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */,
+				BEC042EC22A2CCD700EFF50C /* Assets.xcassets */,
 				BEC0430622A2EB6F00EFF50C /* GitController.swift */,
-				BEC0430822A2FB9F00EFF50C /* JIRATicket.swift */,
+				BEC042F122A2CCD700EFF50C /* Info.plist */,
+				BEC0430822A2FB9F00EFF50C /* JIRA.swift */,
+				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
 				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
 				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
-				BEC042EC22A2CCD700EFF50C /* Assets.xcassets */,
-				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
-				BEC042F122A2CCD700EFF50C /* Info.plist */,
 				BEC0430222A2E2D100EFF50C /* ShellUtils.swift */,
 			);
 			path = Juggler;
@@ -148,7 +148,7 @@
 				BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */,
 				BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
-				BEC0430922A2FB9F00EFF50C /* JIRATicket.swift in Sources */,
+				BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
