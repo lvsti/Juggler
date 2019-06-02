@@ -58,6 +58,8 @@ struct Workspace {
 
 
 class WorkspaceController {
+    private static let workspaceRootURLKey = "WorkspaceRootURL"
+    
     private let fileManager: FileManager
     private let gitController: GitController
     private let userDefaults: UserDefaults
@@ -75,6 +77,8 @@ class WorkspaceController {
             guard rootFolderURL != oldValue else {
                 return
             }
+            
+            userDefaults.set(rootFolderURL, forKey: WorkspaceController.workspaceRootURLKey)
 
             reload()
         }
@@ -90,7 +94,7 @@ class WorkspaceController {
         self.userDefaults = userDefaults
         self.jiraURLProvider = jiraURLProvider
         self.gitHubURLProvider = gitHubURLProvider
-        rootFolderURL = URL(fileURLWithPath: "/")
+        rootFolderURL = userDefaults.url(forKey: WorkspaceController.workspaceRootURLKey) ?? URL(fileURLWithPath: NSHomeDirectory())
     }
 
     func reload() {

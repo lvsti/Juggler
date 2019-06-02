@@ -30,6 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                   userDefaults: UserDefaults.standard,
                                                   jiraURLProvider: jiraURLProvider,
                                                   gitHubURLProvider: gitHubURLProvider)
+        workspaceController.reload()
         super.init()
     }
     
