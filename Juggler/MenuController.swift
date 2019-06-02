@@ -9,6 +9,10 @@
 import Foundation
 import AppKit
 
+protocol MenuControllerDelegate: class {
+    func menuControllerDidInvokePreferences()
+}
+
 class MenuController: NSObject, NSMenuDelegate {
     // dependencies
     private let menu: NSMenu
@@ -16,6 +20,8 @@ class MenuController: NSObject, NSMenuDelegate {
 
     // state
     private var menuItems: [NSMenuItem]
+    
+    weak var delegate: MenuControllerDelegate?
     
     init(menu: NSMenu, workspaceController: WorkspaceController) {
         self.menu = menu
@@ -49,6 +55,9 @@ class MenuController: NSObject, NSMenuDelegate {
         menuItems.append(NSMenuItem(title: "Refresh") { _ in
             self.workspaceController.reload()
             self.rebuildMenu()
+        })
+        menuItems.append(NSMenuItem(title: "Preferences...") { _ in
+            self.delegate?.menuControllerDidInvokePreferences()
         })
         menuItems.append(NSMenuItem.separator())
         menuItems.append(NSMenuItem(title: "Quit Juggler", keyEquivalent: "q") { _ in

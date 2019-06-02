@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var statusItem: NSStatusItem!
     private var menuController: MenuController!
+    private var preferencesCoordinator: PreferencesCoordinator?
     
     private let workspaceController: WorkspaceController
     private let gitController: GitController
@@ -44,7 +45,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSMenu.setMenuBarVisible(false)
         
         menuController = MenuController(menu: statusItem.menu!, workspaceController: workspaceController)
+        menuController.delegate = self
     }
     
+}
+
+extension AppDelegate: MenuControllerDelegate {
+    func menuControllerDidInvokePreferences() {
+        if preferencesCoordinator == nil {
+            preferencesCoordinator = PreferencesCoordinator(workspaceController: workspaceController,
+                                                            jiraURLProvider: jiraURLProvider)
+            preferencesCoordinator?.delegate = self
+        }
+        preferencesCoordinator?.showPreferences()
+    }
+}
+
+extension AppDelegate: PreferencesCoordinatorDelegate {
+    func preferencesCoordinatorDidDismiss() {
+        preferencesCoordinator = nil
+    }
 }
 
