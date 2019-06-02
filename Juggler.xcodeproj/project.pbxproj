@@ -15,6 +15,7 @@
 		BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430222A2E2D100EFF50C /* ShellUtils.swift */; };
 		BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430622A2EB6F00EFF50C /* GitController.swift */; };
 		BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430822A2FB9F00EFF50C /* JIRA.swift */; };
+		BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430A22A300BB00EFF50C /* GitHub.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		BEC0430222A2E2D100EFF50C /* ShellUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellUtils.swift; sourceTree = "<group>"; };
 		BEC0430622A2EB6F00EFF50C /* GitController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitController.swift; sourceTree = "<group>"; };
 		BEC0430822A2FB9F00EFF50C /* JIRA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIRA.swift; sourceTree = "<group>"; };
+		BEC0430A22A300BB00EFF50C /* GitHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHub.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */,
 				BEC042EC22A2CCD700EFF50C /* Assets.xcassets */,
 				BEC0430622A2EB6F00EFF50C /* GitController.swift */,
+				BEC0430A22A300BB00EFF50C /* GitHub.swift */,
 				BEC042F122A2CCD700EFF50C /* Info.plist */,
 				BEC0430822A2FB9F00EFF50C /* JIRA.swift */,
 				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
@@ -146,6 +149,7 @@
 				BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */,
 				BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */,
 				BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */,
+				BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */,
 				BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
 				BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */,
