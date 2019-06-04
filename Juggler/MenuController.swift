@@ -102,20 +102,24 @@ class MenuController: NSObject, NSMenuDelegate {
             NSWorkspace.shared.openFile(workspace.folderURL.path, withApplication: "iTerm")
         }))
 
-        if let pr = workspace.pullRequest {
-            menu.addItem(NSMenuItem.separator())
-            menu.addItem(NSMenuItem(title: "GitHub"))
-            menu.addItem(indented(NSMenuItem(title: "Go to PR") { _ in
-                NSWorkspace.shared.open(pr.url)
-            }))
-        }
+        let hasMetadata = workspace.pullRequest != nil || workspace.ticket != nil
         
-        if let ticket = workspace.ticket {
-            menu.addItem(NSMenuItem.separator())
-            menu.addItem(NSMenuItem(title: "JIRA"))
-            menu.addItem(indented(NSMenuItem(title: "Go to Issue") { _ in
-                NSWorkspace.shared.open(ticket.url)
-            }))
+        if hasMetadata {
+            if let ticket = workspace.ticket {
+                menu.addItem(NSMenuItem.separator())
+                menu.addItem(NSMenuItem(title: "JIRA: \(ticket.id)"))
+                menu.addItem(indented(NSMenuItem(title: "Go to JIRA Issue") { _ in
+                    NSWorkspace.shared.open(ticket.url)
+                }))
+            }
+
+            if let pr = workspace.pullRequest {
+                menu.addItem(NSMenuItem.separator())
+                menu.addItem(NSMenuItem(title: "GitHub: PR #\(pr.id)"))
+                menu.addItem(indented(NSMenuItem(title: "Go to GitHub PR") { _ in
+                    NSWorkspace.shared.open(pr.url)
+                }))
+            }
         }
         
         menu.addItem(NSMenuItem.separator())
@@ -137,7 +141,6 @@ class MenuController: NSObject, NSMenuDelegate {
                 self.workspaceController.setTicket(ticket, for: workspace)
             }
         })
-
         
         if let remote = workspace.gitStatus.remote {
             menu.addItem(NSMenuItem(title: "Link to GitHub PR...") { _ in
@@ -161,13 +164,16 @@ class MenuController: NSObject, NSMenuDelegate {
             })
         }
 
+        if hasMetadata {
+            menu.addItem(NSMenuItem(title: "Reset Metadata") { _ in
+                self.workspaceController.resetWorkspace(workspace)
+                self.workspaceController.reload()
+            })
+        }
+
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Set Up...") { _ in
             self.delegate?.menuControllerDidInvokeSetup(for: workspace)
-        })
-        menu.addItem(NSMenuItem(title: "Reset") { _ in
-            self.workspaceController.resetWorkspace(workspace)
-            self.workspaceController.reload()
         })
 
         return menu
