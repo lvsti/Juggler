@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="WorkspaceMenuItemCell" customModule="Juggler" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="440" height="36"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="mnj-Eh-XbY">
+                    <rect key="frame" x="20" y="0.0" width="80" height="36"/>
+                    <subviews>
+                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="47a-Gi-WRC">
+                            <rect key="frame" x="0.0" y="6" width="80" height="24"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6oS-qh-TqC">
+                                    <rect key="frame" x="4" y="3" width="72" height="19"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="72" id="k1Y-In-TtO"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" alignment="center" title="workspace1" drawsBackground="YES" id="EOW-4k-eTx">
+                                        <font key="font" metaFont="system" size="16"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" red="0.11764705882352941" green="0.11764705882352941" blue="0.11764705882352941" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </textFieldCell>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="color" keyPath="layer.backgroundColor">
+                                            <color key="value" name="systemPinkColor" catalog="System" colorSpace="catalog"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="6oS-qh-TqC" firstAttribute="leading" secondItem="47a-Gi-WRC" secondAttribute="leading" constant="4" id="3DA-fa-mpU"/>
+                                <constraint firstItem="6oS-qh-TqC" firstAttribute="centerY" secondItem="47a-Gi-WRC" secondAttribute="centerY" id="OUH-GB-Qf8"/>
+                                <constraint firstAttribute="height" constant="24" id="WIU-7a-Acx"/>
+                                <constraint firstAttribute="trailing" secondItem="6oS-qh-TqC" secondAttribute="trailing" constant="4" id="bmk-Qm-mmv"/>
+                            </constraints>
+                        </customView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="QUD-gu-8Pi"/>
+                        <constraint firstItem="47a-Gi-WRC" firstAttribute="centerX" secondItem="mnj-Eh-XbY" secondAttribute="centerX" id="gCE-cB-ULN"/>
+                        <constraint firstItem="47a-Gi-WRC" firstAttribute="centerY" secondItem="mnj-Eh-XbY" secondAttribute="centerY" id="kpq-7H-Jkr"/>
+                        <constraint firstAttribute="height" constant="36" id="lzc-LO-sna"/>
+                    </constraints>
+                </customView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwf-hT-Lgz">
+                    <rect key="frame" x="120" y="10" width="287" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="287" id="8po-n7-aSx"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" title="ABCD-1234 Nasty bug in the Foo module" drawsBackground="YES" usesSingleLineMode="YES" id="MKZ-Cv-wIg">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="A65-5a-rVf">
+                    <rect key="frame" x="415" y="10" width="16" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="▶︎" drawsBackground="YES" id="9d9-Y4-V1z">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" red="0.11764705882352941" green="0.11764705882352941" blue="0.11764705882352941" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="kwf-hT-Lgz" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="120" id="0il-2U-S9a"/>
+                <constraint firstAttribute="trailing" secondItem="A65-5a-rVf" secondAttribute="trailing" constant="9" id="C5i-Ht-LPT"/>
+                <constraint firstItem="kwf-hT-Lgz" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="l4f-0o-9dv"/>
+                <constraint firstItem="mnj-Eh-XbY" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="sSK-t4-oxT"/>
+                <constraint firstItem="A65-5a-rVf" firstAttribute="leading" secondItem="kwf-hT-Lgz" secondAttribute="trailing" constant="8" id="uoK-hx-1eM"/>
+                <constraint firstItem="A65-5a-rVf" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="uzB-Tq-IVt"/>
+                <constraint firstItem="mnj-Eh-XbY" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" id="vR8-dd-09r"/>
+            </constraints>
+            <connections>
+                <outlet property="badge" destination="47a-Gi-WRC" id="ysR-ZU-7WR"/>
+                <outlet property="badgeTitle" destination="6oS-qh-TqC" id="M9w-ot-dVf"/>
+                <outlet property="titleLabel" destination="kwf-hT-Lgz" id="QNr-SA-65b"/>
+            </connections>
+            <point key="canvasLocation" x="65" y="41"/>
+        </customView>
+    </objects>
+</document>

@@ -43,9 +43,7 @@ class MenuController: NSObject, NSMenuDelegate {
         if !workspaceController.workspaces.isEmpty {
             var index = 1
             for workspace in workspaceController.workspaces {
-                let wsItem = NSMenuItem(title: workspace.resolvedTitle)
-                wsItem.submenu = workspaceMenu(for: workspace)
-                menuItems.append(wsItem)
+                menuItems.append(menuItem(for: workspace))
                 index += 1
             }
         }
@@ -73,6 +71,22 @@ class MenuController: NSObject, NSMenuDelegate {
         for item in menuItems {
             menu.addItem(item)
         }
+    }
+    
+    private func menuItem(for workspace: Workspace) -> NSMenuItem {
+        let wsItem = NSMenuItem(title: workspace.resolvedTitle)
+        wsItem.submenu = workspaceMenu(for: workspace)
+
+        let nib = NSNib(nibNamed: "WorkspaceMenuItemCell", bundle: nil)
+        var topLevel: NSArray? = nil
+        nib?.instantiate(withOwner: nil, topLevelObjects: &topLevel)
+        let cell = topLevel?.first(where: { $0 is WorkspaceMenuItemCell }) as! WorkspaceMenuItemCell
+        
+        cell.badgeTitle.stringValue = "\(workspace.folderURL.lastPathComponent)"
+        cell.titleLabel.stringValue = workspace.resolvedTitle
+        wsItem.view = cell
+        
+        return wsItem
     }
     
     private func workspaceMenu(for workspace: Workspace) -> NSMenu {

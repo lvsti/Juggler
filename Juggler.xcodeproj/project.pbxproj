@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		BE25D9FF22A4556D008142F4 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */; };
 		BE25DA0122A4557D008142F4 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */; };
+		BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */; };
+		BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */; };
 		BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */; };
 		BE851FD822A456900031E2DA /* GeneralPreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE851FD722A456900031E2DA /* GeneralPreferencesView.xib */; };
 		BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD922A45F7E0031E2DA /* PreferencesCoordinator.swift */; };
@@ -27,6 +29,8 @@
 /* Begin PBXFileReference section */
 		BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WorkspaceMenuItemCell.xib; sourceTree = "<group>"; };
+		BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceMenuItemCell.swift; sourceTree = "<group>"; };
 		BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
 		BE851FD722A456900031E2DA /* GeneralPreferencesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GeneralPreferencesView.xib; sourceTree = "<group>"; };
 		BE851FD922A45F7E0031E2DA /* PreferencesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesCoordinator.swift; sourceTree = "<group>"; };
@@ -98,6 +102,8 @@
 				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
 				BEC0430222A2E2D100EFF50C /* ShellUtils.swift */,
 				BEC0430422A2EB6700EFF50C /* WorkspaceController.swift */,
+				BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */,
+				BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */,
 			);
 			path = Juggler;
 			sourceTree = "<group>";
@@ -161,6 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE25D9FF22A4556D008142F4 /* PreferencesWindow.xib in Resources */,
+				BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */,
 				BEC042ED22A2CCD700EFF50C /* Assets.xcassets in Resources */,
 				BE851FD822A456900031E2DA /* GeneralPreferencesView.xib in Resources */,
 				BEC042F022A2CCD700EFF50C /* MainMenu.xib in Resources */,
@@ -176,6 +183,7 @@
 			files = (
 				BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */,
 				BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */,
+				BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */,
 				BE25DA0122A4557D008142F4 /* PreferencesWindowController.swift in Sources */,
 				BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */,
 				BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */,
