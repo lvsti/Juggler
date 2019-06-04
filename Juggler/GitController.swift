@@ -116,7 +116,7 @@ class GitController {
     }
     
     private func hasLocalChanges(in folderURL: URL) -> Bool {
-        guard let changes = try? executeGitCommand("status", args: ["--porcelain", "-uno"], in: folderURL) else {
+        guard let changes = try? executeGitCommand("status", args: ["--porcelain", "-uno", "--ignore-submodules"], in: folderURL) else {
             return false
         }
         
