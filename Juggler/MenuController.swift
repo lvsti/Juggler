@@ -161,11 +161,13 @@ class MenuController: NSObject, NSMenuDelegate {
             })
         }
 
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Set Up...") { _ in
             self.delegate?.menuControllerDidInvokeSetup(for: workspace)
         })
         menu.addItem(NSMenuItem(title: "Reset") { _ in
-            
+            self.workspaceController.resetWorkspace(workspace)
+            self.workspaceController.reload()
         })
 
         return menu

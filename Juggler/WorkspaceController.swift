@@ -134,6 +134,10 @@ class WorkspaceController {
         saveWorkspace(newWorkspace)
         reload()
     }
+    
+    func resetWorkspace(_ workspace: Workspace) {
+        userDefaults.set(nil, forKey: workspace.folderURL.path)
+    }
 
     private func createWorkspace(for url: URL, with gitStatus: Git.WorkingCopyStatus) -> Workspace {
         return Workspace(folderURL: url,
