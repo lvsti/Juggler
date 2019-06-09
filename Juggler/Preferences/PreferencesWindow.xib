@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesWindowController" customModule="Juggler" customModuleProvider="target">
             <connections>
+                <outlet property="toolbar" destination="BWH-0U-cdh" id="cLS-HY-TaP"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="TlC-MM-M2m"/>
             </connections>
         </customObject>
@@ -19,25 +20,37 @@
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             </view>
             <toolbar key="toolbar" implicitIdentifier="313F7195-3DEA-456E-924F-DDF4E6EA5767" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="BWH-0U-cdh">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="YTj-eR-clu"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="clU-Oy-ebL"/>
-                    <toolbarItem implicitItemIdentifier="74E10B94-570B-4DCF-8319-FDD009C52A42" label="General" paletteLabel="General" tag="-1" image="NSPreferencesGeneral" autovalidates="NO" selectable="YES" id="e03-jQ-zSg">
+                    <toolbarItem implicitItemIdentifier="74E10B94-570B-4DCF-8319-FDD009C52A42" explicitItemIdentifier="generalPane" label="General" paletteLabel="General" tag="-1" image="NSPreferencesGeneral" autovalidates="NO" selectable="YES" id="e03-jQ-zSg">
                         <size key="minSize" width="32" height="32"/>
                         <size key="maxSize" width="32" height="32"/>
+                        <connections>
+                            <action selector="generalPaneClicked:" target="-2" id="o2v-b8-RuJ"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="8BC72EFB-393D-4F3A-B3E9-A1248BB71945" explicitItemIdentifier="jiraPane" label="JIRA" paletteLabel="JIRA" tag="-1" image="NSFolder" autovalidates="NO" selectable="YES" id="Xte-YV-NwE">
+                        <size key="minSize" width="32" height="32"/>
+                        <size key="maxSize" width="32" height="32"/>
+                        <connections>
+                            <action selector="jiraPaneClicked:" target="-2" id="6xo-ZH-lQi"/>
+                        </connections>
                     </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="e03-jQ-zSg"/>
+                    <toolbarItem reference="Xte-YV-NwE"/>
                     <toolbarItem reference="clU-Oy-ebL"/>
                 </defaultToolbarItems>
             </toolbar>
         </window>
     </objects>
     <resources>
+        <image name="NSFolder" width="32" height="32"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
     </resources>
 </document>

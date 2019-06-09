@@ -51,7 +51,7 @@ final class JIRADataProvider {
             return userDefaults.string(forKey: JIRADataProvider.jiraUserNameKey)
         }
         set {
-            userDefaults.set(pUserName, forKey: JIRADataProvider.jiraUserNameKey)
+            userDefaults.set(newValue, forKey: JIRADataProvider.jiraUserNameKey)
         }
     }
 
@@ -60,7 +60,7 @@ final class JIRADataProvider {
             return userDefaults.string(forKey: JIRADataProvider.jiraAPITokenKey)
         }
         set {
-            userDefaults.set(pUserName, forKey: JIRADataProvider.jiraAPITokenKey)
+            userDefaults.set(newValue, forKey: JIRADataProvider.jiraAPITokenKey)
         }
     }
 
@@ -94,7 +94,7 @@ final class JIRADataProvider {
         let credentials = "\(user):\(token)".data(using: .utf8)!.base64EncodedString()
         request.addValue("Basic \(credentials)", forHTTPHeaderField: "Authorization")
         
-        let session = URLSession()
+        let session = URLSession(configuration: URLSessionConfiguration.default)
         let task = session.dataTask(with: request) { data, response, error in
             guard
                 let data = data,

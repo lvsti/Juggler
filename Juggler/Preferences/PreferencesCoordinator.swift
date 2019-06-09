@@ -6,7 +6,7 @@
 //  Copyright © 2019. Tamas Lustyik. All rights reserved.
 //
 
-import Foundation
+import Cocoa
 
 protocol PreferencesCoordinatorDelegate: class {
     func preferencesCoordinatorDidDismiss()
@@ -17,6 +17,8 @@ class PreferencesCoordinator {
     private let jiraDataProvider: JIRADataProvider
     
     private var preferencesWindowController: PreferencesWindowController?
+    private var paneControllers: [PreferencesPane: NSViewController] = [:]
+    private var activePane: PreferencesPane = .general
     
     weak var delegate: PreferencesCoordinatorDelegate?
 
@@ -32,18 +34,40 @@ class PreferencesCoordinator {
         }
         preferencesWindowController?.window?.makeKeyAndOrderFront(nil)
     }
+    
+    private func activatePane(_ pane: PreferencesPane) {
+        guard pane != activePane else {
+            return
+        }
+        
+        preferencesWindowController?.contentViewController = paneControllers[pane]
+        activePane = pane
+    }
 }
 
 extension PreferencesCoordinator: PreferencesWindowDelegate {
     func preferencesWindowDidLoad() {
         let generalVC = GeneralPreferencesViewController()
         generalVC.delegate = self
+        let jiraVC = JIRAPreferencesViewController()
+        jiraVC.delegate = self
+        
+        paneControllers = [
+            .general: generalVC,
+            .jira: jiraVC
+        ]
+        
         preferencesWindowController?.contentViewController = generalVC
+        
     }
     
     func preferencesWindowDidDismiss() {
         preferencesWindowController = nil
         delegate?.preferencesCoordinatorDidDismiss()
+    }
+    
+    func preferencesWindowDidChangePane(to pane: PreferencesPane) {
+        activatePane(pane)
     }
 }
 
@@ -56,11 +80,31 @@ extension PreferencesCoordinator: GeneralPreferencesViewDelegate {
         return jiraDataProvider.baseURL
     }
     
-    func generalPreferencesDidChangeJIRABaseURL(to url: URL) {
-        jiraDataProvider.baseURL = url
-    }
-    
     func generalPreferencesDidChangeWorkspaceRootURL(to url: URL) {
         workspaceController.rootFolderURL = url
     }
+}
+
+extension PreferencesCoordinator: JIRAPreferencesViewDelegate {
+    var jiraUserName: String {
+        return jiraDataProvider.userName ?? ""
+    }
+    
+    var jiraAPIToken: String {
+        return jiraDataProvider.apiToken ?? ""
+    }
+    
+    func jiraPreferencesDidChangeBaseURL(to url: URL) {
+        jiraDataProvider.baseURL = url
+    }
+    
+    func jiraPreferencesDidChangeUserName(to userName: String) {
+        jiraDataProvider.userName = userName
+    }
+    
+    func jiraPreferencesDidChangeAPIToken(to token: String) {
+        jiraDataProvider.apiToken = token
+    }
+    
+    
 }

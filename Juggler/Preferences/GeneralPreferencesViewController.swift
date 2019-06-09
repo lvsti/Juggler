@@ -10,15 +10,12 @@ import Cocoa
 
 protocol GeneralPreferencesViewDelegate: class {
     var workspaceRootURL: URL { get }
-    var jiraBaseURL: URL { get }
     func generalPreferencesDidChangeWorkspaceRootURL(to url: URL)
-    func generalPreferencesDidChangeJIRABaseURL(to url: URL)
 }
 
 final class GeneralPreferencesViewController: NSViewController {
     
     @IBOutlet weak var rootFolderLabel: NSTextField!
-    @IBOutlet weak var jiraBaseURLTextField: NSTextField!
     
     weak var delegate: GeneralPreferencesViewDelegate?
     
@@ -37,7 +34,6 @@ final class GeneralPreferencesViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         rootFolderLabel.stringValue = delegate?.workspaceRootURL.path ?? ""
-        jiraBaseURLTextField.stringValue = delegate?.jiraBaseURL.absoluteString ?? ""
     }
     
     @IBAction private func browseButtonClicked(_ sender: Any) {
@@ -53,12 +49,6 @@ final class GeneralPreferencesViewController: NSViewController {
                 self.delegate?.generalPreferencesDidChangeWorkspaceRootURL(to: panel.url!)
                 self.rootFolderLabel.stringValue = panel.url!.path
             }
-        }
-    }
-    
-    @IBAction private func jiraBaseURLChanged(_ sender: Any) {
-        if let url = URL(string: jiraBaseURLTextField.stringValue) {
-            delegate?.generalPreferencesDidChangeJIRABaseURL(to: url)
         }
     }
     

@@ -12,6 +12,8 @@
 		BE6493CD22ACE53800474D62 /* ScriptingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */; };
 		BE6493D222ACE80100474D62 /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE6493D122ACE80100474D62 /* AppleScriptObjC.framework */; };
 		BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */ = {isa = PBXBuildFile; fileRef = BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */; };
+		BE64940022AD755E00474D62 /* JIRAPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */; };
+		BE64940222AD769100474D62 /* JIRAPreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE64940122AD769100474D62 /* JIRAPreferencesView.xib */; };
 		BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */; };
 		BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */; };
 		BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */; };
@@ -35,6 +37,8 @@
 		BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptingBridge.swift; sourceTree = "<group>"; };
 		BE6493D122ACE80100474D62 /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
 		BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.applescript; path = ScriptingBridge.applescript; sourceTree = "<group>"; };
+		BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIRAPreferencesViewController.swift; sourceTree = "<group>"; };
+		BE64940122AD769100474D62 /* JIRAPreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JIRAPreferencesView.xib; sourceTree = "<group>"; };
 		BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WorkspaceMenuItemCell.xib; sourceTree = "<group>"; };
 		BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceMenuItemCell.swift; sourceTree = "<group>"; };
 		BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
@@ -88,6 +92,8 @@
 			children = (
 				BE851FD722A456900031E2DA /* GeneralPreferencesView.xib */,
 				BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */,
+				BE64940122AD769100474D62 /* JIRAPreferencesView.xib */,
+				BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */,
 				BE851FD922A45F7E0031E2DA /* PreferencesCoordinator.swift */,
 				BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */,
 				BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */,
@@ -192,6 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE64940222AD769100474D62 /* JIRAPreferencesView.xib in Resources */,
 				BE25D9FF22A4556D008142F4 /* PreferencesWindow.xib in Resources */,
 				BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */,
 				BEC042ED22A2CCD700EFF50C /* Assets.xcassets in Resources */,
@@ -219,6 +226,7 @@
 				BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
 				BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */,
+				BE64940022AD755E00474D62 /* JIRAPreferencesViewController.swift in Sources */,
 				BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */,
 				BE6493CD22ACE53800474D62 /* ScriptingBridge.swift in Sources */,
 			);
