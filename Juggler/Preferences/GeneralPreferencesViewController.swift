@@ -40,7 +40,7 @@ final class GeneralPreferencesViewController: NSViewController {
         jiraBaseURLTextField.stringValue = delegate?.jiraBaseURL.absoluteString ?? ""
     }
     
-    @IBAction func browseButtonClicked(_ sender: Any) {
+    @IBAction private func browseButtonClicked(_ sender: Any) {
         let panel = NSOpenPanel()
         panel.title = "Choose Workspace Root Folder"
         panel.canChooseDirectories = true
@@ -56,9 +56,10 @@ final class GeneralPreferencesViewController: NSViewController {
         }
     }
     
-    @IBAction func jiraBaseURLChanged(_ sender: Any) {
+    @IBAction private func jiraBaseURLChanged(_ sender: Any) {
         if let url = URL(string: jiraBaseURLTextField.stringValue) {
             delegate?.generalPreferencesDidChangeJIRABaseURL(to: url)
         }
     }
+    
 }
