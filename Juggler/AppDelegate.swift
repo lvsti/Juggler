@@ -24,11 +24,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let jiraDataProvider: JIRADataProvider
     private let gitHubURLProvider: GitHubURLProvider
     private let terminalController: TerminalController
+    private let keychainManager: KeychainManager
     
     override init() {
         gitController = GitController(gitURL: URL(fileURLWithPath: "/usr/bin/git"),
                                       fileManager: FileManager.default)
-        jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard)
+        keychainManager = KeychainManager()
+        jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard, keychainManager: keychainManager)
         gitHubURLProvider = GitHubURLProvider()
         terminalController = TerminalController(userDefaults: UserDefaults.standard)
         workspaceController = WorkspaceController(fileManager: FileManager.default,

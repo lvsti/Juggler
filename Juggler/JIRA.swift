@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Security
 
 struct JIRATicket: Ticket {
     var kind: TicketKind { return .jira }
@@ -16,10 +17,22 @@ struct JIRATicket: Ticket {
 }
 
 final class JIRADataProvider {
-    private let userDefaults: UserDefaults
     private static let jiraBaseURLKey = "JIRABaseURL"
-    private static let jiraUserNameKey = "JIRAUserName"
-    private static let jiraAPITokenKey = "JIRAAPIToken"
+    private static let jiraKeychainItemLabel = "JIRA API Access"
+    private static let jiraKeychainItemService = "me.cocoagrinder.Juggler.JIRA"
+
+    private let userDefaults: UserDefaults
+    private let keychainManager: KeychainManager
+
+    private var credentials: KeychainManager.Credentials? {
+        didSet {
+            if let credentials = credentials {
+                keychainManager.setCredentials(credentials,
+                                               forService: JIRADataProvider.jiraKeychainItemService,
+                                               label: JIRADataProvider.jiraKeychainItemLabel)
+            }
+        }
+    }
     
     var baseURL: URL {
         get {
@@ -47,25 +60,33 @@ final class JIRADataProvider {
     }
     
     var userName: String? {
-        get {
-            return userDefaults.string(forKey: JIRADataProvider.jiraUserNameKey)
-        }
+        get { return credentials?.account }
         set {
-            userDefaults.set(newValue, forKey: JIRADataProvider.jiraUserNameKey)
+            if credentials != nil {
+                credentials?.account = newValue ?? ""
+            }
+            else if newValue != nil {
+                credentials = KeychainManager.Credentials(account: newValue!, secret: "")
+            }
         }
     }
 
     var apiToken: String? {
-        get {
-            return userDefaults.string(forKey: JIRADataProvider.jiraAPITokenKey)
-        }
+        get { return credentials?.secret }
         set {
-            userDefaults.set(newValue, forKey: JIRADataProvider.jiraAPITokenKey)
+            if credentials != nil {
+                credentials?.secret = newValue ?? ""
+            }
+            else if newValue != nil {
+                credentials = KeychainManager.Credentials(account: "", secret: newValue!)
+            }
         }
     }
 
-    init(userDefaults: UserDefaults) {
+    init(userDefaults: UserDefaults, keychainManager: KeychainManager) {
         self.userDefaults = userDefaults
+        self.keychainManager = keychainManager
+        self.credentials = keychainManager.credentials(forService: JIRADataProvider.jiraKeychainItemService)
     }
     
     func ticketURL(for ticketID: String) -> URL {
@@ -82,8 +103,8 @@ final class JIRADataProvider {
     
     func fetchTicket(for ticketID: String, completion: @escaping (JIRATicket?, Error?) -> Void) {
         guard
-            let user = userDefaults.string(forKey: JIRADataProvider.jiraUserNameKey),
-            let token = userDefaults.string(forKey: JIRADataProvider.jiraAPITokenKey),
+            let user = credentials?.account, !user.isEmpty,
+            let token = credentials?.secret, !token.isEmpty,
             let requestURL = URL(string: "https://shapr3d.atlassian.net/rest/api/latest/issue/\(ticketID)?fields=summary")
         else {
             completion(nil, nil)
