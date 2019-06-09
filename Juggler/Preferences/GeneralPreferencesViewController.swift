@@ -10,12 +10,15 @@ import Cocoa
 
 protocol GeneralPreferencesViewDelegate: class {
     var workspaceRootURL: URL { get }
+    var terminalAppURL: URL { get }
     func generalPreferencesDidChangeWorkspaceRootURL(to url: URL)
+    func generalPreferencesDidChangeTerminalAppURL(to url: URL)
 }
 
 final class GeneralPreferencesViewController: NSViewController {
     
     @IBOutlet weak var rootFolderLabel: NSTextField!
+    @IBOutlet weak var terminalAppLabel: NSTextField!
     
     weak var delegate: GeneralPreferencesViewDelegate?
     
@@ -34,9 +37,10 @@ final class GeneralPreferencesViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         rootFolderLabel.stringValue = delegate?.workspaceRootURL.path ?? ""
+        terminalAppLabel.stringValue = delegate?.terminalAppURL.path ?? ""
     }
     
-    @IBAction private func browseButtonClicked(_ sender: Any) {
+    @IBAction private func browseRootButtonClicked(_ sender: Any) {
         let panel = NSOpenPanel()
         panel.title = "Choose Workspace Root Folder"
         panel.canChooseDirectories = true
@@ -51,5 +55,27 @@ final class GeneralPreferencesViewController: NSViewController {
             }
         }
     }
-    
+
+    @IBAction private func browseTerminalButtonClicked(_ sender: Any) {
+        let panel = NSOpenPanel()
+        panel.title = "Select Terminal App"
+        panel.canCreateDirectories = false
+        panel.prompt = "Select"
+        panel.allowedFileTypes = [kUTTypeApplicationBundle as String]
+        
+        if let appsDir = try? FileManager.default.url(for: .applicationDirectory,
+                                                      in: .systemDomainMask,
+                                                      appropriateFor: nil,
+                                                      create: false) {
+            panel.directoryURL = appsDir
+        }
+        
+        panel.beginSheetModal(for: view.window!) { response in
+            if response == .OK {
+                self.delegate?.generalPreferencesDidChangeTerminalAppURL(to: panel.url!)
+                self.terminalAppLabel.stringValue = panel.url!.path
+            }
+        }
+    }
+
 }

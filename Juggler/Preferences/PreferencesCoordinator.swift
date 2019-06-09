@@ -15,6 +15,7 @@ protocol PreferencesCoordinatorDelegate: class {
 class PreferencesCoordinator {
     private let workspaceController: WorkspaceController
     private let jiraDataProvider: JIRADataProvider
+    private let terminalController: TerminalController
     
     private var preferencesWindowController: PreferencesWindowController?
     private var paneControllers: [PreferencesPane: NSViewController] = [:]
@@ -22,9 +23,12 @@ class PreferencesCoordinator {
     
     weak var delegate: PreferencesCoordinatorDelegate?
 
-    init(workspaceController: WorkspaceController, jiraDataProvider: JIRADataProvider) {
+    init(workspaceController: WorkspaceController,
+         jiraDataProvider: JIRADataProvider,
+         terminalController: TerminalController) {
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
+        self.terminalController = terminalController
     }
     
     func showPreferences() {
@@ -58,7 +62,6 @@ extension PreferencesCoordinator: PreferencesWindowDelegate {
         ]
         
         preferencesWindowController?.contentViewController = generalVC
-        
     }
     
     func preferencesWindowDidDismiss() {
@@ -76,16 +79,24 @@ extension PreferencesCoordinator: GeneralPreferencesViewDelegate {
         return workspaceController.rootFolderURL
     }
     
-    var jiraBaseURL: URL {
-        return jiraDataProvider.baseURL
+    var terminalAppURL: URL {
+        return URL(fileURLWithPath: terminalController.appPath)
     }
     
     func generalPreferencesDidChangeWorkspaceRootURL(to url: URL) {
         workspaceController.rootFolderURL = url
     }
+    
+    func generalPreferencesDidChangeTerminalAppURL(to url: URL) {
+        terminalController.appPath = url.path
+    }
 }
 
 extension PreferencesCoordinator: JIRAPreferencesViewDelegate {
+    var jiraBaseURL: URL {
+        return jiraDataProvider.baseURL
+    }
+ 
     var jiraUserName: String {
         return jiraDataProvider.userName ?? ""
     }

@@ -14,6 +14,7 @@
 		BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */ = {isa = PBXBuildFile; fileRef = BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */; };
 		BE64940022AD755E00474D62 /* JIRAPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */; };
 		BE64940222AD769100474D62 /* JIRAPreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE64940122AD769100474D62 /* JIRAPreferencesView.xib */; };
+		BE64940522AD99C500474D62 /* TerminalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE64940422AD99C500474D62 /* TerminalController.swift */; };
 		BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */; };
 		BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */; };
 		BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */; };
@@ -39,6 +40,7 @@
 		BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.applescript; path = ScriptingBridge.applescript; sourceTree = "<group>"; };
 		BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIRAPreferencesViewController.swift; sourceTree = "<group>"; };
 		BE64940122AD769100474D62 /* JIRAPreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JIRAPreferencesView.xib; sourceTree = "<group>"; };
+		BE64940422AD99C500474D62 /* TerminalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalController.swift; sourceTree = "<group>"; };
 		BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WorkspaceMenuItemCell.xib; sourceTree = "<group>"; };
 		BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceMenuItemCell.swift; sourceTree = "<group>"; };
 		BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
 				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
 				BEC0430222A2E2D100EFF50C /* ShellUtils.swift */,
+				BE64940422AD99C500474D62 /* TerminalController.swift */,
 				BEC0430422A2EB6700EFF50C /* WorkspaceController.swift */,
 				BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */,
 				BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */,
@@ -221,6 +224,7 @@
 				BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */,
 				BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */,
 				BEC0430522A2EB6700EFF50C /* WorkspaceController.swift in Sources */,
+				BE64940522AD99C500474D62 /* TerminalController.swift in Sources */,
 				BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */,
 				BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */,
 				BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */,

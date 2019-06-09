@@ -13,6 +13,7 @@ protocol MenuControllerDelegate: class {
     func menuControllerDidInvokePreferences()
     func menuControllerDidInvokeSetup(for workspace: Workspace)
     func menuControllerDidFocus(_ workspace: Workspace)
+    func menuControllerDidOpenTerminal(for workspace: Workspace)
 }
 
 class MenuController: NSObject, NSMenuDelegate {
@@ -140,7 +141,7 @@ class MenuController: NSObject, NSMenuDelegate {
             NSWorkspace.shared.open(workspace.folderURL)
         }))
         menu.addItem(indented(NSMenuItem(title: "Open in Terminal") { _ in
-            NSWorkspace.shared.openFile(workspace.folderURL.path, withApplication: "iTerm")
+            self.delegate?.menuControllerDidOpenTerminal(for: workspace)
         }))
 
         let hasMetadata = workspace.pullRequest != nil || workspace.ticket != nil
