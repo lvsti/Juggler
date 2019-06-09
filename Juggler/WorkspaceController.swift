@@ -69,6 +69,7 @@ class WorkspaceController {
     private let userDefaults: UserDefaults
     private let jiraURLProvider: JIRAURLProvider
     private let gitHubURLProvider: GitHubURLProvider
+    private let queue: DispatchQueue
 
     private(set) var workspaces: [Workspace] = []
 
@@ -92,55 +93,99 @@ class WorkspaceController {
          gitController: GitController,
          userDefaults: UserDefaults,
          jiraURLProvider: JIRAURLProvider,
-         gitHubURLProvider: GitHubURLProvider) {
+         gitHubURLProvider: GitHubURLProvider,
+         queue: DispatchQueue = DispatchQueue(label: "WSControllerQueue", qos: .userInitiated)) {
         self.fileManager = fileManager
         self.gitController = gitController
         self.userDefaults = userDefaults
         self.jiraURLProvider = jiraURLProvider
         self.gitHubURLProvider = gitHubURLProvider
+        self.queue = queue
         rootFolderURL = userDefaults.url(forKey: WorkspaceController.workspaceRootURLKey) ?? URL(fileURLWithPath: NSHomeDirectory())
     }
 
-    func reload() {
-        guard let entryNames = try? fileManager.contentsOfDirectory(atPath: rootFolderURL.path) else {
-            return
+    func reload(completion: (([Workspace]) -> Void)? = nil) {
+        queue.async {
+            guard let entryNames = try? self.fileManager.contentsOfDirectory(atPath: self.rootFolderURL.path) else {
+                completion?(self.workspaces)
+                return
+            }
+            
+            var foundWorkspaces: [Workspace] = []
+            
+            for entryName in entryNames {
+                let folderURL = self.rootFolderURL.appendingPathComponent(entryName)
+                guard let gitStatus = self.gitController.workingCopyStatus(at: folderURL) else {
+                    continue
+                }
+                
+                if let workspace = self.loadWorkspace(at: folderURL, with: gitStatus) {
+                    foundWorkspaces.append(workspace)
+                }
+                else {
+                    foundWorkspaces.append(self.createWorkspace(for: folderURL, with: gitStatus))
+                }
+            }
+            
+            self.workspaces = foundWorkspaces
+            
+            DispatchQueue.main.async {
+                completion?(self.workspaces)
+            }
         }
-
-        var foundWorkspaces: [Workspace] = []
-        
-        for entryName in entryNames {
-            let folderURL = rootFolderURL.appendingPathComponent(entryName)
-            guard let gitStatus = gitController.workingCopyStatus(at: folderURL) else {
-                continue
-            }
-
-            if let workspace = loadWorkspace(at: folderURL, with: gitStatus) {
-                foundWorkspaces.append(workspace)
-            }
-            else {
-                foundWorkspaces.append(createWorkspace(for: folderURL, with: gitStatus))
-            }
-        }
-        
-        workspaces = foundWorkspaces
     }
     
     func setPullRequest(_ pr: PullRequest?, for workspace: Workspace) {
         var newWorkspace = workspace
         newWorkspace.pullRequest = pr
-        saveWorkspace(newWorkspace)
-        reload()
+        updateWorkspace(newWorkspace)
     }
 
     func setTicket(_ ticket: Ticket?, for workspace: Workspace) {
         var newWorkspace = workspace
         newWorkspace.ticket = ticket
-        saveWorkspace(newWorkspace)
-        reload()
+        updateWorkspace(newWorkspace)
     }
     
-    func resetWorkspace(_ workspace: Workspace) {
+    func resetWorkspace(_ workspace: Workspace, metadataOnly: Bool, completion: ((Error?) -> Void)? = nil) {
         userDefaults.set(nil, forKey: workspace.folderURL.path)
+        
+        guard !metadataOnly else {
+            completion?(nil)
+            return
+        }
+
+        queue.async {
+            var err: Error?
+            do {
+                try self.gitController.resetWorkingCopy(at: workspace.folderURL)
+                try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
+                                                                      toExisting: Git.Branch(name: "master"))
+                try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
+            }
+            catch {
+                err = error
+            }
+            
+            if let completion = completion {
+                DispatchQueue.main.async {
+                    completion(err)
+                }
+            }
+        }
+    }
+    
+    private func updateWorkspace(_ workspace: Workspace) {
+        saveWorkspace(workspace)
+        
+        queue.sync {
+            let slices = workspaces.split(maxSplits: 1, whereSeparator: { $0.folderURL == workspace.folderURL })
+
+            var newWorkspaces = Array(slices.first ?? [])
+            newWorkspaces.append(workspace)
+            newWorkspaces.append(contentsOf: slices.last ?? [])
+            self.workspaces = newWorkspaces
+        }
     }
 
     private func createWorkspace(for url: URL, with gitStatus: Git.WorkingCopyStatus) -> Workspace {

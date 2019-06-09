@@ -75,8 +75,9 @@ class MenuController: NSObject, NSMenuDelegate {
         menuItems.append(NSMenuItem.separator())
 
         menuItems.append(NSMenuItem(title: "Refresh") { _ in
-            self.workspaceController.reload()
-            self.rebuildMenu()
+            self.workspaceController.reload { _ in
+                self.rebuildMenu()
+            }
         })
         menuItems.append(NSMenuItem(title: "Preferences...") { _ in
             self.delegate?.menuControllerDidInvokePreferences()
@@ -206,10 +207,17 @@ class MenuController: NSObject, NSMenuDelegate {
 
         if hasMetadata {
             menu.addItem(NSMenuItem(title: "Reset Metadata") { _ in
-                self.workspaceController.resetWorkspace(workspace)
-                self.workspaceController.reload()
+                self.workspaceController.resetWorkspace(workspace, metadataOnly: true) { _ in
+                    self.workspaceController.reload()
+                }
             })
         }
+
+        menu.addItem(NSMenuItem(title: "Reset Contents") { _ in
+            self.workspaceController.resetWorkspace(workspace, metadataOnly: false) { _ in
+                self.workspaceController.reload()
+            }
+        })
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Set Up...") { _ in
