@@ -42,10 +42,30 @@ class MenuController: NSObject, NSMenuDelegate {
         menuItems.removeAll(keepingCapacity: true)
         
         if !workspaceController.workspaces.isEmpty {
+            var inactiveWorkspaces: [Workspace] = []
+            
             var index = 1
             for workspace in workspaceController.workspaces {
+                if !workspace.isActive {
+                    inactiveWorkspaces.append(workspace)
+                    continue;
+                }
+                if index == 1 {
+                    menuItems.append(NSMenuItem(title: "Active Workspaces"))
+                }
                 menuItems.append(menuItem(for: workspace))
                 index += 1
+            }
+            
+            if !inactiveWorkspaces.isEmpty {
+                menuItems.append(NSMenuItem.separator())
+                menuItems.append(NSMenuItem(title: "Free Pool"))
+
+                for workspace in inactiveWorkspaces {
+                    menuItems.append(menuItem(for: workspace))
+                    index += 1
+                }
+
             }
         }
         else {

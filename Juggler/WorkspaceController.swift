@@ -46,6 +46,10 @@ struct Workspace {
             gitDescription
     }
     
+    var isActive: Bool {
+        return gitStatus.currentBranch?.name != "master"
+    }
+    
     private var gitDescription: String {
         let branchSpec = gitStatus.currentBranch?.name ?? "HEAD"
         if let remote = gitStatus.remote {
