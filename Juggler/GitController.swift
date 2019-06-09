@@ -143,6 +143,6 @@ class GitController {
     
     @discardableResult
     private func executeGitCommand(_ command: String, args: [String], in folderURL: URL) throws -> String {
-        return try shell("/bin/bash", args: ["-c", "cd \"\(folderURL.path)\" ; \"\(gitURL.path)\" \(command) \(args.joined(separator: " "))"])
+        return try shell("/bin/bash", args: ["-l", "-c", "cd \"\(folderURL.path)\" ; \"\(gitURL.path)\" \(command) \(args.joined(separator: " "))"])
     }
 }
