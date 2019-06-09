@@ -14,15 +14,15 @@ protocol PreferencesCoordinatorDelegate: class {
 
 class PreferencesCoordinator {
     private let workspaceController: WorkspaceController
-    private let jiraURLProvider: JIRAURLProvider
+    private let jiraDataProvider: JIRADataProvider
     
     private var preferencesWindowController: PreferencesWindowController?
     
     weak var delegate: PreferencesCoordinatorDelegate?
 
-    init(workspaceController: WorkspaceController, jiraURLProvider: JIRAURLProvider) {
+    init(workspaceController: WorkspaceController, jiraDataProvider: JIRADataProvider) {
         self.workspaceController = workspaceController
-        self.jiraURLProvider = jiraURLProvider
+        self.jiraDataProvider = jiraDataProvider
     }
     
     func showPreferences() {
@@ -53,11 +53,11 @@ extension PreferencesCoordinator: GeneralPreferencesViewDelegate {
     }
     
     var jiraBaseURL: URL {
-        return jiraURLProvider.baseURL
+        return jiraDataProvider.baseURL
     }
     
     func generalPreferencesDidChangeJIRABaseURL(to url: URL) {
-        jiraURLProvider.baseURL = url
+        jiraDataProvider.baseURL = url
     }
     
     func generalPreferencesDidChangeWorkspaceRootURL(to url: URL) {

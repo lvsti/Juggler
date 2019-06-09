@@ -15,13 +15,15 @@ struct JIRATicket: Ticket {
     let url: URL
 }
 
-class JIRAURLProvider {
+final class JIRADataProvider {
     private let userDefaults: UserDefaults
     private static let jiraBaseURLKey = "JIRABaseURL"
+    private static let jiraUserNameKey = "JIRAUserName"
+    private static let jiraAPITokenKey = "JIRAAPIToken"
     
     var baseURL: URL {
         get {
-            guard var baseURLStr = userDefaults.string(forKey: JIRAURLProvider.jiraBaseURLKey) else {
+            guard var baseURLStr = userDefaults.string(forKey: JIRADataProvider.jiraBaseURLKey) else {
                 return URL(string: "https://example.com/")!
             }
             
@@ -40,10 +42,28 @@ class JIRAURLProvider {
                 return
             }
             
-            userDefaults.set(newValue.absoluteString, forKey: JIRAURLProvider.jiraBaseURLKey)
+            userDefaults.set(newValue.absoluteString, forKey: JIRADataProvider.jiraBaseURLKey)
         }
     }
     
+    var userName: String? {
+        get {
+            return userDefaults.string(forKey: JIRADataProvider.jiraUserNameKey)
+        }
+        set {
+            userDefaults.set(pUserName, forKey: JIRADataProvider.jiraUserNameKey)
+        }
+    }
+
+    var apiToken: String? {
+        get {
+            return userDefaults.string(forKey: JIRADataProvider.jiraAPITokenKey)
+        }
+        set {
+            userDefaults.set(pUserName, forKey: JIRADataProvider.jiraAPITokenKey)
+        }
+    }
+
     init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
     }
@@ -51,5 +71,49 @@ class JIRAURLProvider {
     func ticketURL(for ticketID: String) -> URL {
         return baseURL.appendingPathComponent("browse").appendingPathComponent(ticketID)
     }
+
+    func ticketID(from url: URL) -> String? {
+        guard url.host == baseURL.host, url.pathComponents.dropLast() == ["/", "browse"] else {
+            return nil
+        }
+        
+        return url.lastPathComponent
+    }
+    
+    func fetchTicket(for ticketID: String, completion: @escaping (JIRATicket?, Error?) -> Void) {
+        guard
+            let user = userDefaults.string(forKey: JIRADataProvider.jiraUserNameKey),
+            let token = userDefaults.string(forKey: JIRADataProvider.jiraAPITokenKey),
+            let requestURL = URL(string: "https://shapr3d.atlassian.net/rest/api/latest/issue/\(ticketID)?fields=summary")
+        else {
+            completion(nil, nil)
+            return
+        }
+        
+        var request = URLRequest(url: requestURL)
+        let credentials = "\(user):\(token)".data(using: .utf8)!.base64EncodedString()
+        request.addValue("Basic \(credentials)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession()
+        let task = session.dataTask(with: request) { data, response, error in
+            guard
+                let data = data,
+                let result = try? JSONDecoder().decode(JIRAGetIssueResult.self, from: data)
+            else {
+                completion(nil, error)
+                return
+            }
+            
+            let ticket = JIRATicket(id: ticketID,
+                                    title: result.fields["summary"],
+                                    url: self.ticketURL(for: result.key))
+            completion(ticket, nil)
+        }
+        task.resume()
+    }
 }
 
+private struct JIRAGetIssueResult: Decodable {
+    let key: String
+    let fields: [String: String]
+}

@@ -19,17 +19,17 @@ class MenuController: NSObject, NSMenuDelegate {
     // dependencies
     private let menu: NSMenu
     private let workspaceController: WorkspaceController
-    private let jiraURLProvider: JIRAURLProvider
+    private let jiraDataProvider: JIRADataProvider
 
     // state
     private var menuItems: [NSMenuItem]
     
     weak var delegate: MenuControllerDelegate?
     
-    init(menu: NSMenu, workspaceController: WorkspaceController, jiraURLProvider: JIRAURLProvider) {
+    init(menu: NSMenu, workspaceController: WorkspaceController, jiraDataProvider: JIRADataProvider) {
         self.menu = menu
         self.workspaceController = workspaceController
-        self.jiraURLProvider = jiraURLProvider
+        self.jiraDataProvider = jiraDataProvider
         
         menuItems = []
         
@@ -177,7 +177,7 @@ class MenuController: NSObject, NSMenuDelegate {
             
             if alert.runModal() == .alertFirstButtonReturn {
                 let ticketID = ticketField.stringValue
-                let ticketURL = self.jiraURLProvider.ticketURL(for: ticketID)
+                let ticketURL = self.jiraDataProvider.ticketURL(for: ticketID)
                 let ticket = JIRATicket(id: ticketID, title: ticketID, url: ticketURL)
                 self.workspaceController.setTicket(ticket, for: workspace)
             }

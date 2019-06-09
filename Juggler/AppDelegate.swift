@@ -21,18 +21,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private let workspaceController: WorkspaceController
     private let gitController: GitController
-    private let jiraURLProvider: JIRAURLProvider
+    private let jiraDataProvider: JIRADataProvider
     private let gitHubURLProvider: GitHubURLProvider
     
     override init() {
         gitController = GitController(gitURL: URL(fileURLWithPath: "/usr/bin/git"),
                                       fileManager: FileManager.default)
-        jiraURLProvider = JIRAURLProvider(userDefaults: UserDefaults.standard)
+        jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard)
         gitHubURLProvider = GitHubURLProvider()
         workspaceController = WorkspaceController(fileManager: FileManager.default,
                                                   gitController: gitController,
                                                   userDefaults: UserDefaults.standard,
-                                                  jiraURLProvider: jiraURLProvider,
+                                                  jiraDataProvider: jiraDataProvider,
                                                   gitHubURLProvider: gitHubURLProvider)
         workspaceController.reload()
         super.init()
@@ -53,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         menuController = MenuController(menu: statusItem.menu!,
                                         workspaceController: workspaceController,
-                                        jiraURLProvider: jiraURLProvider)
+                                        jiraDataProvider: jiraDataProvider)
         menuController.delegate = self
     }
     
@@ -67,7 +67,7 @@ extension AppDelegate: MenuControllerDelegate {
     func menuControllerDidInvokePreferences() {
         if preferencesCoordinator == nil {
             preferencesCoordinator = PreferencesCoordinator(workspaceController: workspaceController,
-                                                            jiraURLProvider: jiraURLProvider)
+                                                            jiraDataProvider: jiraDataProvider)
             preferencesCoordinator?.delegate = self
         }
         preferencesCoordinator?.showPreferences()

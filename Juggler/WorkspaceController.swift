@@ -67,7 +67,7 @@ class WorkspaceController {
     private let fileManager: FileManager
     private let gitController: GitController
     private let userDefaults: UserDefaults
-    private let jiraURLProvider: JIRAURLProvider
+    private let jiraDataProvider: JIRADataProvider
     private let gitHubURLProvider: GitHubURLProvider
     private let queue: DispatchQueue
 
@@ -92,13 +92,13 @@ class WorkspaceController {
     init(fileManager: FileManager,
          gitController: GitController,
          userDefaults: UserDefaults,
-         jiraURLProvider: JIRAURLProvider,
+         jiraDataProvider: JIRADataProvider,
          gitHubURLProvider: GitHubURLProvider,
          queue: DispatchQueue = DispatchQueue(label: "WSControllerQueue", qos: .userInitiated)) {
         self.fileManager = fileManager
         self.gitController = gitController
         self.userDefaults = userDefaults
-        self.jiraURLProvider = jiraURLProvider
+        self.jiraDataProvider = jiraDataProvider
         self.gitHubURLProvider = gitHubURLProvider
         self.queue = queue
         rootFolderURL = userDefaults.url(forKey: WorkspaceController.workspaceRootURLKey) ?? URL(fileURLWithPath: NSHomeDirectory())
@@ -212,7 +212,7 @@ class WorkspaceController {
             case .jira:
                 ticket = JIRATicket(id: ticketID,
                                     title: serializedTicket["title"],
-                                    url: jiraURLProvider.ticketURL(for: ticketID))
+                                    url: jiraDataProvider.ticketURL(for: ticketID))
             }
         }
         
