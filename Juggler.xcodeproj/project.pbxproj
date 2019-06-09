@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		BE25D9FF22A4556D008142F4 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */; };
 		BE25DA0122A4557D008142F4 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */; };
+		BE6493CD22ACE53800474D62 /* ScriptingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */; };
+		BE6493D222ACE80100474D62 /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE6493D122ACE80100474D62 /* AppleScriptObjC.framework */; };
+		BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */ = {isa = PBXBuildFile; fileRef = BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */; };
 		BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */; };
 		BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */; };
 		BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */; };
@@ -29,6 +32,9 @@
 /* Begin PBXFileReference section */
 		BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptingBridge.swift; sourceTree = "<group>"; };
+		BE6493D122ACE80100474D62 /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
+		BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.applescript; path = ScriptingBridge.applescript; sourceTree = "<group>"; };
 		BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WorkspaceMenuItemCell.xib; sourceTree = "<group>"; };
 		BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceMenuItemCell.swift; sourceTree = "<group>"; };
 		BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
@@ -53,12 +59,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE6493D222ACE80100474D62 /* AppleScriptObjC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BE6493C322AC679A00474D62 /* Scripting */ = {
+			isa = PBXGroup;
+			children = (
+				BE6493D322ACE86A00474D62 /* ScriptingBridge.applescript */,
+				BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */,
+			);
+			path = Scripting;
+			sourceTree = "<group>";
+		};
+		BE6493D022ACE80100474D62 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BE6493D122ACE80100474D62 /* AppleScriptObjC.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BE851FDB22A463A80031E2DA /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +100,7 @@
 			children = (
 				BEC042E922A2CCD600EFF50C /* Juggler */,
 				BEC042E822A2CCD600EFF50C /* Products */,
+				BE6493D022ACE80100474D62 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				BE851FDB22A463A80031E2DA /* Preferences */,
+				BE6493C322AC679A00474D62 /* Scripting */,
 				BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */,
 				BEC042EC22A2CCD700EFF50C /* Assets.xcassets */,
 				BEC0430622A2EB6F00EFF50C /* GitController.swift */,
@@ -193,6 +219,8 @@
 				BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
 				BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */,
+				BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */,
+				BE6493CD22ACE53800474D62 /* ScriptingBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

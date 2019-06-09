@@ -12,6 +12,7 @@ import AppKit
 protocol MenuControllerDelegate: class {
     func menuControllerDidInvokePreferences()
     func menuControllerDidInvokeSetup(for workspace: Workspace)
+    func menuControllerDidFocus(_ workspace: Workspace)
 }
 
 class MenuController: NSObject, NSMenuDelegate {
@@ -96,6 +97,11 @@ class MenuController: NSObject, NSMenuDelegate {
             item.indentationLevel = 1
             return item
         }
+        
+        menu.addItem(NSMenuItem(title: "Focus") { _ in
+            self.delegate?.menuControllerDidFocus(workspace)
+        })
+        menu.addItem(NSMenuItem.separator())
 
         menu.addItem(NSMenuItem(title: "Workspace"))
         if let project = workspace.projectURL {

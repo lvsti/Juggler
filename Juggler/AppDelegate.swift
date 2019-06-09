@@ -14,6 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var menuController: MenuController!
     private var preferencesCoordinator: PreferencesCoordinator?
+    private lazy var scriptingBridge: ScriptingBridge = {
+        let scriptingBridgeClass: AnyClass = NSClassFromString("ScriptingBridge")!
+        return scriptingBridgeClass.alloc() as! ScriptingBridge
+    }()
     
     private let workspaceController: WorkspaceController
     private let gitController: GitController
@@ -35,6 +39,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        Bundle.main.loadAppleScriptObjectiveCScripts()
+        
         let statusBar = NSStatusBar.system
         statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
         
@@ -65,6 +71,17 @@ extension AppDelegate: MenuControllerDelegate {
             preferencesCoordinator?.delegate = self
         }
         preferencesCoordinator?.showPreferences()
+    }
+    
+    func menuControllerDidFocus(_ workspace: Workspace) {
+        NSWorkspace.shared.launchApplication("Sourcetree")
+        scriptingBridge.closeAllSourcetreeWindows()
+        NSWorkspace.shared.openFile(workspace.folderURL.path, withApplication: "Sourcetree")
+        
+        if let projectPath = workspace.projectURL?.path {
+            scriptingBridge.closeAllXcodeProjects(except: projectPath)
+            NSWorkspace.shared.openFile(projectPath, withApplication: "Xcode")
+        }
     }
 }
 
