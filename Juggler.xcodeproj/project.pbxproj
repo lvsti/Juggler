@@ -15,6 +15,7 @@
 		BE64940022AD755E00474D62 /* JIRAPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */; };
 		BE64940222AD769100474D62 /* JIRAPreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE64940122AD769100474D62 /* JIRAPreferencesView.xib */; };
 		BE64940522AD99C500474D62 /* TerminalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE64940422AD99C500474D62 /* TerminalController.swift */; };
+		BE64940722ADAC2E00474D62 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE64940622ADAC2E00474D62 /* KeychainManager.swift */; };
 		BE696DDA22A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */; };
 		BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */; };
 		BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */; };
@@ -41,6 +42,7 @@
 		BE6493FF22AD755E00474D62 /* JIRAPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIRAPreferencesViewController.swift; sourceTree = "<group>"; };
 		BE64940122AD769100474D62 /* JIRAPreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JIRAPreferencesView.xib; sourceTree = "<group>"; };
 		BE64940422AD99C500474D62 /* TerminalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalController.swift; sourceTree = "<group>"; };
+		BE64940622ADAC2E00474D62 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WorkspaceMenuItemCell.xib; sourceTree = "<group>"; };
 		BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceMenuItemCell.swift; sourceTree = "<group>"; };
 		BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				BEC0430A22A300BB00EFF50C /* GitHub.swift */,
 				BEC042F122A2CCD700EFF50C /* Info.plist */,
 				BEC0430822A2FB9F00EFF50C /* JIRA.swift */,
+				BE64940622ADAC2E00474D62 /* KeychainManager.swift */,
 				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
 				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
 				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
@@ -229,6 +232,7 @@
 				BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */,
 				BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
+				BE64940722ADAC2E00474D62 /* KeychainManager.swift in Sources */,
 				BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */,
 				BE64940022AD755E00474D62 /* JIRAPreferencesViewController.swift in Sources */,
 				BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */,
