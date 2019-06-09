@@ -168,18 +168,29 @@ class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: "Link to JIRA ticket...") { _ in
             let alert = NSAlert()
             let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
-            ticketField.placeholderString = "Ticket ID"
-            alert.messageText = "Enter JIRA ticket ID:"
+            ticketField.placeholderString = "Ticket ID or URL"
+            alert.messageText = "Enter JIRA ticket ID or URL:"
             alert.accessoryView = ticketField
             alert.addButton(withTitle: "OK")
             alert.addButton(withTitle: "Cancel")
             alert.window.initialFirstResponder = ticketField
             
             if alert.runModal() == .alertFirstButtonReturn {
-                let ticketID = ticketField.stringValue
-                let ticketURL = self.jiraDataProvider.ticketURL(for: ticketID)
-                let ticket = JIRATicket(id: ticketID, title: ticketID, url: ticketURL)
-                self.workspaceController.setTicket(ticket, for: workspace)
+                let ticketID: String
+                let ticketURL: URL
+                if let url = URL(string: ticketField.stringValue), let id = self.jiraDataProvider.ticketID(from: url) {
+                    ticketID = id
+                    ticketURL = url
+                }
+                else {
+                    ticketID = ticketField.stringValue
+                    ticketURL = self.jiraDataProvider.ticketURL(for: ticketID)
+                }
+                
+                self.jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
+                    self.workspaceController.setTicket(ticket ?? JIRATicket(id: ticketID, title: ticketID, url: ticketURL),
+                                                       for: workspace)
+                }
             }
         })
         

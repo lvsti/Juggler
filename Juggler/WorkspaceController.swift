@@ -41,13 +41,18 @@ struct Workspace {
     
     var resolvedTitle: String {
         return title ??
-            ticket?.title ??
+            ticketInfo ??
             pullRequest?.title ??
             gitDescription
     }
     
     var isActive: Bool {
         return gitStatus.currentBranch?.name != "master"
+    }
+    
+    private var ticketInfo: String? {
+        guard let ticket = ticket else { return nil }
+        return "[\(ticket.id)] \(ticket.title ?? "")"
     }
     
     private var gitDescription: String {
