@@ -187,16 +187,26 @@ class MenuController: NSObject, NSMenuDelegate {
             menu.addItem(NSMenuItem(title: "Link to GitHub PR...") { _ in
                 let alert = NSAlert()
                 let prField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
-                prField.placeholderString = "PR number"
-                alert.messageText = "Enter GitHub PR number:"
+                prField.placeholderString = "PR number or URL"
+                alert.messageText = "Enter GitHub PR number or URL:"
                 alert.accessoryView = prField
                 alert.addButton(withTitle: "OK")
                 alert.addButton(withTitle: "Cancel")
                 alert.window.initialFirstResponder = prField
 
                 if alert.runModal() == .alertFirstButtonReturn {
-                    let prID = prField.stringValue
-                    let prURL = GitHubURLProvider().pullRequestURL(for: prID, in: remote)
+                    let urlProvider = GitHubURLProvider()
+
+                    let prID: String
+                    let prURL: URL
+                    if let url = URL(string: prField.stringValue), let id = urlProvider.pullRequestID(from: url, in: remote) {
+                        prID = id
+                        prURL = url
+                    }
+                    else {
+                        prID = prField.stringValue
+                        prURL = urlProvider.pullRequestURL(for: prID, in: remote)
+                    }
                     let pr = GitHubPullRequest(id: prID,
                                                title: "PR #\(prID) (\(workspace.gitStatus.currentBranch?.name ?? "N/A"))",
                                                url: prURL)

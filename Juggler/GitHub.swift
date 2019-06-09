@@ -23,5 +23,17 @@ class GitHubURLProvider {
             .appendingPathComponent("pull")
             .appendingPathComponent(prID)
     }
+    
+    func pullRequestID(from url: URL, in remote: Git.Remote) -> String? {
+        guard
+            url.host == "github.com",
+            url.pathComponents.dropLast() == ["/", remote.orgName, remote.repoName, "pull"],
+            Int(url.lastPathComponent) != nil
+        else {
+            return nil
+        }
+        
+        return url.lastPathComponent
+    }
 }
 
