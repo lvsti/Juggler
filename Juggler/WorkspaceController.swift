@@ -179,11 +179,10 @@ class WorkspaceController {
         saveWorkspace(workspace)
         
         queue.sync {
-            let slices = workspaces.split(maxSplits: 1, whereSeparator: { $0.folderURL == workspace.folderURL })
+            let index = workspaces.firstIndex(where: { $0.folderURL == workspace.folderURL })!
 
-            var newWorkspaces = Array(slices.first ?? [])
-            newWorkspaces.append(workspace)
-            newWorkspaces.append(contentsOf: slices.last ?? [])
+            var newWorkspaces = self.workspaces
+            newWorkspaces.replaceSubrange(index ..< index + 1, with: [workspace])
             self.workspaces = newWorkspaces
         }
     }
