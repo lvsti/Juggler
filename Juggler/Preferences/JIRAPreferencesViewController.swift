@@ -58,4 +58,8 @@ final class JIRAPreferencesViewController: NSViewController {
         delegate?.jiraPreferencesDidChangeAPIToken(to: jiraAPITokenField.stringValue)
     }
 
+    @IBAction private func jiraSetUpTokensLinkClicked(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://id.atlassian.com/manage/api-tokens")!)
+    }
+
 }
