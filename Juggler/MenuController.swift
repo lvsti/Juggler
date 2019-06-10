@@ -225,18 +225,16 @@ class MenuController: NSObject, NSMenuDelegate {
         }
         
         let ticketID: String
-        let ticketURL: URL
         if let url = URL(string: ticketField.stringValue), let id = jiraDataProvider.ticketID(from: url) {
             ticketID = id
-            ticketURL = url
         }
         else {
             ticketID = ticketField.stringValue
-            ticketURL = jiraDataProvider.ticketURL(for: ticketID)
         }
         
         jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
-            completion(ticket ?? JIRATicket(id: ticketID, title: ticketID, url: ticketURL))
+            guard let ticket = ticket else { return }
+            completion(ticket)
         }
     }
     
@@ -256,18 +254,16 @@ class MenuController: NSObject, NSMenuDelegate {
         }
         
         let prID: String
-        let prURL: URL
         if let url = URL(string: prField.stringValue), let id = gitHubDataProvider.pullRequestID(from: url, in: remote) {
             prID = id
-            prURL = url
         }
         else {
             prID = prField.stringValue
-            prURL = gitHubDataProvider.pullRequestURL(for: prID, in: remote)
         }
         
         gitHubDataProvider.fetchPullRequest(for: prID, in: remote) { pr, _ in
-            completion(pr ?? GitHubPullRequest(id: prID, title: nil, url: prURL))
+            guard let pr = pr else { return }
+            completion(pr)
         }
     }
 
