@@ -9,7 +9,7 @@
 import Foundation
 import Security
 
-struct JIRATicket: Ticket {
+struct JIRATicket: Ticket, Codable {
     var kind: TicketKind { return .jira }
     let id: String
     let title: String?
@@ -126,7 +126,7 @@ final class JIRADataProvider {
             }
             
             let ticket = JIRATicket(id: ticketID,
-                                    title: result.fields["summary"],
+                                    title: result.fields.summary,
                                     url: self.ticketURL(for: result.key))
             completion(ticket, nil)
         }
@@ -135,6 +135,10 @@ final class JIRADataProvider {
 }
 
 private struct JIRAGetIssueResult: Decodable {
+    struct Fields: Decodable {
+        let summary: String
+    }
+    
     let key: String
-    let fields: [String: String]
+    let fields: Fields
 }
