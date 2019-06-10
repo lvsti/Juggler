@@ -48,9 +48,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let statusBar = NSStatusBar.system
         statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
         
-//        statusItem.image = #imageLiteral(resourceName: "statusicon")
-//        statusItem.image?.isTemplate = true
-        statusItem.button!.title = "JG"
+        statusItem.button?.image = #imageLiteral(resourceName: "statusicon")
+        statusItem.button?.image?.isTemplate = true
         statusItem.menu = NSMenu(title: statusItem.button!.title)
         
         NSMenu.setMenuBarVisible(false)

@@ -33,14 +33,14 @@
                             <action selector="generalPaneClicked:" target="-2" id="o2v-b8-RuJ"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="8BC72EFB-393D-4F3A-B3E9-A1248BB71945" explicitItemIdentifier="jiraPane" label="JIRA" paletteLabel="JIRA" tag="-1" image="NSFolder" autovalidates="NO" selectable="YES" id="Xte-YV-NwE">
+                    <toolbarItem implicitItemIdentifier="8BC72EFB-393D-4F3A-B3E9-A1248BB71945" explicitItemIdentifier="jiraPane" label="JIRA" paletteLabel="JIRA" tag="-1" image="jira" autovalidates="NO" selectable="YES" id="Xte-YV-NwE">
                         <size key="minSize" width="32" height="32"/>
                         <size key="maxSize" width="32" height="32"/>
                         <connections>
                             <action selector="jiraPaneClicked:" target="-2" id="6xo-ZH-lQi"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="A6E7CF0A-119A-45BD-BC21-63D02A1D93B3" explicitItemIdentifier="gitHubPane" label="GitHub" paletteLabel="GitHub" tag="-1" image="NSNetwork" autovalidates="NO" selectable="YES" id="eLi-90-Wgc">
+                    <toolbarItem implicitItemIdentifier="A6E7CF0A-119A-45BD-BC21-63D02A1D93B3" explicitItemIdentifier="gitHubPane" label="GitHub" paletteLabel="GitHub" tag="-1" image="github" autovalidates="NO" selectable="YES" id="eLi-90-Wgc">
                         <size key="minSize" width="32" height="32"/>
                         <size key="maxSize" width="32" height="32"/>
                         <connections>
@@ -58,8 +58,8 @@
         </window>
     </objects>
     <resources>
-        <image name="NSFolder" width="32" height="32"/>
-        <image name="NSNetwork" width="32" height="32"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="github" width="32" height="32"/>
+        <image name="jira" width="32" height="32"/>
     </resources>
 </document>
