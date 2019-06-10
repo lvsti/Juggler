@@ -15,6 +15,7 @@ protocol PreferencesCoordinatorDelegate: class {
 class PreferencesCoordinator {
     private let workspaceController: WorkspaceController
     private let jiraDataProvider: JIRADataProvider
+    private let gitHubDataProvider: GitHubDataProvider
     private let terminalController: TerminalController
     
     private var preferencesWindowController: PreferencesWindowController?
@@ -25,9 +26,11 @@ class PreferencesCoordinator {
 
     init(workspaceController: WorkspaceController,
          jiraDataProvider: JIRADataProvider,
+         gitHubDataProvider: GitHubDataProvider,
          terminalController: TerminalController) {
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
+        self.gitHubDataProvider = gitHubDataProvider
         self.terminalController = terminalController
     }
     
@@ -55,10 +58,13 @@ extension PreferencesCoordinator: PreferencesWindowDelegate {
         generalVC.delegate = self
         let jiraVC = JIRAPreferencesViewController()
         jiraVC.delegate = self
-        
+        let gitHubVC = GitHubPreferencesViewController()
+        gitHubVC.delegate = self
+
         paneControllers = [
             .general: generalVC,
-            .jira: jiraVC
+            .jira: jiraVC,
+            .gitHub: gitHubVC
         ]
         
         preferencesWindowController?.contentViewController = generalVC
@@ -116,6 +122,14 @@ extension PreferencesCoordinator: JIRAPreferencesViewDelegate {
     func jiraPreferencesDidChangeAPIToken(to token: String) {
         jiraDataProvider.apiToken = token
     }
+}
+
+extension PreferencesCoordinator: GitHubPreferencesViewDelegate {
+    var gitHubAPIToken: String {
+        return gitHubDataProvider.apiToken ?? ""
+    }
     
-    
+    func gitHubPreferencesDidChangeAPIToken(to token: String) {
+        gitHubDataProvider.apiToken = token
+    }
 }

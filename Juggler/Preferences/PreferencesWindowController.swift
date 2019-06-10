@@ -9,7 +9,7 @@
 import Cocoa
 
 enum PreferencesPane {
-    case general, jira
+    case general, jira, gitHub
 }
 
 protocol PreferencesWindowDelegate: class {
@@ -52,5 +52,9 @@ final class PreferencesWindowController: NSWindowController, NSWindowDelegate {
 
     @IBAction private func jiraPaneClicked(_ sender: Any) {
         delegate?.preferencesWindowDidChangePane(to: .jira)
+    }
+
+    @IBAction private func gitHubPaneClicked(_ sender: Any) {
+        delegate?.preferencesWindowDidChangePane(to: .gitHub)
     }
 }

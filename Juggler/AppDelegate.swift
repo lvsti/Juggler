@@ -73,6 +73,7 @@ extension AppDelegate: MenuControllerDelegate {
         if preferencesCoordinator == nil {
             preferencesCoordinator = PreferencesCoordinator(workspaceController: workspaceController,
                                                             jiraDataProvider: jiraDataProvider,
+                                                            gitHubDataProvider: gitHubDataProvider,
                                                             terminalController: terminalController)
             preferencesCoordinator?.delegate = self
         }
