@@ -47,6 +47,28 @@ class MenuController: NSObject, NSMenuDelegate {
     private func rebuildMenu() {
         menuItems.removeAll(keepingCapacity: true)
         
+        if let availableWorkspace = workspaceController.firstAvailableWorkspace {
+            menuItems.append(NSMenuItem(title: "Start Ticket...") { _ in
+                self.promptForJIRATicket { ticket in
+                    guard let ticket = ticket else { return }
+                    self.workspaceController.setUpWorkspace(availableWorkspace, for: ticket)
+                }
+            })
+            if let remote = availableWorkspace.gitStatus.remote {
+                menuItems.append(NSMenuItem(title: "Start Code Review...") { _ in
+                    self.promptForGitHubPullRequest(remote: remote) { pr in
+                        guard let pr = pr else { return }
+                        self.workspaceController.setUpWorkspace(availableWorkspace, for: pr)
+                    }
+                })
+            }
+        }
+        else {
+            menuItems.append(NSMenuItem(title: "Start Ticket..."))
+            menuItems.append(NSMenuItem(title: "Start Code Review..."))
+        }
+        menuItems.append(NSMenuItem.separator())
+
         if !workspaceController.workspaces.isEmpty {
             var inactiveWorkspaces: [Workspace] = []
             

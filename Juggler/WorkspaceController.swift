@@ -105,7 +105,7 @@ class WorkspaceController {
         queue.async {
             var err: Error?
             do {
-                try self.gitController.resetWorkingCopy(at: workspace.folderURL)
+                try self.gitController.resetWorkingCopy(at: workspace.folderURL, inMode: .hard)
                 try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
                                                                       toExisting: Git.Branch(name: "master"))
                 try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
@@ -114,14 +114,93 @@ class WorkspaceController {
                 err = error
             }
             
-            if let completion = completion {
-                DispatchQueue.main.async {
-                    completion(err)
-                }
+            self.reload { _ in
+                completion?(err)
             }
         }
     }
     
+    var firstAvailableWorkspace: Workspace? {
+        return workspaces.first(where: { !$0.isActive })
+    }
+    
+    func setUpWorkspace(_ workspace: Workspace, for ticket: Ticket, completion: ((Error?) -> Void)? = nil) {
+        resetWorkspace(workspace, metadataOnly: false) { err in
+            guard err == nil else { return }
+            
+            self.queue.async {
+                var err: Error?
+                do {
+                    let branch = try self.gitController.createBranchForWorkingCopy(at: workspace.folderURL,
+                                                                                   branchName: ticket.preferredBranchName)
+                    try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
+                                                                          toExisting: branch)
+                }
+                catch {
+                    err = error
+                }
+
+                guard let gitStatus = self.gitController.workingCopyStatus(at: workspace.folderURL) else {
+                    DispatchQueue.main.async {
+                        completion?(NSError(domain: "", code: -1, userInfo: nil))
+                    }
+                    return
+                }
+
+                var newWorkspace = workspace
+                newWorkspace.gitStatus = gitStatus
+
+                if err == nil {
+                    newWorkspace.ticket = ticket
+                }
+
+                DispatchQueue.main.async {
+                    self.updateWorkspace(newWorkspace)
+                    completion?(err)
+                }
+            }
+        }
+    }
+
+    func setUpWorkspace(_ workspace: Workspace, for pr: PullRequest, completion: ((Error?) -> Void)? = nil) {
+        resetWorkspace(workspace, metadataOnly: false) { err in
+            guard err == nil else { return }
+            
+            self.queue.async {
+                var err: Error?
+                do {
+                    try self.gitController.fetchAllRemotesForWorkingCopy(at: workspace.folderURL)
+                    try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL, toExisting: pr.sourceBranch)
+                    try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
+                    try self.gitController.resetWorkingCopy(at: workspace.folderURL,
+                                                            to: .branch(pr.targetBranch),
+                                                            inMode: .mixed)
+                }
+                catch {
+                    err = error
+                }
+
+                guard let gitStatus = self.gitController.workingCopyStatus(at: workspace.folderURL) else {
+                    DispatchQueue.main.async {
+                        completion?(NSError(domain: "", code: -1, userInfo: nil))
+                    }
+                    return
+                }
+
+                var newWorkspace = workspace
+                newWorkspace.gitStatus = gitStatus
+                if err == nil {
+                    newWorkspace.pullRequest = pr
+                }
+
+                DispatchQueue.main.async {
+                    self.updateWorkspace(newWorkspace)
+                    completion?(err)
+                }
+            }
+        }
+    }
+
     private func updateWorkspace(_ workspace: Workspace) {
         saveWorkspace(workspace)
         

@@ -9,8 +9,28 @@
 import Foundation
 
 enum Git {
+    struct Commit {
+        let sha: String
+    }
+    
     struct Branch {
         let name: String
+    }
+    
+    enum Ref: CustomStringConvertible {
+        case branch(Branch)
+        case commit(Commit)
+        
+        var description: String {
+            switch self {
+            case .branch(let branch): return branch.name
+            case .commit(let commit): return commit.sha
+            }
+        }
+    }
+    
+    enum ResetMode: String {
+        case hard = "--hard", mixed = "--mixed"
     }
     
     struct Remote {
@@ -92,9 +112,14 @@ class GitController {
     func setCurrentBranchForWorkingCopy(at folderURL: URL, toExisting branch: Git.Branch) throws {
         try executeGitCommand("checkout", args: [branch.name], in: folderURL)
     }
-    
-    func resetWorkingCopy(at folderURL: URL) throws {
-        try executeGitCommand("reset", args: ["--hard"], in: folderURL)
+
+    func createBranchForWorkingCopy(at folderURL: URL, branchName: String) throws -> Git.Branch {
+        try executeGitCommand("branch", args: [branchName], in: folderURL)
+        return Git.Branch(name: branchName)
+    }
+
+    func resetWorkingCopy(at folderURL: URL, to ref: Git.Ref? = nil, inMode mode: Git.ResetMode) throws {
+        try executeGitCommand("reset", args: [mode.rawValue] + (ref != nil ? [ref!.description] : []), in: folderURL)
     }
     
     func fetchAllRemotesForWorkingCopy(at folderURL: URL) throws {
