@@ -9,10 +9,51 @@
 import Foundation
 
 struct GitHubPullRequest: PullRequest {
-    var kind: PullRequestKind { return .github }
-    var id: String
-    var title: String?
-    var url: URL
+    var kind: PullRequestKind { return .gitHub }
+    let id: String
+    let title: String?
+    let url: URL
+    let remote: Git.Remote
+    let sourceBranch: Git.Branch
+    let targetBranch: Git.Branch
+}
+
+extension GitHubPullRequest: Codable {
+    private enum CodingKeys: String, CodingKey {
+        case id, title, url, remote, source, target
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+       
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decodeIfPresent(String.self, forKey: .title)
+        
+        let urlStr = try container.decode(String.self, forKey: .url)
+        guard let url = URL(string: urlStr) else {
+            throw DecodingError.dataCorruptedError(forKey: .url, in: container, debugDescription: "invalid URL")
+        }
+        self.url = url
+        
+        guard let remote = Git.Remote(repoURI: try container.decode(String.self, forKey: .remote)) else {
+            throw DecodingError.dataCorruptedError(forKey: .remote, in: container, debugDescription: "invalid remote")
+        }
+        self.remote = remote
+        
+        sourceBranch = Git.Branch(name: try container.decode(String.self, forKey: .source))
+        targetBranch = Git.Branch(name: try container.decode(String.self, forKey: .target))
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(title, forKey: .title)
+        try container.encode(url.absoluteString, forKey: .url)
+        try container.encode(remote.repoURI, forKey: .remote)
+        try container.encode(sourceBranch.name, forKey: .source)
+        try container.encode(targetBranch.name, forKey: .target)
+    }
 }
 
 final class GitHubDataProvider {
@@ -92,7 +133,10 @@ final class GitHubDataProvider {
             
             let pr = GitHubPullRequest(id: prID,
                                        title: result.title,
-                                       url: self.pullRequestURL(for: prID, in: remote))
+                                       url: self.pullRequestURL(for: prID, in: remote),
+                                       remote: remote,
+                                       sourceBranch: Git.Branch(name: result.head.ref),
+                                       targetBranch: Git.Branch(name: result.base.ref))
             completion(pr, nil)
         }
         task.resume()
@@ -100,7 +144,17 @@ final class GitHubDataProvider {
 }
 
 private struct GitHubGetPullRequestResult: Decodable {
+    struct BaseSection: Decodable {
+        let ref: String
+    }
+    
+    struct HeadSection: Decodable {
+        let ref: String
+    }
+    
     let number: Int
     let title: String
+    let base: BaseSection
+    let head: HeadSection
 }
 
