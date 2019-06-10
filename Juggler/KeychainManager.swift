@@ -36,13 +36,6 @@ final class KeychainManager {
         var status = SecItemCopyMatching(query as CFDictionary, &item)
         
         if status == errSecItemNotFound {
-//            query = [
-//                kSecClass as String: kSecClassGenericPassword,
-//                kSecAttrAccount as String: credentials.account,
-//                kSecValueData as String: secretData,
-//                kSecAttrLabel as String: label,
-//                kSecAttrService as String: service
-//            ]
             status = SecItemAdd(query as CFDictionary, nil)
         }
         else {

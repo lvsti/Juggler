@@ -38,7 +38,7 @@ final class GitHubDataProvider {
                 credentials?.secret = newValue ?? ""
             }
             else if newValue != nil {
-                credentials = KeychainManager.Credentials(account: "", secret: newValue!)
+                credentials = KeychainManager.Credentials(account: "OAuth", secret: newValue!)
             }
         }
     }
