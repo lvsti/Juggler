@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let workspaceController: WorkspaceController
     private let gitController: GitController
     private let jiraDataProvider: JIRADataProvider
-    private let gitHubURLProvider: GitHubURLProvider
+    private let gitHubDataProvider: GitHubDataProvider
     private let terminalController: TerminalController
     private let keychainManager: KeychainManager
     
@@ -31,13 +31,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                       fileManager: FileManager.default)
         keychainManager = KeychainManager()
         jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard, keychainManager: keychainManager)
-        gitHubURLProvider = GitHubURLProvider()
+        gitHubDataProvider = GitHubDataProvider(keychainManager: keychainManager)
         terminalController = TerminalController(userDefaults: UserDefaults.standard)
         workspaceController = WorkspaceController(fileManager: FileManager.default,
                                                   gitController: gitController,
                                                   userDefaults: UserDefaults.standard,
                                                   jiraDataProvider: jiraDataProvider,
-                                                  gitHubURLProvider: gitHubURLProvider)
+                                                  gitHubDataProvider: gitHubDataProvider)
         workspaceController.reload()
         super.init()
     }
@@ -57,7 +57,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         menuController = MenuController(menu: statusItem.menu!,
                                         workspaceController: workspaceController,
-                                        jiraDataProvider: jiraDataProvider)
+                                        jiraDataProvider: jiraDataProvider,
+                                        gitHubDataProvider: gitHubDataProvider)
         menuController.delegate = self
     }
     

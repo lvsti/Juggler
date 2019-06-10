@@ -21,17 +21,22 @@ class MenuController: NSObject, NSMenuDelegate {
     private let menu: NSMenu
     private let workspaceController: WorkspaceController
     private let jiraDataProvider: JIRADataProvider
+    private let gitHubDataProvider: GitHubDataProvider
 
     // state
     private var menuItems: [NSMenuItem]
     
     weak var delegate: MenuControllerDelegate?
     
-    init(menu: NSMenu, workspaceController: WorkspaceController, jiraDataProvider: JIRADataProvider) {
+    init(menu: NSMenu,
+         workspaceController: WorkspaceController,
+         jiraDataProvider: JIRADataProvider,
+         gitHubDataProvider: GitHubDataProvider) {
         self.menu = menu
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
-        
+        self.gitHubDataProvider = gitHubDataProvider
+
         menuItems = []
         
         super.init()
@@ -207,17 +212,16 @@ class MenuController: NSObject, NSMenuDelegate {
                 alert.window.initialFirstResponder = prField
 
                 if alert.runModal() == .alertFirstButtonReturn {
-                    let urlProvider = GitHubURLProvider()
-
                     let prID: String
                     let prURL: URL
-                    if let url = URL(string: prField.stringValue), let id = urlProvider.pullRequestID(from: url, in: remote) {
+                    if let url = URL(string: prField.stringValue),
+                        let id = self.gitHubDataProvider.pullRequestID(from: url, in: remote) {
                         prID = id
                         prURL = url
                     }
                     else {
                         prID = prField.stringValue
-                        prURL = urlProvider.pullRequestURL(for: prID, in: remote)
+                        prURL = self.gitHubDataProvider.pullRequestURL(for: prID, in: remote)
                     }
                     let pr = GitHubPullRequest(id: prID,
                                                title: "PR #\(prID) (\(workspace.gitStatus.currentBranch?.name ?? "N/A"))",

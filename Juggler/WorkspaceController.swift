@@ -73,7 +73,7 @@ class WorkspaceController {
     private let gitController: GitController
     private let userDefaults: UserDefaults
     private let jiraDataProvider: JIRADataProvider
-    private let gitHubURLProvider: GitHubURLProvider
+    private let gitHubDataProvider: GitHubDataProvider
     private let queue: DispatchQueue
 
     private(set) var workspaces: [Workspace] = []
@@ -98,13 +98,13 @@ class WorkspaceController {
          gitController: GitController,
          userDefaults: UserDefaults,
          jiraDataProvider: JIRADataProvider,
-         gitHubURLProvider: GitHubURLProvider,
+         gitHubDataProvider: GitHubDataProvider,
          queue: DispatchQueue = DispatchQueue(label: "WSControllerQueue", qos: .userInitiated)) {
         self.fileManager = fileManager
         self.gitController = gitController
         self.userDefaults = userDefaults
         self.jiraDataProvider = jiraDataProvider
-        self.gitHubURLProvider = gitHubURLProvider
+        self.gitHubDataProvider = gitHubDataProvider
         self.queue = queue
         rootFolderURL = userDefaults.url(forKey: WorkspaceController.workspaceRootURLKey) ?? URL(fileURLWithPath: NSHomeDirectory())
     }
@@ -233,7 +233,7 @@ class WorkspaceController {
             case .github:
                 pr = GitHubPullRequest(id: prID,
                                        title: prTitle,
-                                       url: gitHubURLProvider.pullRequestURL(for: prID, in: remote))
+                                       url: gitHubDataProvider.pullRequestURL(for: prID, in: remote))
             }
         }
 
