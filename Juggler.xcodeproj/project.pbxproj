@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE16280622AEE516000DC138 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE16280522AEE516000DC138 /* Workspace.swift */; };
+		BE16280822AEEAA2000DC138 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE16280722AEEAA2000DC138 /* Ticket.swift */; };
+		BE16280A22AEEAB5000DC138 /* PullRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE16280922AEEAB5000DC138 /* PullRequest.swift */; };
 		BE25D9FF22A4556D008142F4 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */; };
 		BE25DA0122A4557D008142F4 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */; };
 		BE6493CD22ACE53800474D62 /* ScriptingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */; };
@@ -36,6 +39,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE16280522AEE516000DC138 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
+		BE16280722AEEAA2000DC138 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
+		BE16280922AEEAB5000DC138 /* PullRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullRequest.swift; sourceTree = "<group>"; };
 		BE25D9FE22A4556D008142F4 /* PreferencesWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		BE25DA0022A4557D008142F4 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		BE6493CC22ACE53800474D62 /* ScriptingBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptingBridge.swift; sourceTree = "<group>"; };
@@ -143,11 +149,14 @@
 				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
 				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
 				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
+				BE16280922AEEAB5000DC138 /* PullRequest.swift */,
 				BEC0430222A2E2D100EFF50C /* ShellUtils.swift */,
 				BE64940422AD99C500474D62 /* TerminalController.swift */,
+				BE16280722AEEAA2000DC138 /* Ticket.swift */,
+				BE16280522AEE516000DC138 /* Workspace.swift */,
 				BEC0430422A2EB6700EFF50C /* WorkspaceController.swift */,
-				BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */,
 				BE696DDB22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift */,
+				BE696DD922A6F4E8004E2BEF /* WorkspaceMenuItemCell.xib */,
 			);
 			path = Juggler;
 			sourceTree = "<group>";
@@ -237,10 +246,13 @@
 				BE64940522AD99C500474D62 /* TerminalController.swift in Sources */,
 				BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */,
 				BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */,
+				BE16280822AEEAA2000DC138 /* Ticket.swift in Sources */,
 				BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */,
 				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
+				BE16280A22AEEAB5000DC138 /* PullRequest.swift in Sources */,
 				BE64940722ADAC2E00474D62 /* KeychainManager.swift in Sources */,
 				BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */,
+				BE16280622AEE516000DC138 /* Workspace.swift in Sources */,
 				BE64940C22AE573F00474D62 /* GitHubPreferencesViewController.swift in Sources */,
 				BE64940022AD755E00474D62 /* JIRAPreferencesViewController.swift in Sources */,
 				BE6493D422ACE86A00474D62 /* ScriptingBridge.applescript in Sources */,
