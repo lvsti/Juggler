@@ -11,7 +11,7 @@ import Foundation
 struct GitHubPullRequest: PullRequest {
     var kind: PullRequestKind { return .github }
     var id: String
-    var title: String
+    var title: String?
     var url: URL
 }
 

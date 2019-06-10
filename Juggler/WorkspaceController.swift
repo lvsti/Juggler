@@ -26,7 +26,7 @@ enum PullRequestKind: String {
 protocol PullRequest {
     var kind: PullRequestKind { get }
     var id: String { get }
-    var title: String { get }
+    var title: String? { get }
     var url: URL { get }
 }
 
@@ -42,7 +42,7 @@ struct Workspace {
     var resolvedTitle: String {
         return title ??
             ticketInfo ??
-            pullRequest?.title ??
+            pullRequestInfo ??
             gitDescription
     }
     
@@ -53,6 +53,11 @@ struct Workspace {
     private var ticketInfo: String? {
         guard let ticket = ticket else { return nil }
         return "[\(ticket.id)] \(ticket.title ?? "")"
+    }
+    
+    private var pullRequestInfo: String? {
+        guard let pr = pullRequest else { return nil }
+        return "PR #\(pr.id) " + (pr.title ?? "(\(gitDescription))")
     }
     
     private var gitDescription: String {
@@ -225,14 +230,13 @@ class WorkspaceController {
         if let serializedPR = serializedWS["pr"] as? [String: String],
             let prID = serializedPR["id"],
             let prKind = serializedPR["kind"],
-            let prTitle = serializedPR["title"],
             let kind = PullRequestKind(rawValue: prKind),
             let remote = gitStatus.remote
         {
             switch kind {
             case .github:
                 pr = GitHubPullRequest(id: prID,
-                                       title: prTitle,
+                                       title: serializedPR["title"],
                                        url: gitHubDataProvider.pullRequestURL(for: prID, in: remote))
             }
         }
@@ -259,18 +263,26 @@ class WorkspaceController {
             serializedWS["proj"] = proj.path
         }
         if let ticket = workspace.ticket {
-            serializedWS["ticket"] = [
+            var ticketProps: [String: Any] = [
                 "kind": ticket.kind.rawValue,
-                "id": ticket.id,
-                "title": ticket.title ?? ""
+                "id": ticket.id
             ]
+            
+            if let title = ticket.title {
+                ticketProps["title"] = title
+            }
+            serializedWS["ticket"] = ticketProps
         }
         if let pr = workspace.pullRequest {
-            serializedWS["pr"] = [
+            var prProps: [String: Any] = [
                 "kind": pr.kind.rawValue,
-                "id": pr.id,
-                "title": pr.title
+                "id": pr.id
             ]
+
+            if let title = pr.title {
+                prProps["title"] = title
+            }
+            serializedWS["pr"] = prProps
         }
 
         userDefaults.set(serializedWS, forKey: workspace.folderURL.path)

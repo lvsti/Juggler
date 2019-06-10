@@ -172,60 +172,16 @@ class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem.separator())
 
         menu.addItem(NSMenuItem(title: "Link to JIRA ticket...") { _ in
-            let alert = NSAlert()
-            let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
-            ticketField.placeholderString = "Ticket ID or URL"
-            alert.messageText = "Enter JIRA ticket ID or URL:"
-            alert.accessoryView = ticketField
-            alert.addButton(withTitle: "OK")
-            alert.addButton(withTitle: "Cancel")
-            alert.window.initialFirstResponder = ticketField
-            
-            if alert.runModal() == .alertFirstButtonReturn {
-                let ticketID: String
-                let ticketURL: URL
-                if let url = URL(string: ticketField.stringValue), let id = self.jiraDataProvider.ticketID(from: url) {
-                    ticketID = id
-                    ticketURL = url
-                }
-                else {
-                    ticketID = ticketField.stringValue
-                    ticketURL = self.jiraDataProvider.ticketURL(for: ticketID)
-                }
-                
-                self.jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
-                    self.workspaceController.setTicket(ticket ?? JIRATicket(id: ticketID, title: ticketID, url: ticketURL),
-                                                       for: workspace)
-                }
+            self.promptForJIRATicket { ticket in
+                guard let ticket = ticket else { return }
+                self.workspaceController.setTicket(ticket, for: workspace)
             }
         })
         
         if let remote = workspace.gitStatus.remote {
             menu.addItem(NSMenuItem(title: "Link to GitHub PR...") { _ in
-                let alert = NSAlert()
-                let prField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
-                prField.placeholderString = "PR number or URL"
-                alert.messageText = "Enter GitHub PR number or URL:"
-                alert.accessoryView = prField
-                alert.addButton(withTitle: "OK")
-                alert.addButton(withTitle: "Cancel")
-                alert.window.initialFirstResponder = prField
-
-                if alert.runModal() == .alertFirstButtonReturn {
-                    let prID: String
-                    let prURL: URL
-                    if let url = URL(string: prField.stringValue),
-                        let id = self.gitHubDataProvider.pullRequestID(from: url, in: remote) {
-                        prID = id
-                        prURL = url
-                    }
-                    else {
-                        prID = prField.stringValue
-                        prURL = self.gitHubDataProvider.pullRequestURL(for: prID, in: remote)
-                    }
-                    let pr = GitHubPullRequest(id: prID,
-                                               title: "PR #\(prID) (\(workspace.gitStatus.currentBranch?.name ?? "N/A"))",
-                                               url: prURL)
+                self.promptForGitHubPullRequest(remote: remote) { pr in
+                    guard let pr = pr else { return }
                     self.workspaceController.setPullRequest(pr, for: workspace)
                 }
             })
@@ -251,6 +207,68 @@ class MenuController: NSObject, NSMenuDelegate {
         })
 
         return menu
+    }
+    
+    private func promptForJIRATicket(completion: @escaping (JIRATicket?) -> Void) {
+        let alert = NSAlert()
+        let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+        ticketField.placeholderString = "Ticket ID or URL"
+        alert.messageText = "Enter JIRA ticket ID or URL:"
+        alert.accessoryView = ticketField
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        alert.window.initialFirstResponder = ticketField
+        
+        if alert.runModal() != .alertFirstButtonReturn {
+            completion(nil)
+            return
+        }
+        
+        let ticketID: String
+        let ticketURL: URL
+        if let url = URL(string: ticketField.stringValue), let id = jiraDataProvider.ticketID(from: url) {
+            ticketID = id
+            ticketURL = url
+        }
+        else {
+            ticketID = ticketField.stringValue
+            ticketURL = jiraDataProvider.ticketURL(for: ticketID)
+        }
+        
+        jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
+            completion(ticket ?? JIRATicket(id: ticketID, title: ticketID, url: ticketURL))
+        }
+    }
+    
+    private func promptForGitHubPullRequest(remote: Git.Remote, completion: @escaping (GitHubPullRequest?) -> Void) {
+        let alert = NSAlert()
+        let prField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+        prField.placeholderString = "PR number or URL"
+        alert.messageText = "Enter GitHub PR number or URL:"
+        alert.accessoryView = prField
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        alert.window.initialFirstResponder = prField
+        
+        if alert.runModal() != .alertFirstButtonReturn {
+            completion(nil)
+            return
+        }
+        
+        let prID: String
+        let prURL: URL
+        if let url = URL(string: prField.stringValue), let id = gitHubDataProvider.pullRequestID(from: url, in: remote) {
+            prID = id
+            prURL = url
+        }
+        else {
+            prID = prField.stringValue
+            prURL = gitHubDataProvider.pullRequestURL(for: prID, in: remote)
+        }
+        
+        gitHubDataProvider.fetchPullRequest(for: prID, in: remote) { pr, _ in
+            completion(pr ?? GitHubPullRequest(id: prID, title: nil, url: prURL))
+        }
     }
 
     // MARK: - from NSMenuDelegate:
