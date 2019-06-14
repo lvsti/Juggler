@@ -19,15 +19,15 @@ protocol Ticket {
     var url: URL { get }
 }
 
-private let validGitBranchCharsRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9-_]", options: [])
+private let droppedCharsRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9]", options: [])
 
 extension Ticket {
     var preferredBranchName: String {
         if let title = title {
-            let sanitizedTitle = validGitBranchCharsRegex.stringByReplacingMatches(in: title,
-                                                                                   options: [],
-                                                                                   range: NSRange(location: 0, length: title.count),
-                                                                                   withTemplate: " ")
+            let sanitizedTitle = droppedCharsRegex.stringByReplacingMatches(in: title,
+                                                                            options: [],
+                                                                            range: NSRange(location: 0, length: title.count),
+                                                                            withTemplate: " ")
             let components = sanitizedTitle.lowercased().split(separator: " ")
             return "\(id)-" + components.joined(separator: "-")
         }
