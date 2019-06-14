@@ -55,7 +55,9 @@ class WorkspaceController {
     func reload(completion: (([Workspace]) -> Void)? = nil) {
         queue.async {
             guard let entryNames = try? self.fileManager.contentsOfDirectory(atPath: self.rootFolderURL.path) else {
-                completion?(self.workspaces)
+                DispatchQueue.main.async {
+                    completion?(self.workspaces)
+                }
                 return
             }
             

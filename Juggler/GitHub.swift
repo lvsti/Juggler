@@ -127,7 +127,9 @@ final class GitHubDataProvider {
                 let data = data,
                 let result = try? JSONDecoder().decode(GitHubGetPullRequestResult.self, from: data)
             else {
-                completion(nil, error)
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
                 return
             }
             
@@ -137,7 +139,9 @@ final class GitHubDataProvider {
                                        remote: remote,
                                        sourceBranch: Git.Branch(name: result.head.ref),
                                        targetBranch: Git.Branch(name: result.base.ref))
-            completion(pr, nil)
+            DispatchQueue.main.async {
+                completion(pr, nil)
+            }
         }
         task.resume()
     }

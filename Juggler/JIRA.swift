@@ -107,7 +107,9 @@ final class JIRADataProvider {
             let token = credentials?.secret, !token.isEmpty,
             let requestURL = URL(string: "https://shapr3d.atlassian.net/rest/api/latest/issue/\(ticketID)?fields=summary")
         else {
-            completion(nil, nil)
+            DispatchQueue.main.async {
+                completion(nil, nil)
+            }
             return
         }
         
@@ -121,14 +123,18 @@ final class JIRADataProvider {
                 let data = data,
                 let result = try? JSONDecoder().decode(JIRAGetIssueResult.self, from: data)
             else {
-                completion(nil, error)
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
                 return
             }
             
             let ticket = JIRATicket(id: ticketID,
                                     title: result.fields.summary,
                                     url: self.ticketURL(for: result.key))
-            completion(ticket, nil)
+            DispatchQueue.main.async {
+                completion(ticket, nil)
+            }
         }
         task.resume()
     }
