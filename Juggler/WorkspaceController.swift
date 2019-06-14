@@ -131,8 +131,8 @@ class WorkspaceController {
         }
     }
     
-    var firstAvailableWorkspace: Workspace? {
-        return workspaces.first(where: { !$0.isActive })
+    func firstAvailableWorkspace(for remote: Git.Remote) -> Workspace? {
+        return workspaces.first(where: { !$0.isActive && $0.gitStatus.remote == remote })
     }
     
     func isWorkspaceBusy(_ workspace: Workspace) -> Bool {

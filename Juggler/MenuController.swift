@@ -46,62 +46,11 @@ class MenuController: NSObject, NSMenuDelegate {
     
     private func rebuildMenu() {
         menuItems.removeAll(keepingCapacity: true)
-        
-        if let availableWorkspace = workspaceController.firstAvailableWorkspace {
-            menuItems.append(NSMenuItem(title: "Start Ticket...") { _ in
-                self.promptForJIRATicket { ticket in
-                    guard let ticket = ticket else { return }
-                    self.workspaceController.setUpWorkspace(availableWorkspace, for: ticket)
-                }
-            })
-            if let remote = availableWorkspace.gitStatus.remote {
-                menuItems.append(NSMenuItem(title: "Start Code Review...") { _ in
-                    self.promptForGitHubPullRequest(remote: remote) { pr in
-                        guard let pr = pr else { return }
-                        self.workspaceController.setUpWorkspace(availableWorkspace, for: pr)
-                    }
-                })
-            }
-        }
-        else {
-            menuItems.append(NSMenuItem(title: "Start Ticket..."))
-            menuItems.append(NSMenuItem(title: "Start Code Review..."))
-        }
+
+        buildWorkflowMenuItems()
         menuItems.append(NSMenuItem.separator())
 
-        if workspaceController.isReloading {
-            menuItems.append(NSMenuItem(title: "Scanning workspaces..."))
-        }
-        else if !workspaceController.workspaces.isEmpty {
-            var inactiveWorkspaces: [Workspace] = []
-            
-            var index = 1
-            for workspace in workspaceController.workspaces {
-                if !workspace.isActive {
-                    inactiveWorkspaces.append(workspace)
-                    continue;
-                }
-                if index == 1 {
-                    menuItems.append(NSMenuItem(title: "Active Workspaces"))
-                }
-                menuItems.append(menuItem(for: workspace))
-                index += 1
-            }
-            
-            if !inactiveWorkspaces.isEmpty {
-                menuItems.append(NSMenuItem.separator())
-                menuItems.append(NSMenuItem(title: "Free Pool"))
-
-                for workspace in inactiveWorkspaces {
-                    menuItems.append(menuItem(for: workspace))
-                    index += 1
-                }
-            }
-        }
-        else {
-            menuItems.append(NSMenuItem(title: "No workspaces found"))
-        }
-        
+        buildWorkspaceMenuItems()
         menuItems.append(NSMenuItem.separator())
 
         menuItems.append(NSMenuItem(title: "Refresh") { _ in
@@ -125,6 +74,102 @@ class MenuController: NSObject, NSMenuDelegate {
         }
     }
     
+    private func buildWorkflowMenuItems() {
+        let allRemotes = Set(workspaceController.workspaces.compactMap { $0.gitStatus.remote })
+        
+        let ticketMenu = NSMenu(title: "Start Ticket")
+        let reviewMenu = NSMenu(title: "Start Code Review")
+        
+        if !workspaceController.isReloading {
+            for remote in allRemotes {
+                if let availableWorkspace = workspaceController.firstAvailableWorkspace(for: remote) {
+                    ticketMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)...") { _ in
+                        self.promptForJIRATicket { ticket in
+                            guard let ticket = ticket else { return }
+                            self.workspaceController.setUpWorkspace(availableWorkspace, for: ticket)
+                        }
+                    })
+                    
+                    reviewMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)...") { _ in
+                        self.promptForGitHubPullRequest(remote: remote) { pr in
+                            guard let pr = pr else { return }
+                            self.workspaceController.setUpWorkspace(availableWorkspace, for: pr)
+                        }
+                    })
+                }
+                else {
+                    ticketMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)..."))
+                    reviewMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)..."))
+                }
+            }
+        }
+        
+        let showEllipsis = allRemotes.count == 1 || workspaceController.isReloading
+        
+        let ticketItem = NSMenuItem(title: showEllipsis ? "Start Ticket..." : "Start Ticket")
+        menuItems.append(ticketItem)
+        
+        let reviewItem = NSMenuItem(title: showEllipsis ? "Start Code Review..." : "Start Code Review")
+        menuItems.append(reviewItem)
+
+        if allRemotes.count == 1 {
+            let remote = allRemotes.first!
+            if let availableWorkspace = workspaceController.firstAvailableWorkspace(for: remote) {
+                ticketItem.setHandler { _ in
+                    self.promptForJIRATicket { ticket in
+                        guard let ticket = ticket else { return }
+                        self.workspaceController.setUpWorkspace(availableWorkspace, for: ticket)
+                    }
+                }
+                reviewItem.setHandler { _ in
+                    self.promptForGitHubPullRequest(remote: remote) { pr in
+                        guard let pr = pr else { return }
+                        self.workspaceController.setUpWorkspace(availableWorkspace, for: pr)
+                    }
+                }
+            }
+        }
+        else {
+            ticketItem.submenu = !workspaceController.isReloading ? ticketMenu : nil
+            reviewItem.submenu = !workspaceController.isReloading ? reviewMenu : nil
+        }
+    }
+    
+    private func buildWorkspaceMenuItems() {
+        if workspaceController.isReloading {
+            menuItems.append(NSMenuItem(title: "Scanning workspaces..."))
+        }
+        else if !workspaceController.workspaces.isEmpty {
+            var inactiveWorkspaces: [Workspace] = []
+            
+            var index = 1
+            for workspace in workspaceController.workspaces {
+                if !workspace.isActive {
+                    inactiveWorkspaces.append(workspace)
+                    continue;
+                }
+                if index == 1 {
+                    menuItems.append(NSMenuItem(title: "Active Workspaces"))
+                }
+                menuItems.append(menuItem(for: workspace))
+                index += 1
+            }
+            
+            if !inactiveWorkspaces.isEmpty {
+                menuItems.append(NSMenuItem.separator())
+                menuItems.append(NSMenuItem(title: "Free Pool"))
+                
+                for workspace in inactiveWorkspaces {
+                    menuItems.append(menuItem(for: workspace))
+                    index += 1
+                }
+            }
+        }
+        else {
+            menuItems.append(NSMenuItem(title: "No workspaces found"))
+        }
+    }
+
     private func menuItem(for workspace: Workspace) -> NSMenuItem {
         let wsItem = NSMenuItem(title: workspace.resolvedTitle)
 
@@ -264,9 +309,19 @@ class MenuController: NSObject, NSMenuDelegate {
         }
         
         jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
-            guard let ticket = ticket else { return }
+            if ticket == nil {
+                self.showTicketFetchFailedAlert()
+            }
             completion(ticket)
         }
+    }
+    
+    private func showTicketFetchFailedAlert() {
+        let alert = NSAlert()
+        alert.messageText = "Failed to query ticket"
+        alert.informativeText = "This could as well be a network hiccup or the requested ticket might not exist."
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
     
     private func promptForGitHubPullRequest(remote: Git.Remote, completion: @escaping (GitHubPullRequest?) -> Void) {
@@ -293,9 +348,20 @@ class MenuController: NSObject, NSMenuDelegate {
         }
         
         gitHubDataProvider.fetchPullRequest(for: prID, in: remote) { pr, _ in
-            guard let pr = pr else { return }
+            if pr == nil {
+                self.showPRFetchFailedAlert(remote: remote)
+            }
             completion(pr)
         }
+    }
+    
+    private func showPRFetchFailedAlert(remote: Git.Remote) {
+        let alert = NSAlert()
+        alert.messageText = "Failed to query pull request"
+        alert.informativeText = "This could as well be a network hiccup or the requested PR " +
+                                "might not exist in the \(remote.orgName)/\(remote.repoName) remote."
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
 
     // MARK: - from NSMenuDelegate:

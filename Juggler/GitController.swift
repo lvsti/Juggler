@@ -88,6 +88,12 @@ enum Git {
     }
 }
 
+extension Git.Remote: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(repoURI)
+    }
+}
+
 
 class GitController {
     private let gitURL: URL
