@@ -20,6 +20,7 @@ class WorkspaceController {
 
     private(set) var workspaces: [Workspace] = []
     private var busyWorkspaceFolderURLs: Set<URL> = []
+    private(set) var isReloading = false
 
     var rootFolderURL: URL {
         didSet {
@@ -53,9 +54,12 @@ class WorkspaceController {
     }
 
     func reload(completion: (([Workspace]) -> Void)? = nil) {
+        isReloading = true
+        
         queue.async {
             guard let entryNames = try? self.fileManager.contentsOfDirectory(atPath: self.rootFolderURL.path) else {
                 DispatchQueue.main.async {
+                    self.isReloading = false
                     completion?(self.workspaces)
                 }
                 return
@@ -80,6 +84,7 @@ class WorkspaceController {
             self.workspaces = foundWorkspaces
             
             DispatchQueue.main.async {
+                self.isReloading = false
                 completion?(self.workspaces)
             }
         }

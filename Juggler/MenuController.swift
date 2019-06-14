@@ -69,7 +69,10 @@ class MenuController: NSObject, NSMenuDelegate {
         }
         menuItems.append(NSMenuItem.separator())
 
-        if !workspaceController.workspaces.isEmpty {
+        if workspaceController.isReloading {
+            menuItems.append(NSMenuItem(title: "Scanning workspaces..."))
+        }
+        else if !workspaceController.workspaces.isEmpty {
             var inactiveWorkspaces: [Workspace] = []
             
             var index = 1
@@ -93,7 +96,6 @@ class MenuController: NSObject, NSMenuDelegate {
                     menuItems.append(menuItem(for: workspace))
                     index += 1
                 }
-
             }
         }
         else {
