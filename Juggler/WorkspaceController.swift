@@ -19,6 +19,7 @@ class WorkspaceController {
     private let queue: DispatchQueue
 
     private(set) var workspaces: [Workspace] = []
+    private var busyWorkspaceFolderURLs: Set<URL> = []
 
     var rootFolderURL: URL {
         didSet {
@@ -102,6 +103,8 @@ class WorkspaceController {
             return
         }
 
+        busyWorkspaceFolderURLs.insert(workspace.folderURL)
+        
         queue.async {
             var err: Error?
             do {
@@ -115,6 +118,7 @@ class WorkspaceController {
             }
             
             self.reload { _ in
+                self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                 completion?(err)
             }
         }
@@ -124,10 +128,16 @@ class WorkspaceController {
         return workspaces.first(where: { !$0.isActive })
     }
     
+    func isWorkspaceBusy(_ workspace: Workspace) -> Bool {
+        return busyWorkspaceFolderURLs.contains(workspace.folderURL)
+    }
+    
     func setUpWorkspace(_ workspace: Workspace, for ticket: Ticket, completion: ((Error?) -> Void)? = nil) {
         resetWorkspace(workspace, metadataOnly: false) { err in
             guard err == nil else { return }
-            
+
+            self.busyWorkspaceFolderURLs.insert(workspace.folderURL)
+
             self.queue.async {
                 var err: Error?
                 do {
@@ -142,6 +152,7 @@ class WorkspaceController {
 
                 guard let gitStatus = self.gitController.workingCopyStatus(at: workspace.folderURL) else {
                     DispatchQueue.main.async {
+                        self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                         completion?(NSError(domain: "", code: -1, userInfo: nil))
                     }
                     return
@@ -156,6 +167,7 @@ class WorkspaceController {
 
                 DispatchQueue.main.async {
                     self.updateWorkspace(newWorkspace)
+                    self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                     completion?(err)
                 }
             }
@@ -166,6 +178,8 @@ class WorkspaceController {
         resetWorkspace(workspace, metadataOnly: false) { err in
             guard err == nil else { return }
             
+            self.busyWorkspaceFolderURLs.insert(workspace.folderURL)
+
             self.queue.async {
                 var err: Error?
                 do {
@@ -182,6 +196,7 @@ class WorkspaceController {
 
                 guard let gitStatus = self.gitController.workingCopyStatus(at: workspace.folderURL) else {
                     DispatchQueue.main.async {
+                        self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                         completion?(NSError(domain: "", code: -1, userInfo: nil))
                     }
                     return
@@ -195,6 +210,7 @@ class WorkspaceController {
 
                 DispatchQueue.main.async {
                     self.updateWorkspace(newWorkspace)
+                    self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                     completion?(err)
                 }
             }

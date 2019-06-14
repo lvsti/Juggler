@@ -125,7 +125,6 @@ class MenuController: NSObject, NSMenuDelegate {
     
     private func menuItem(for workspace: Workspace) -> NSMenuItem {
         let wsItem = NSMenuItem(title: workspace.resolvedTitle)
-        wsItem.submenu = workspaceMenu(for: workspace)
 
         let nib = NSNib(nibNamed: "WorkspaceMenuItemCell", bundle: nil)
         var topLevel: NSArray? = nil
@@ -135,7 +134,15 @@ class MenuController: NSObject, NSMenuDelegate {
         cell.badgeTitle.stringValue = "\(workspace.folderURL.lastPathComponent)"
         cell.titleLabel.stringValue = workspace.resolvedTitle
         wsItem.view = cell
-        
+
+        let isBusy = workspaceController.isWorkspaceBusy(workspace)
+        cell.disclosureArrow.isHidden = isBusy
+        cell.spinner.isHidden = !isBusy
+        if isBusy {
+            cell.spinner.startAnimation(nil)
+        }
+        wsItem.submenu = isBusy ? nil : workspaceMenu(for: workspace)
+
         return wsItem
     }
     

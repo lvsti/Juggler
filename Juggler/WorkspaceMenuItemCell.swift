@@ -12,7 +12,8 @@ final class WorkspaceMenuItemCell: NSVisualEffectView {
     @IBOutlet weak var badge: NSView!
     @IBOutlet weak var badgeTitle: NSTextField!
     @IBOutlet weak var titleLabel: NSTextField!
-    @IBOutlet weak var effectView: NSVisualEffectView!
+    @IBOutlet weak var disclosureArrow: NSTextField!
+    @IBOutlet weak var spinner: NSProgressIndicator!
     
     override func awakeFromNib() {
         super.awakeFromNib()

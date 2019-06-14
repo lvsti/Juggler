@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14810.11"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -54,7 +55,7 @@
                     </constraints>
                 </customView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwf-hT-Lgz">
-                    <rect key="frame" x="120" y="10" width="287" height="17"/>
+                    <rect key="frame" x="120" y="10" width="287" height="16"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="287" id="8po-n7-aSx"/>
                     </constraints>
@@ -65,17 +66,22 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="A65-5a-rVf">
-                    <rect key="frame" x="415" y="10" width="16" height="17"/>
+                    <rect key="frame" x="415" y="10" width="16" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="▶︎" drawsBackground="YES" id="9d9-Y4-V1z">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" red="0.11764705882352941" green="0.11764705882352941" blue="0.11764705882352941" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </textFieldCell>
                 </textField>
+                <progressIndicator hidden="YES" wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Bre-1D-AHx">
+                    <rect key="frame" x="415" y="10" width="16" height="16"/>
+                </progressIndicator>
             </subviews>
             <constraints>
                 <constraint firstItem="kwf-hT-Lgz" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="120" id="0il-2U-S9a"/>
+                <constraint firstAttribute="trailing" secondItem="Bre-1D-AHx" secondAttribute="trailing" constant="9" id="BU9-0E-JNv"/>
                 <constraint firstAttribute="trailing" secondItem="A65-5a-rVf" secondAttribute="trailing" constant="9" id="C5i-Ht-LPT"/>
+                <constraint firstItem="Bre-1D-AHx" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="QgL-Xq-TsQ"/>
                 <constraint firstItem="kwf-hT-Lgz" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="l4f-0o-9dv"/>
                 <constraint firstItem="mnj-Eh-XbY" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="sSK-t4-oxT"/>
                 <constraint firstItem="A65-5a-rVf" firstAttribute="leading" secondItem="kwf-hT-Lgz" secondAttribute="trailing" constant="8" id="uoK-hx-1eM"/>
@@ -85,6 +91,8 @@
             <connections>
                 <outlet property="badge" destination="47a-Gi-WRC" id="ysR-ZU-7WR"/>
                 <outlet property="badgeTitle" destination="6oS-qh-TqC" id="M9w-ot-dVf"/>
+                <outlet property="disclosureArrow" destination="A65-5a-rVf" id="rpp-G4-ZiO"/>
+                <outlet property="spinner" destination="Bre-1D-AHx" id="bvR-jr-XEb"/>
                 <outlet property="titleLabel" destination="kwf-hT-Lgz" id="QNr-SA-65b"/>
             </connections>
             <point key="canvasLocation" x="65" y="41"/>
