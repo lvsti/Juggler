@@ -180,6 +180,7 @@ class MenuController: NSObject, NSMenuDelegate {
         
         cell.badgeTitle.stringValue = "\(workspace.folderURL.lastPathComponent)"
         cell.titleLabel.stringValue = workspace.resolvedTitle
+        cell.color = workspace.color?.toNSColor()
         wsItem.view = cell
 
         let isBusy = workspaceController.isWorkspaceBusy(workspace)
@@ -281,8 +282,41 @@ class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: "Set Up...") { _ in
             self.delegate?.menuControllerDidInvokeSetup(for: workspace)
         })
+        
+        let colorItem = NSMenuItem(title: "Set Color")
+        colorItem.submenu = colorMenu(for: workspace)
+        menu.addItem(colorItem)
 
         return menu
+    }
+    
+    private func colorMenu(for workspace: Workspace) -> NSMenu {
+        let menu = NSMenu(title: "Set Color")
+        
+        for color in Workspace.Color.allCases {
+            let item = NSMenuItem(title: color.name) { _ in
+                self.workspaceController.setColor(color, for: workspace)
+            }
+            item.image = colorSwatch(for: color.toNSColor())
+            item.state = workspace.color == color ? .on : .off
+            menu.addItem(item)
+        }
+        
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Reset to Default") { _ in
+            self.workspaceController.setColor(nil, for: workspace)
+        })
+        
+        return menu
+    }
+    
+    private func colorSwatch(for color: NSColor) -> NSImage {
+        let image = NSImage(size: NSSize(width: 10, height: 10))
+        image.lockFocus()
+        color.set()
+        NSRect(x: 0, y: 0, width: 10, height: 10).fill()
+        image.unlockFocus()
+        return image
     }
     
     private func promptForJIRATicket(completion: @escaping (JIRATicket?) -> Void) {
@@ -375,4 +409,32 @@ class MenuController: NSObject, NSMenuDelegate {
         renderMenu()
     }
     
+}
+
+extension Workspace.Color {
+    func toNSColor() -> NSColor {
+        switch self {
+        case .red: return .systemRed
+        case .orange: return .systemOrange
+        case .yellow: return .systemYellow
+        case .green: return .systemGreen
+        case .teal: return .systemTeal
+        case .blue: return .systemBlue
+        case .purple: return .systemPurple
+        case .pink: return .systemPink
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .red: return "Red"
+        case .orange: return "Orange"
+        case .yellow: return "Yellow"
+        case .green: return "Green"
+        case .teal: return "Teal"
+        case .blue: return "Blue"
+        case .purple: return "Purple"
+        case .pink: return "Pink"
+        }
+    }
 }

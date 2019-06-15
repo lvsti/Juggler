@@ -9,6 +9,10 @@
 import Foundation
 
 struct Workspace {
+    enum Color: String, CaseIterable, Codable {
+        case red, orange, yellow, green, teal, blue, purple, pink
+    }
+
     var folderURL: URL
     var title: String?
     var description: String?
@@ -16,6 +20,7 @@ struct Workspace {
     var ticket: Ticket?
     var pullRequest: PullRequest?
     var projectURL: URL?
+    var color: Color?
     
     var meta: WorkspaceMeta {
         var wsMeta = WorkspaceMeta()
@@ -24,6 +29,7 @@ struct Workspace {
         wsMeta.ticket = ticket
         wsMeta.pullRequest = pullRequest
         wsMeta.projectURL = projectURL
+        wsMeta.color = color
         return wsMeta
     }
     
@@ -63,11 +69,12 @@ struct WorkspaceMeta: Codable {
     var ticket: Ticket?
     var pullRequest: PullRequest?
     var projectURL: URL?
-    
+    var color: Workspace.Color?
+
     init() {}
 
     private enum CodingKeys: String, CodingKey {
-        case title, description = "desc", ticketKind, jiraTicket, prKind, gitHubPR, projectURL = "proj"
+        case title, description = "desc", ticketKind, jiraTicket, prKind, gitHubPR, projectURL = "proj", color
     }
 
     init(from decoder: Decoder) throws {
@@ -84,6 +91,8 @@ struct WorkspaceMeta: Codable {
         if let prKind = try container.decodeIfPresent(PullRequestKind.self, forKey: .prKind), prKind == .gitHub {
             pullRequest = try container.decode(GitHubPullRequest.self, forKey: .gitHubPR)
         }
+        
+        color = try container.decodeIfPresent(Workspace.Color.self, forKey: .color)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -97,5 +106,6 @@ struct WorkspaceMeta: Codable {
         try container.encodeIfPresent(ticket as? JIRATicket, forKey: .jiraTicket)
         try container.encodeIfPresent(pullRequest?.kind, forKey: .prKind)
         try container.encodeIfPresent(pullRequest as? GitHubPullRequest, forKey: .gitHubPR)
+        try container.encodeIfPresent(color, forKey: .color)
     }
 }

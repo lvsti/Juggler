@@ -16,7 +16,7 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="mnj-Eh-XbY">
                     <rect key="frame" x="20" y="0.0" width="80" height="36"/>
                     <subviews>
-                        <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="47a-Gi-WRC">
+                        <customView wantsLayer="YES" appearanceType="aqua" translatesAutoresizingMaskIntoConstraints="NO" id="47a-Gi-WRC">
                             <rect key="frame" x="0.0" y="6" width="80" height="24"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6oS-qh-TqC">

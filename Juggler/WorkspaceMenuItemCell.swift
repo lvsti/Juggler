@@ -15,6 +15,13 @@ final class WorkspaceMenuItemCell: NSVisualEffectView {
     @IBOutlet weak var disclosureArrow: NSTextField!
     @IBOutlet weak var spinner: NSProgressIndicator!
     
+    var color: NSColor? {
+        didSet {
+            let bgColor = color?.withAlphaComponent(0.8) ?? NSColor(calibratedWhite: 0.5, alpha: 0.8)
+            badge.layer?.backgroundColor = bgColor.cgColor
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         badge.layer?.cornerRadius = 6

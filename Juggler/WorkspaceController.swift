@@ -102,6 +102,12 @@ class WorkspaceController {
         updateWorkspace(newWorkspace)
     }
     
+    func setColor(_ color: Workspace.Color?, for workspace: Workspace) {
+        var newWorkspace = workspace
+        newWorkspace.color = color
+        updateWorkspace(newWorkspace)
+    }
+    
     func resetWorkspace(_ workspace: Workspace, metadataOnly: Bool, completion: ((Error?) -> Void)? = nil) {
         userDefaults.set(nil, forKey: workspace.folderURL.path)
         
@@ -243,7 +249,8 @@ class WorkspaceController {
                          gitStatus: gitStatus,
                          ticket: nil,
                          pullRequest: nil,
-                         projectURL: xcodeProjectURL(for: url))
+                         projectURL: xcodeProjectURL(for: url),
+                         color: nil)
     }
     
     private func loadWorkspace(at url: URL, with gitStatus: Git.WorkingCopyStatus) -> Workspace? {
@@ -260,7 +267,8 @@ class WorkspaceController {
                          gitStatus: gitStatus,
                          ticket: meta.ticket,
                          pullRequest: meta.pullRequest,
-                         projectURL: meta.projectURL)
+                         projectURL: meta.projectURL,
+                         color: meta.color)
     }
     
     private func saveWorkspace(_ workspace: Workspace) {
