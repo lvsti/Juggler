@@ -11,7 +11,6 @@ import AppKit
 
 protocol MenuControllerDelegate: class {
     func menuControllerDidInvokePreferences()
-    func menuControllerDidInvokeSetup(for workspace: Workspace)
     func menuControllerDidFocus(_ workspace: Workspace)
     func menuControllerDidOpenTerminal(for workspace: Workspace)
 }
@@ -264,28 +263,16 @@ class MenuController: NSObject, NSMenuDelegate {
             })
         }
 
-        if hasMetadata {
-            menu.addItem(NSMenuItem(title: "Reset Metadata") { _ in
-                self.workspaceController.resetWorkspace(workspace, metadataOnly: true) { _ in
-                    self.workspaceController.reload()
-                }
-            })
-        }
+        let colorItem = NSMenuItem(title: "Set Color")
+        colorItem.submenu = colorMenu(for: workspace)
+        menu.addItem(colorItem)
 
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Reset Contents") { _ in
             self.workspaceController.resetWorkspace(workspace, metadataOnly: false) { _ in
                 self.workspaceController.reload()
             }
         })
-
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Set Up...") { _ in
-            self.delegate?.menuControllerDidInvokeSetup(for: workspace)
-        })
-        
-        let colorItem = NSMenuItem(title: "Set Color")
-        colorItem.submenu = colorMenu(for: workspace)
-        menu.addItem(colorItem)
 
         return menu
     }

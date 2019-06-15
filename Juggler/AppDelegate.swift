@@ -64,10 +64,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: MenuControllerDelegate {
-    func menuControllerDidInvokeSetup(for workspace: Workspace) {
-        
-    }
-    
     func menuControllerDidInvokePreferences() {
         if preferencesCoordinator == nil {
             preferencesCoordinator = PreferencesCoordinator(workspaceController: workspaceController,
