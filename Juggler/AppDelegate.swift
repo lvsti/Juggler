@@ -14,25 +14,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var menuController: MenuController!
     private var preferencesCoordinator: PreferencesCoordinator?
-    private lazy var scriptingBridge: ScriptingBridge = {
-        let scriptingBridgeClass: AnyClass = NSClassFromString("ScriptingBridge")!
-        return scriptingBridgeClass.alloc() as! ScriptingBridge
-    }()
-    
+
+    private var scriptingBridge: ScriptingBridge
     private let workspaceController: WorkspaceController
     private let gitController: GitController
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
     private let terminalController: TerminalController
+    private let xcodeController: XcodeController
     private let keychainManager: KeychainManager
     
     override init() {
+        Bundle.main.loadAppleScriptObjectiveCScripts()
+
+        let scriptingBridgeClass: AnyClass = NSClassFromString("ScriptingBridge")!
+        scriptingBridge = scriptingBridgeClass.alloc() as! ScriptingBridge
+        
         gitController = GitController(gitURL: URL(fileURLWithPath: "/usr/bin/git"),
                                       fileManager: FileManager.default)
         keychainManager = KeychainManager()
-        jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard, keychainManager: keychainManager)
+        jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard,
+                                            keychainManager: keychainManager)
         gitHubDataProvider = GitHubDataProvider(keychainManager: keychainManager)
         terminalController = TerminalController(userDefaults: UserDefaults.standard)
+        xcodeController = XcodeController(scriptingBridge: scriptingBridge,
+                                          userDefaults: UserDefaults.standard)
         workspaceController = WorkspaceController(fileManager: FileManager.default,
                                                   gitController: gitController,
                                                   userDefaults: UserDefaults.standard,
@@ -43,8 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        Bundle.main.loadAppleScriptObjectiveCScripts()
-        
         let statusBar = NSStatusBar.system
         statusItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
         
@@ -69,7 +73,8 @@ extension AppDelegate: MenuControllerDelegate {
             preferencesCoordinator = PreferencesCoordinator(workspaceController: workspaceController,
                                                             jiraDataProvider: jiraDataProvider,
                                                             gitHubDataProvider: gitHubDataProvider,
-                                                            terminalController: terminalController)
+                                                            terminalController: terminalController,
+                                                            xcodeController: xcodeController)
             preferencesCoordinator?.delegate = self
         }
         preferencesCoordinator?.showPreferences()
@@ -79,10 +84,9 @@ extension AppDelegate: MenuControllerDelegate {
         NSWorkspace.shared.launchApplication("Sourcetree")
         scriptingBridge.closeAllSourcetreeWindows()
         NSWorkspace.shared.openFile(workspace.folderURL.path, withApplication: "Sourcetree")
-        
-        if let projectPath = workspace.projectURL?.path {
-            scriptingBridge.closeAllXcodeProjects(except: projectPath)
-            NSWorkspace.shared.openFile(projectPath, withApplication: "Xcode")
+
+        if let projectURL = workspace.projectURL {
+            self.xcodeController.focusOnProject(at: projectURL)
         }
     }
     

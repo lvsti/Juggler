@@ -17,6 +17,7 @@ class PreferencesCoordinator {
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
     private let terminalController: TerminalController
+    private let xcodeController: XcodeController
     
     private var preferencesWindowController: PreferencesWindowController?
     private var paneControllers: [PreferencesPane: NSViewController] = [:]
@@ -27,11 +28,13 @@ class PreferencesCoordinator {
     init(workspaceController: WorkspaceController,
          jiraDataProvider: JIRADataProvider,
          gitHubDataProvider: GitHubDataProvider,
-         terminalController: TerminalController) {
+         terminalController: TerminalController,
+         xcodeController: XcodeController) {
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
         self.gitHubDataProvider = gitHubDataProvider
         self.terminalController = terminalController
+        self.xcodeController = xcodeController
     }
     
     func showPreferences() {
@@ -89,12 +92,20 @@ extension PreferencesCoordinator: GeneralPreferencesViewDelegate {
         return URL(fileURLWithPath: terminalController.appPath)
     }
     
+    var xcodeURL: URL {
+        return URL(fileURLWithPath: xcodeController.appPath)
+    }
+    
     func generalPreferencesDidChangeWorkspaceRootURL(to url: URL) {
         workspaceController.rootFolderURL = url
     }
     
     func generalPreferencesDidChangeTerminalAppURL(to url: URL) {
         terminalController.appPath = url.path
+    }
+
+    func generalPreferencesDidChangeXcodeURL(to url: URL) {
+        xcodeController.appPath = url.path
     }
 }
 

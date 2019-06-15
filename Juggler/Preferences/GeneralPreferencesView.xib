@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14810.11"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,6 +11,7 @@
                 <outlet property="rootFolderLabel" destination="k4t-4j-d7h" id="lyB-pl-0rY"/>
                 <outlet property="terminalAppLabel" destination="7rK-0d-i65" id="aln-sC-hGF"/>
                 <outlet property="view" destination="c22-O7-iKe" id="aHp-WS-qR7"/>
+                <outlet property="xcodeLabel" destination="wtz-IK-g5l" id="0Hp-9n-yNE"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -18,7 +20,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="257"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y0I-Yu-uY2">
-                    <rect key="frame" x="18" y="219" width="104" height="17"/>
+                    <rect key="frame" x="18" y="220" width="104" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Workspace root:" id="Tla-Ig-r8P">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -26,7 +28,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k4t-4j-d7h">
-                    <rect key="frame" x="126" y="219" width="78" height="17"/>
+                    <rect key="frame" x="126" y="220" width="78" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" title="/foo/bar/baz" usesSingleLineMode="YES" id="eYL-pS-fCh">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -44,7 +46,7 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fu1-Yr-eBi">
-                    <rect key="frame" x="36" y="193" width="86" height="17"/>
+                    <rect key="frame" x="36" y="195" width="86" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Terminal app:" id="HF2-NF-F6h">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -52,7 +54,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7rK-0d-i65">
-                    <rect key="frame" x="126" y="193" width="78" height="17"/>
+                    <rect key="frame" x="126" y="195" width="78" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" title="/foo/bar/baz" usesSingleLineMode="YES" id="Lq1-Gu-cSz">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -60,7 +62,7 @@
                     </textFieldCell>
                 </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7N4-E9-z0T">
-                    <rect key="frame" x="370" y="183" width="96" height="32"/>
+                    <rect key="frame" x="370" y="185" width="96" height="32"/>
                     <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="a81-He-HOY">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -69,18 +71,50 @@
                         <action selector="browseTerminalButtonClicked:" target="-2" id="pqW-6B-L0H"/>
                     </connections>
                 </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Lfh-a8-tRT">
+                    <rect key="frame" x="75" y="171" width="47" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Xcode:" id="GP7-Kx-Vf2">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtz-IK-g5l">
+                    <rect key="frame" x="126" y="171" width="78" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" title="/foo/bar/baz" usesSingleLineMode="YES" id="YbC-PR-pgF">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y0c-lO-mVg">
+                    <rect key="frame" x="370" y="161" width="96" height="32"/>
+                    <buttonCell key="cell" type="push" title="Browse..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="INv-tp-oza">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="browseXcodeButtonClicked:" target="-2" id="ddJ-KG-Cl8"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="7N4-E9-z0T" secondAttribute="trailing" constant="20" id="0d4-tq-cgZ"/>
+                <constraint firstItem="wtz-IK-g5l" firstAttribute="firstBaseline" secondItem="Lfh-a8-tRT" secondAttribute="firstBaseline" id="Aid-jz-00a"/>
+                <constraint firstAttribute="trailing" secondItem="Y0c-lO-mVg" secondAttribute="trailing" constant="20" id="IBv-If-ejx"/>
                 <constraint firstItem="e5k-HE-fmo" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="20" id="OPV-Tc-A8E"/>
                 <constraint firstItem="k4t-4j-d7h" firstAttribute="leading" secondItem="Y0I-Yu-uY2" secondAttribute="trailing" constant="8" id="PkT-BE-QWh"/>
                 <constraint firstItem="Y0I-Yu-uY2" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" id="Q0E-pJ-UOE"/>
                 <constraint firstItem="Y0I-Yu-uY2" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="21" id="TlO-lb-JQa"/>
+                <constraint firstItem="Y0I-Yu-uY2" firstAttribute="trailing" secondItem="Lfh-a8-tRT" secondAttribute="trailing" id="UTe-pJ-cAp"/>
                 <constraint firstAttribute="trailing" secondItem="e5k-HE-fmo" secondAttribute="trailing" constant="20" id="Ybt-6U-J46"/>
                 <constraint firstItem="k4t-4j-d7h" firstAttribute="firstBaseline" secondItem="Y0I-Yu-uY2" secondAttribute="firstBaseline" id="Yfu-q2-GnU"/>
                 <constraint firstItem="7rK-0d-i65" firstAttribute="leading" secondItem="Fu1-Yr-eBi" secondAttribute="trailing" constant="8" id="bzR-rq-u4Z"/>
                 <constraint firstItem="Fu1-Yr-eBi" firstAttribute="top" secondItem="Y0I-Yu-uY2" secondAttribute="bottom" constant="9" id="fDO-mt-a0i"/>
+                <constraint firstItem="Lfh-a8-tRT" firstAttribute="firstBaseline" secondItem="Y0c-lO-mVg" secondAttribute="firstBaseline" id="jek-0n-R6x"/>
                 <constraint firstItem="7N4-E9-z0T" firstAttribute="firstBaseline" secondItem="Fu1-Yr-eBi" secondAttribute="firstBaseline" id="lCc-Jz-jO1"/>
+                <constraint firstItem="Lfh-a8-tRT" firstAttribute="top" secondItem="Fu1-Yr-eBi" secondAttribute="bottom" constant="8" id="nRH-sj-sk1"/>
+                <constraint firstItem="wtz-IK-g5l" firstAttribute="leading" secondItem="Lfh-a8-tRT" secondAttribute="trailing" constant="8" id="ssB-f1-Kie"/>
                 <constraint firstItem="Y0I-Yu-uY2" firstAttribute="trailing" secondItem="Fu1-Yr-eBi" secondAttribute="trailing" id="tv9-i8-erw"/>
                 <constraint firstItem="7rK-0d-i65" firstAttribute="firstBaseline" secondItem="Fu1-Yr-eBi" secondAttribute="firstBaseline" id="uX2-ex-iiU"/>
             </constraints>

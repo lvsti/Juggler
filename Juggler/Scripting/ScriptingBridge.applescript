@@ -9,12 +9,18 @@ script ScriptingBridge
         end tell
     end closeAllSourcetreeWindows
 
-    on doCloseAllXcodeProjectsWithExcept_(projectPath)
-        repeat with doc in documents of application "Xcode"
-            if file of doc as text is not projectPath then
-                tell doc to close
+    on doCloseAllXcodeProjectsWithExcept_xcodePath_(projectPath, xcodePath)
+        set wsDocs to {}
+        repeat with doc in documents of application (xcodePath as text)
+            set cls to class of doc as text
+            if cls is "workspace document" and file of doc as text is not projectPath then
+                set wsDocs to wsDocs & {doc}
             end if
         end repeat
-    end doCloseAllXcodeProjectsWithExcept_
+
+        repeat with doc in wsDocs
+            tell doc to close
+        end repeat
+    end doCloseAllXcodeProjectsWithExcept_xcodePath_
     
 end script
