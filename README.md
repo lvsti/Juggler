@@ -2,7 +2,7 @@
 
 Juggler is a macOS status bar app that aims to reduce the friction incurred by frequent context switches in an Xcode-GitHub-JIRA workflow.
 
-![](docs/screenshot.png)
+<img src="docs/screenshot.png" height="498" alt="screenshot"/>
 
 ### Use case
 
@@ -19,15 +19,15 @@ Juggler herds a bunch of git working copy folders (called "workspaces") by stori
 
 Workspaces can be either assigned to a task or available (if not on any branch). Juggler lists the two groups separately:
 
-![](docs/groups.png)
+<img src="docs/groups.png" height="379" alt="workspace groups"/>
 
 For each workspace, there are easy access shortcuts for the Xcode project, opening the working copy with a GUI git client (Sourcetree), and revealing the folder in Finder or in your favourite Terminal app.
 
-![](docs/shortcuts.png)
+<img src="docs/shortcuts.png" height="380" alt="shortcuts"/>
 
 You can also link a JIRA ticket or a GitHub PR to the workspace, which, apart from setting a user-friendly title for the workspace, allows for quickly navigating to the issue or PR web page.
 
-![](docs/links.png)
+<img src="docs/links.png" height="380" alt="links"/>
 
 To further simplify the setup phase for a given task, Juggler offers the following workflow-based setup sequences:
 
