@@ -20,9 +20,12 @@ extension ScriptingBridge {
     }
     
     func requestPermissionsToAutomateXcode() -> Bool {
-        let targetAppEventDescriptor = NSAppleEventDescriptor(bundleIdentifier: "com.apple.dt.Xcode")
-        let status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, true)
+        if #available(OSX 10.14, *) {
+            let targetAppEventDescriptor = NSAppleEventDescriptor(bundleIdentifier: "com.apple.dt.Xcode")
+            let status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, true)
+            return status == noErr
+        }
         
-        return status == noErr
+        return true
     }
 }
