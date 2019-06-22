@@ -19,9 +19,9 @@ protocol JIRAPreferencesViewDelegate: class {
 
 final class JIRAPreferencesViewController: NSViewController {
     
-    @IBOutlet weak var jiraBaseURLField: NSTextField!
-    @IBOutlet weak var jiraUserNameField: NSTextField!
-    @IBOutlet weak var jiraAPITokenField: NSTextField!
+    @IBOutlet private weak var jiraBaseURLField: NSTextField!
+    @IBOutlet private weak var jiraUserNameField: NSTextField!
+    @IBOutlet private weak var jiraAPITokenField: NSTextField!
 
     weak var delegate: JIRAPreferencesViewDelegate?
     

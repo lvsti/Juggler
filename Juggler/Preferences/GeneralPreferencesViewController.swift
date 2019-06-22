@@ -19,9 +19,9 @@ protocol GeneralPreferencesViewDelegate: class {
 
 final class GeneralPreferencesViewController: NSViewController {
     
-    @IBOutlet weak var rootFolderLabel: NSTextField!
-    @IBOutlet weak var terminalAppLabel: NSTextField!
-    @IBOutlet weak var xcodeLabel: NSTextField!
+    @IBOutlet private weak var rootFolderLabel: NSTextField!
+    @IBOutlet private weak var terminalAppLabel: NSTextField!
+    @IBOutlet private weak var xcodeLabel: NSTextField!
     
     weak var delegate: GeneralPreferencesViewDelegate?
     
