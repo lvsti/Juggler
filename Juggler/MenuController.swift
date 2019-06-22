@@ -85,14 +85,34 @@ class MenuController: NSObject, NSMenuDelegate {
                     ticketMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)...") { _ in
                         self.promptForJIRATicket { ticket in
                             guard let ticket = ticket else { return }
-                            self.workspaceController.setUpWorkspace(availableWorkspace, for: ticket)
+                            self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket)
                         }
                     })
                     
                     reviewMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)...") { _ in
                         self.promptForGitHubPullRequest(remote: remote) { pr in
                             guard let pr = pr else { return }
-                            self.workspaceController.setUpWorkspace(availableWorkspace, for: pr)
+                            
+                            self.workspaceController.setUpWorkspace(availableWorkspace, forReviewing: pr) { ws, err in
+                                guard let ws = ws else { return }
+
+                                guard
+                                    let prTitle = pr.title,
+                                    let regex = self.gitHubDataProvider.ticketIDFromPRTitleRegex,
+                                    let match = regex.firstMatch(in: prTitle,
+                                                                 options: [],
+                                                                 range: NSRange(location: 0, length: prTitle.count))
+                                else {
+                                    return
+                                }
+                                
+                                let ticketID = String(prTitle[Range(match.range(at: 1), in: prTitle)!])
+                                
+                                self.jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
+                                    guard let ticket = ticket else { return }
+                                    self.workspaceController.setTicket(ticket, for: ws)
+                                }
+                            }
                         }
                     })
                 }
@@ -117,13 +137,32 @@ class MenuController: NSObject, NSMenuDelegate {
                 ticketItem.setHandler { _ in
                     self.promptForJIRATicket { ticket in
                         guard let ticket = ticket else { return }
-                        self.workspaceController.setUpWorkspace(availableWorkspace, for: ticket)
+                        self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket)
                     }
                 }
                 reviewItem.setHandler { _ in
                     self.promptForGitHubPullRequest(remote: remote) { pr in
                         guard let pr = pr else { return }
-                        self.workspaceController.setUpWorkspace(availableWorkspace, for: pr)
+                        self.workspaceController.setUpWorkspace(availableWorkspace, forReviewing: pr) { ws, err in
+                            guard let ws = ws else { return }
+                            
+                            guard
+                                let prTitle = pr.title,
+                                let regex = self.gitHubDataProvider.ticketIDFromPRTitleRegex,
+                                let match = regex.firstMatch(in: prTitle,
+                                                             options: [],
+                                                             range: NSRange(location: 0, length: prTitle.count))
+                            else {
+                                return
+                            }
+                            
+                            let ticketID = String(prTitle[Range(match.range(at: 1), in: prTitle)!])
+                            
+                            self.jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
+                                guard let ticket = ticket else { return }
+                                self.workspaceController.setTicket(ticket, for: ws)
+                            }
+                        }
                     }
                 }
             }
