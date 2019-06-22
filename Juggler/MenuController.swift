@@ -269,9 +269,7 @@ class MenuController: NSObject, NSMenuDelegate {
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Reset Contents") { _ in
-            self.workspaceController.resetWorkspace(workspace, metadataOnly: false) { _ in
-                self.workspaceController.reload()
-            }
+            self.workspaceController.resetWorkspace(workspace, metadataOnly: false)
         })
 
         return menu
