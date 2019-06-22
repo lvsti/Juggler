@@ -124,6 +124,13 @@ class GitController {
         return Git.Branch(name: branchName)
     }
 
+    func forkPoint(at folderURL: URL, of branchRef: Git.Ref, relativeTo parentRef: Git.Ref) throws -> Git.Ref {
+        let result = try executeGitCommand("merge-base",
+                                           args: [parentRef.description, branchRef.description],
+                                           in: folderURL)
+        return .commit(Git.Commit(sha: result))
+    }
+    
     func resetWorkingCopy(at folderURL: URL, to ref: Git.Ref? = nil, inMode mode: Git.ResetMode) throws {
         try executeGitCommand("reset", args: [mode.rawValue] + (ref != nil ? [ref!.description] : []), in: folderURL)
     }
