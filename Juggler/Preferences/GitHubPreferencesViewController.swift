@@ -10,12 +10,15 @@ import Cocoa
 
 protocol GitHubPreferencesViewDelegate: class {
     var gitHubAPIToken: String { get }
+    var gitHubTicketIDPattern: String { get }
     func gitHubPreferencesDidChangeAPIToken(to token: String)
+    func gitHubPreferencesDidChangeTicketIDPattern(to pattern: String)
 }
 
 final class GitHubPreferencesViewController: NSViewController {
     
-    @IBOutlet weak var gitHubAPITokenField: NSTextField!
+    @IBOutlet private weak var gitHubAPITokenField: NSTextField!
+    @IBOutlet private weak var gitHubTicketIDPatternField: NSTextField!
 
     weak var delegate: GitHubPreferencesViewDelegate?
     
@@ -34,10 +37,16 @@ final class GitHubPreferencesViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gitHubAPITokenField.stringValue = delegate?.gitHubAPIToken ?? ""
+        gitHubTicketIDPatternField.stringValue = delegate?.gitHubTicketIDPattern ?? ""
     }
     
     @IBAction private func gitHubAPITokenChanged(_ sender: Any) {
         delegate?.gitHubPreferencesDidChangeAPIToken(to: gitHubAPITokenField.stringValue)
+    }
+
+    @IBAction private func gitHubTicketIDPatternChanged(_ sender: Any) {
+        delegate?.gitHubPreferencesDidChangeTicketIDPattern(to: gitHubTicketIDPatternField.stringValue)
+        gitHubTicketIDPatternField.stringValue = delegate?.gitHubTicketIDPattern ?? ""
     }
 
     @IBAction private func gitHubSetUpTokensLinkClicked(_ sender: Any) {

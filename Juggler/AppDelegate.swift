@@ -35,7 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         keychainManager = KeychainManager()
         jiraDataProvider = JIRADataProvider(userDefaults: UserDefaults.standard,
                                             keychainManager: keychainManager)
-        gitHubDataProvider = GitHubDataProvider(keychainManager: keychainManager)
+        gitHubDataProvider = GitHubDataProvider(userDefaults: UserDefaults.standard,
+                                                keychainManager: keychainManager)
         terminalController = TerminalController(userDefaults: UserDefaults.standard)
         xcodeController = XcodeController(scriptingBridge: scriptingBridge,
                                           userDefaults: UserDefaults.standard)

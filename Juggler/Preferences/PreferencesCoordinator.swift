@@ -140,7 +140,16 @@ extension PreferencesCoordinator: GitHubPreferencesViewDelegate {
         return gitHubDataProvider.apiToken ?? ""
     }
     
+    var gitHubTicketIDPattern: String {
+        return gitHubDataProvider.ticketIDFromPRTitlePattern ?? ""
+    }
+    
     func gitHubPreferencesDidChangeAPIToken(to token: String) {
         gitHubDataProvider.apiToken = token
     }
+
+    func gitHubPreferencesDidChangeTicketIDPattern(to pattern: String) {
+        gitHubDataProvider.ticketIDFromPRTitlePattern = pattern.isEmpty ? nil : pattern
+    }
+    
 }

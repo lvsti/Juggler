@@ -59,7 +59,9 @@ extension GitHubPullRequest: Codable {
 final class GitHubDataProvider {
     private static let gitHubKeychainItemLabel = "GitHub API Access"
     private static let gitHubKeychainItemService = "me.cocoagrinder.Juggler.GitHub"
+    private static let gitHubTicketIDFromPRTitlePatternKey = "GitHubTicketIDFromPRTitlePattern"
 
+    private let userDefaults: UserDefaults
     private let keychainManager: KeychainManager
     
     private var credentials: KeychainManager.Credentials? {
@@ -83,10 +85,38 @@ final class GitHubDataProvider {
             }
         }
     }
+    
+    private var _ticketIDFromPRTitleRegex: NSRegularExpression?
+    var ticketIDFromPRTitleRegex: NSRegularExpression? {
+        return _ticketIDFromPRTitleRegex
+    }
+    
+    var ticketIDFromPRTitlePattern: String? {
+        get { return userDefaults.string(forKey: GitHubDataProvider.gitHubTicketIDFromPRTitlePatternKey) }
+        set {
+            guard
+                let newPattern = newValue,
+                let regex = try? NSRegularExpression(pattern: newPattern, options: []),
+                regex.numberOfCaptureGroups == 1
+            else {
+                _ticketIDFromPRTitleRegex = nil
+                userDefaults.removeObject(forKey: GitHubDataProvider.gitHubTicketIDFromPRTitlePatternKey)
+                return
+            }
+            
+            userDefaults.set(newPattern, forKey: GitHubDataProvider.gitHubTicketIDFromPRTitlePatternKey)
+            _ticketIDFromPRTitleRegex = regex
+        }
+    }
 
-    init(keychainManager: KeychainManager) {
+    init(userDefaults: UserDefaults, keychainManager: KeychainManager) {
+        self.userDefaults = userDefaults
         self.keychainManager = keychainManager
         self.credentials = keychainManager.credentials(forService: GitHubDataProvider.gitHubKeychainItemService)
+        
+        if let pattern = ticketIDFromPRTitlePattern {
+            ticketIDFromPRTitlePattern = pattern
+        }
     }
 
     func pullRequestURL(for prID: String, in remote: Git.Remote) -> URL {
