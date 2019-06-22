@@ -35,9 +35,9 @@ struct Workspace {
     
     var resolvedTitle: String {
         return title ??
-            ticketInfo ??
             pullRequestInfo ??
-        gitDescription
+            ticketInfo ??
+            gitDescription
     }
     
     var isActive: Bool {
