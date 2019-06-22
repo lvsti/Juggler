@@ -199,8 +199,12 @@ class WorkspaceController {
                     try self.gitController.fetchAllRemotesForWorkingCopy(at: workspace.folderURL)
                     try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL, toExisting: pr.sourceBranch)
                     try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
+                    
+                    let forkPoint = try self.gitController.forkPoint(at: workspace.folderURL,
+                                                                     of: .branch(pr.sourceBranch),
+                                                                     relativeTo: .branch(pr.targetBranch))
                     try self.gitController.resetWorkingCopy(at: workspace.folderURL,
-                                                            to: .branch(pr.targetBranch),
+                                                            to: forkPoint,
                                                             inMode: .mixed)
                 }
                 catch {
