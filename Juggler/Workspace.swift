@@ -40,6 +40,10 @@ struct Workspace {
             gitDescription
     }
     
+    var name: String {
+        return folderURL.lastPathComponent
+    }
+    
     var isActive: Bool {
         return gitStatus.currentBranch?.name != "master"
     }

@@ -216,7 +216,7 @@ class MenuController: NSObject, NSMenuDelegate {
         nib?.instantiate(withOwner: nil, topLevelObjects: &topLevel)
         let cell = topLevel?.first(where: { $0 is WorkspaceMenuItemCell }) as! WorkspaceMenuItemCell
         
-        cell.badgeTitle.stringValue = "\(workspace.folderURL.lastPathComponent)"
+        cell.badgeTitle.stringValue = "\(workspace.name)"
         cell.titleLabel.stringValue = workspace.resolvedTitle
         cell.color = workspace.color?.toNSColor()
         wsItem.view = cell
