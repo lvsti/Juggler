@@ -146,6 +146,10 @@ class GitController {
         }
         try executeGitCommand("pull", args: ["origin", branch.name], in: folderURL)
     }
+    
+    func removeUntrackedFiles(at folderURL: URL) throws {
+        try executeGitCommand("clean", args: ["-f", "-d"], in: folderURL)
+    }
 
     private func gitFolderExists(in folderURL: URL) -> Bool {
         var isDirectory: ObjCBool = false
