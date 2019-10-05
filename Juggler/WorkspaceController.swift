@@ -108,10 +108,12 @@ class WorkspaceController {
         updateWorkspace(newWorkspace)
     }
     
-    func resetWorkspace(_ workspace: Workspace, metadataOnly: Bool, completion: ((Workspace?, Error?) -> Void)? = nil) {
-        userDefaults.set(nil, forKey: workspace.folderURL.path)
-        
-        guard !metadataOnly else {
+    func resetWorkspace(_ workspace: Workspace,
+                        metadataOnly: Bool,
+                        discardChangesHandler: @escaping () -> Bool,
+                        completion: ((Workspace?, Error?) -> Void)? = nil) {
+        if metadataOnly {
+            userDefaults.set(nil, forKey: workspace.folderURL.path)
             guard let ws = loadWorkspace(at: workspace.folderURL, with: workspace.gitStatus) else {
                 completion?(nil, NSError(domain: "", code: -1, userInfo: nil))
                 return
@@ -125,16 +127,21 @@ class WorkspaceController {
         queue.async {
             var err: Error?
             do {
-                try self.gitController.resetWorkingCopy(at: workspace.folderURL, inMode: .hard)
-                try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
-                                                                      toExisting: Git.Branch(name: "master"))
-                try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
+                if let currentStatus = self.gitController.workingCopyStatus(at: workspace.folderURL),
+                    !currentStatus.hasLocalChanges || DispatchQueue.main.sync(execute: discardChangesHandler) {
+                    try self.gitController.resetWorkingCopy(at: workspace.folderURL, inMode: .hard)
+                    try self.gitController.removeUntrackedFiles(at: workspace.folderURL)
+                    try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
+                                                                          toExisting: Git.Branch(name: "master"))
+                    try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
+                }
             }
             catch {
                 err = error
             }
             
             self.reload { wss in
+                self.userDefaults.set(nil, forKey: workspace.folderURL.path)
                 self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                 let ws = err == nil ? wss.first(where: { $0.folderURL == workspace.folderURL }) : nil
                 completion?(ws, err)
@@ -151,7 +158,7 @@ class WorkspaceController {
     }
     
     func setUpWorkspace(_ workspace: Workspace, forTicket ticket: Ticket, completion: ((Workspace?, Error?) -> Void)? = nil) {
-        resetWorkspace(workspace, metadataOnly: false) { ws, err in
+        resetWorkspace(workspace, metadataOnly: false, discardChangesHandler: { return true }) { ws, err in
             guard let ws = ws else {
                 completion?(nil, err)
                 return
@@ -195,7 +202,7 @@ class WorkspaceController {
     }
 
     func setUpWorkspace(_ workspace: Workspace, forReviewing pr: PullRequest, completion: ((Workspace?, Error?) -> Void)? = nil) {
-        resetWorkspace(workspace, metadataOnly: false) { ws, err in
+        resetWorkspace(workspace, metadataOnly: false, discardChangesHandler: { return true }) { ws, err in
             guard let ws = ws else {
                 completion?(nil, err)
                 return

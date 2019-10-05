@@ -308,7 +308,9 @@ class MenuController: NSObject, NSMenuDelegate {
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Reset Contents") { _ in
-            self.workspaceController.resetWorkspace(workspace, metadataOnly: false)
+            self.workspaceController.resetWorkspace(workspace, metadataOnly: false, discardChangesHandler: {
+                return self.showConfirmDiscardChangesAlert(for: workspace)
+            })
         })
 
         return menu
@@ -420,6 +422,16 @@ class MenuController: NSObject, NSMenuDelegate {
                                 "might not exist in the \(remote.orgName)/\(remote.repoName) remote."
         alert.addButton(withTitle: "OK")
         alert.runModal()
+    }
+    
+    private func showConfirmDiscardChangesAlert(for workspace: Workspace) -> Bool {
+        let alert = NSAlert()
+        alert.messageText = "Discard changes?"
+        alert.informativeText = "The working copy in \"\(workspace.name)\" is not clean, do you want to discard changes?"
+        alert.addButton(withTitle: "Discard")
+        alert.addButton(withTitle: "Cancel")
+        
+        return alert.runModal() == .alertFirstButtonReturn
     }
 
     // MARK: - from NSMenuDelegate:
