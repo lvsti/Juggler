@@ -80,9 +80,17 @@ enum Git {
         }
     }
     
+    struct LocalChange {
+        enum ChangeType: String {
+            case added = "A", deleted = "D", modified = "M", untracked = "??"
+        }
+        let type: ChangeType
+        let path: String
+    }
+    
     struct WorkingCopyStatus {
         let folderURL: URL
-        let hasLocalChanges: Bool
+        let localChanges: [LocalChange]
         let currentBranch: Branch?
         let remote: Remote?
     }
@@ -110,7 +118,7 @@ class GitController {
         }
         
         return Git.WorkingCopyStatus(folderURL: folderURL,
-                                     hasLocalChanges: hasLocalChanges(in: folderURL),
+                                     localChanges: (try? localChanges(in: folderURL)) ?? [],
                                      currentBranch: try? currentBranch(in: folderURL),
                                      remote: try? remote(in: folderURL))
     }
@@ -157,18 +165,24 @@ class GitController {
                                       isDirectory: &isDirectory) && isDirectory.boolValue
     }
     
-    private func hasLocalChanges(in folderURL: URL) -> Bool {
-        guard let changes = try? executeGitCommand("status", args: ["--porcelain", "-uno", "--ignore-submodules"], in: folderURL) else {
-            return false
-        }
+    private func localChanges(in folderURL: URL) throws -> [Git.LocalChange] {
+        let changeList = try executeGitCommand("status", args: ["--porcelain", "-uno", "--ignore-submodules"], in: folderURL)
         
-        for change in changes.split(separator: "\n", omittingEmptySubsequences: true) {
-            if change.hasPrefix(" M ") {
-                return true
+        var changes: [Git.LocalChange] = []
+        changeList.enumerateLines { (line, _) in
+            let fields = line.split(whereSeparator: { $0.isWhitespace }).map { String($0) }
+            guard
+                fields.count == 2,
+                let typeField = fields.first,
+                let path = fields.last,
+                let type = Git.LocalChange.ChangeType(rawValue: typeField)
+            else {
+                return
             }
+            changes.append(Git.LocalChange(type: type, path: path))
         }
         
-        return false
+        return changes
     }
     
     private func currentBranch(in folderURL: URL) throws -> Git.Branch? {
