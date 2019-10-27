@@ -431,6 +431,72 @@ class MenuController: NSObject, NSMenuDelegate {
         alert.addButton(withTitle: "Discard")
         alert.addButton(withTitle: "Cancel")
         
+        class ChangesDataSource: NSObject, NSTableViewDataSource, NSTableViewDelegate {
+            private let changes: [Git.LocalChange]
+            
+            init(changes: [Git.LocalChange]) {
+                self.changes = changes
+            }
+
+            func numberOfRows(in tableView: NSTableView) -> Int {
+                return changes.count
+            }
+            
+            func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+                return changes[row].path
+            }
+
+            func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+                let tf = NSTextField(frame: CGRect(x: 0, y: 0, width: 200, height: 17))
+                tf.stringValue = changes[row].path
+                tf.textColor = {
+                    switch changes[row].type {
+                    case .added: return .systemGreen
+                    case .deleted: return .systemRed
+                    case .modified: return .systemBlue
+                    case .untracked: return .systemGray
+                    }
+                }()
+                tf.drawsBackground = false
+                tf.isBezeled = false
+                tf.lineBreakMode = .byTruncatingMiddle
+
+                let view = NSTableCellView(frame: CGRect(x: 0, y: 0, width: 200, height: 17))
+                view.addSubview(tf)
+                view.textField = tf
+
+                return view
+            }
+        }
+        
+        let dataSource = ChangesDataSource(changes: workspace.gitStatus.localChanges)
+
+        let scrollView = NSScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+        scrollView.hasVerticalScroller = true
+        
+        let clipView = NSClipView(frame: .zero)
+        clipView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.contentView = clipView
+        scrollView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .left, relatedBy: .equal, toItem: scrollView, attribute: .left, multiplier: 1.0, constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .right, relatedBy: .equal, toItem: scrollView, attribute: .right, multiplier: 1.0, constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0))
+
+        let tableView = NSTableView(frame: .zero)
+        tableView.addTableColumn(NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: "Column")))
+        tableView.headerView = nil
+        tableView.dataSource = dataSource
+        tableView.delegate = dataSource
+        tableView.usesAlternatingRowBackgroundColors = true
+        tableView.allowsEmptySelection = true
+
+        scrollView.documentView = tableView
+        clipView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .left, relatedBy: .equal, toItem: tableView, attribute: .left, multiplier: 1.0, constant: 0))
+        clipView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .top, relatedBy: .equal, toItem: tableView, attribute: .top, multiplier: 1.0, constant: 0))
+        clipView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .right, relatedBy: .equal, toItem: tableView, attribute: .right, multiplier: 1.0, constant: 0))
+
+        alert.accessoryView = scrollView
+        
         return alert.runModal() == .alertFirstButtonReturn
     }
 
