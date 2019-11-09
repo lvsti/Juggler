@@ -360,10 +360,37 @@ final class MenuController: NSObject, NSMenuDelegate {
         return image
     }
     
+    private func stringValueOfCurrentPasteboardItem() -> String? {
+        guard let item = NSPasteboard.general.pasteboardItems?.first else {
+            return nil
+        }
+        
+        if let index = item.types.firstIndex(where: { UTTypeConformsTo($0.rawValue as CFString, kUTTypeURL) }),
+            let string = item.string(forType: item.types[index])
+        {
+            return string
+        }
+        else if let index = item.types.firstIndex(where: { UTTypeConformsTo($0.rawValue as CFString, kUTTypeText) }),
+            let string = item.string(forType: item.types[index])
+        {
+            return string
+        }
+
+        return nil
+    }
+    
     private func promptForJIRATicket(completion: @escaping (JIRATicket?) -> Void) {
         let alert = NSAlert()
         let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
         ticketField.placeholderString = "Ticket ID or URL"
+        
+        if let candidate = stringValueOfCurrentPasteboardItem(),
+            let url = URL(string: candidate),
+            jiraDataProvider.ticketID(from: url) != nil
+        {
+            ticketField.stringValue = candidate
+        }
+
         alert.messageText = "Enter JIRA ticket ID or URL:"
         alert.accessoryView = ticketField
         alert.addButton(withTitle: "OK")
@@ -403,6 +430,14 @@ final class MenuController: NSObject, NSMenuDelegate {
         let alert = NSAlert()
         let prField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
         prField.placeholderString = "PR number or URL"
+        
+        if let candidate = stringValueOfCurrentPasteboardItem(),
+            let url = URL(string: candidate),
+            gitHubDataProvider.pullRequestID(from: url, in: remote) != nil
+        {
+            prField.stringValue = candidate
+        }
+        
         alert.messageText = "Enter GitHub PR number or URL:"
         alert.accessoryView = prField
         alert.addButton(withTitle: "OK")
