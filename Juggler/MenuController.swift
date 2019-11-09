@@ -430,7 +430,8 @@ class MenuController: NSObject, NSMenuDelegate {
         alert.informativeText = "The working copy in \"\(workspace.name)\" is not clean, do you want to discard changes?"
         alert.addButton(withTitle: "Discard")
         alert.addButton(withTitle: "Cancel")
-        
+        alert.addButton(withTitle: "Open in Sourcetree")
+
         class ChangesDataSource: NSObject, NSTableViewDataSource, NSTableViewDelegate {
             private let changes: [Git.LocalChange]
             
@@ -447,7 +448,7 @@ class MenuController: NSObject, NSMenuDelegate {
             }
 
             func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-                let tf = NSTextField(frame: CGRect(x: 0, y: 0, width: 200, height: 17))
+                let tf = NSTextField(frame: CGRect(x: 0, y: 0, width: 400, height: 17))
                 tf.stringValue = changes[row].path
                 tf.textColor = {
                     switch changes[row].type {
@@ -458,10 +459,11 @@ class MenuController: NSObject, NSMenuDelegate {
                     }
                 }()
                 tf.drawsBackground = false
+                tf.isEditable = false
                 tf.isBezeled = false
                 tf.lineBreakMode = .byTruncatingMiddle
 
-                let view = NSTableCellView(frame: CGRect(x: 0, y: 0, width: 200, height: 17))
+                let view = NSTableCellView(frame: CGRect(x: 0, y: 0, width: 400, height: 17))
                 view.addSubview(tf)
                 view.textField = tf
 
@@ -471,7 +473,7 @@ class MenuController: NSObject, NSMenuDelegate {
         
         let dataSource = ChangesDataSource(changes: workspace.gitStatus.localChanges)
 
-        let scrollView = NSScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+        let scrollView = NSScrollView(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
         scrollView.hasVerticalScroller = true
         
         let clipView = NSClipView(frame: .zero)
@@ -494,10 +496,15 @@ class MenuController: NSObject, NSMenuDelegate {
         clipView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .left, relatedBy: .equal, toItem: tableView, attribute: .left, multiplier: 1.0, constant: 0))
         clipView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .top, relatedBy: .equal, toItem: tableView, attribute: .top, multiplier: 1.0, constant: 0))
         clipView.addConstraint(NSLayoutConstraint(item: clipView, attribute: .right, relatedBy: .equal, toItem: tableView, attribute: .right, multiplier: 1.0, constant: 0))
+        tableView.sizeLastColumnToFit()
 
         alert.accessoryView = scrollView
         
-        return alert.runModal() == .alertFirstButtonReturn
+        let result = alert.runModal()
+        if result == .alertThirdButtonReturn {
+            NSWorkspace.shared.openFile(workspace.folderURL.path, withApplication: "Sourcetree")
+        }
+        return result == .alertFirstButtonReturn
     }
 
     // MARK: - from NSMenuDelegate:
