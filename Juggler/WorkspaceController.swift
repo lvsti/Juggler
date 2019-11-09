@@ -129,6 +129,7 @@ class WorkspaceController {
             do {
                 if let currentStatus = self.gitController.workingCopyStatus(at: workspace.folderURL),
                     currentStatus.localChanges.isEmpty || DispatchQueue.main.sync(execute: discardChangesHandler) {
+                    self.userDefaults.set(nil, forKey: workspace.folderURL.path)
                     try self.gitController.resetWorkingCopy(at: workspace.folderURL, inMode: .hard)
                     try self.gitController.removeUntrackedFiles(at: workspace.folderURL)
                     try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
@@ -139,9 +140,8 @@ class WorkspaceController {
             catch {
                 err = error
             }
-            
+
             self.reload { wss in
-                self.userDefaults.set(nil, forKey: workspace.folderURL.path)
                 self.busyWorkspaceFolderURLs.remove(workspace.folderURL)
                 let ws = err == nil ? wss.first(where: { $0.folderURL == workspace.folderURL }) : nil
                 completion?(ws, err)
