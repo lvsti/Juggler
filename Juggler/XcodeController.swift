@@ -13,6 +13,7 @@ final class XcodeController {
     
     private let scriptingBridge: ScriptingBridge
     private let userDefaults: UserDefaults
+    private let fileManager: FileManager
     
     var appPath: String {
         get {
@@ -23,9 +24,10 @@ final class XcodeController {
         }
     }
     
-    init(scriptingBridge: ScriptingBridge, userDefaults: UserDefaults) {
+    init(scriptingBridge: ScriptingBridge, userDefaults: UserDefaults, fileManager: FileManager) {
         self.scriptingBridge = scriptingBridge
         self.userDefaults = userDefaults
+        self.fileManager = fileManager
     }
     
     func focusOnProject(at projectURL: URL) {
@@ -34,5 +36,51 @@ final class XcodeController {
         }
         
         NSWorkspace.shared.openFile(projectURL.path, withApplication: appPath)
+    }
+    
+    func removeUserData(forProjectAt url: URL) {
+        let urls: [URL]
+        if isWorkspaceURL(url) {
+            urls = containedProjectURLs(forWorkspaceAt: url)
+        }
+        else {
+            urls = [url]
+        }
+        
+        for url in urls {
+            do {
+                try fileManager.removeItem(at: url.appendingPathComponent("xcuserdata"))
+            }
+            catch {
+            }
+        }
+    }
+    
+    private func isWorkspaceURL(_ url: URL) -> Bool {
+        return url.pathExtension == "xcworkspace"
+    }
+    
+    private func containedProjectURLs(forWorkspaceAt url: URL) -> [URL] {
+        let wsDataURL = url.appendingPathComponent("contents.xcworkspacedata")
+        guard
+            fileManager.fileExists(atPath: wsDataURL.path),
+            let xml = try? XMLDocument(contentsOf: wsDataURL, options: []),
+            let projectRefs = try? xml.nodes(forXPath: "/Workspace/FileRef") as? [XMLElement]
+        else {
+            return []
+        }
+        
+        let groupPrefix = "group:"
+        var projectURLs: [URL] = []
+        for ref in projectRefs {
+            guard let loc = ref.attribute(forName: "location")?.stringValue, loc.hasPrefix(groupPrefix) else {
+                continue
+            }
+            
+            let projectURL = URL(fileURLWithPath: String(loc.dropFirst(groupPrefix.count)), relativeTo: url.deletingLastPathComponent())
+            projectURLs.append(projectURL)
+        }
+        
+        return projectURLs
     }
 }

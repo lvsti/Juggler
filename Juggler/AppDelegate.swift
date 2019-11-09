@@ -39,12 +39,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                 keychainManager: keychainManager)
         terminalController = TerminalController(userDefaults: UserDefaults.standard)
         xcodeController = XcodeController(scriptingBridge: scriptingBridge,
-                                          userDefaults: UserDefaults.standard)
+                                          userDefaults: UserDefaults.standard,
+                                          fileManager: FileManager.default)
         workspaceController = WorkspaceController(fileManager: FileManager.default,
                                                   gitController: gitController,
                                                   userDefaults: UserDefaults.standard,
                                                   jiraDataProvider: jiraDataProvider,
-                                                  gitHubDataProvider: gitHubDataProvider)
+                                                  gitHubDataProvider: gitHubDataProvider,
+                                                  xcodeController: xcodeController)
         workspaceController.reload()
         super.init()
     }

@@ -16,6 +16,7 @@ class WorkspaceController {
     private let userDefaults: UserDefaults
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
+    private let xcodeController: XcodeController
     private let queue: DispatchQueue
 
     private(set) var workspaces: [Workspace] = []
@@ -43,12 +44,14 @@ class WorkspaceController {
          userDefaults: UserDefaults,
          jiraDataProvider: JIRADataProvider,
          gitHubDataProvider: GitHubDataProvider,
+         xcodeController: XcodeController,
          queue: DispatchQueue = DispatchQueue(label: "WSControllerQueue", qos: .userInitiated)) {
         self.fileManager = fileManager
         self.gitController = gitController
         self.userDefaults = userDefaults
         self.jiraDataProvider = jiraDataProvider
         self.gitHubDataProvider = gitHubDataProvider
+        self.xcodeController = xcodeController
         self.queue = queue
         rootFolderURL = userDefaults.url(forKey: WorkspaceController.workspaceRootURLKey) ?? URL(fileURLWithPath: NSHomeDirectory())
     }
@@ -130,6 +133,9 @@ class WorkspaceController {
                 if let currentStatus = self.gitController.workingCopyStatus(at: workspace.folderURL),
                     currentStatus.localChanges.isEmpty || DispatchQueue.main.sync(execute: discardChangesHandler) {
                     self.userDefaults.set(nil, forKey: workspace.folderURL.path)
+                    if let projectURL = workspace.projectURL {
+                        self.xcodeController.removeUserData(forProjectAt: projectURL)
+                    }
                     try self.gitController.resetWorkingCopy(at: workspace.folderURL, inMode: .hard)
                     try self.gitController.removeUntrackedFiles(at: workspace.folderURL)
                     try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
