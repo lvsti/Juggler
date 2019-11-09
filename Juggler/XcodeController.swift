@@ -55,6 +55,45 @@ final class XcodeController {
             }
         }
     }
+
+    func derivedDataFolderURLs(forProjectAt projectURL: URL) -> [URL] {
+        guard let libraryFolderURL = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            return []
+        }
+        
+        let derivedDataFolderURL = libraryFolderURL.appendingPathComponent("Developer/Xcode/DerivedData")
+        let enumerator = fileManager.enumerator(at: derivedDataFolderURL,
+                                                includingPropertiesForKeys: [],
+                                                options: [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants])!
+
+        var folderURLs: [URL] = []
+        for entry in enumerator {
+            guard
+                let url = entry as? URL,
+                let infoPlistData = try? Data(contentsOf: url.appendingPathComponent("info.plist")),
+                let plist = try? PropertyListSerialization.propertyList(from: infoPlistData, options: [], format: nil) as? [String: Any],
+                let wsPath = plist["WorkspacePath"] as? String,
+                wsPath == projectURL.path
+            else {
+                continue
+            }
+            
+            folderURLs.append(url)
+        }
+        
+        return folderURLs
+    }
+    
+    func removeDerivedData(forProjectAt projectURL: URL) {
+        let folderURLs = derivedDataFolderURLs(forProjectAt: projectURL)
+        for url in folderURLs {
+            do {
+                try fileManager.removeItem(at: url)
+            }
+            catch {
+            }
+        }
+    }
     
     private func isWorkspaceURL(_ url: URL) -> Bool {
         return url.pathExtension == "xcworkspace"

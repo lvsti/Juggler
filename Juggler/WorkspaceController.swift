@@ -135,6 +135,7 @@ class WorkspaceController {
                     self.userDefaults.set(nil, forKey: workspace.folderURL.path)
                     if let projectURL = workspace.projectURL {
                         self.xcodeController.removeUserData(forProjectAt: projectURL)
+                        self.xcodeController.removeDerivedData(forProjectAt: projectURL)
                     }
                     try self.gitController.resetWorkingCopy(at: workspace.folderURL, inMode: .hard)
                     try self.gitController.removeUntrackedFiles(at: workspace.folderURL)
