@@ -64,7 +64,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menuController = MenuController(menu: statusItem.menu!,
                                         workspaceController: workspaceController,
                                         jiraDataProvider: jiraDataProvider,
-                                        gitHubDataProvider: gitHubDataProvider)
+                                        gitHubDataProvider: gitHubDataProvider,
+                                        xcodeController: xcodeController)
         menuController.delegate = self
     }
     

@@ -15,12 +15,13 @@ protocol MenuControllerDelegate: class {
     func menuControllerDidOpenTerminal(for workspace: Workspace)
 }
 
-class MenuController: NSObject, NSMenuDelegate {
+final class MenuController: NSObject, NSMenuDelegate {
     // dependencies
     private let menu: NSMenu
     private let workspaceController: WorkspaceController
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
+    private let xcodeController: XcodeController
 
     // state
     private var menuItems: [NSMenuItem]
@@ -30,11 +31,13 @@ class MenuController: NSObject, NSMenuDelegate {
     init(menu: NSMenu,
          workspaceController: WorkspaceController,
          jiraDataProvider: JIRADataProvider,
-         gitHubDataProvider: GitHubDataProvider) {
+         gitHubDataProvider: GitHubDataProvider,
+         xcodeController: XcodeController) {
         self.menu = menu
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
         self.gitHubDataProvider = gitHubDataProvider
+        self.xcodeController = xcodeController
 
         menuItems = []
         
@@ -263,6 +266,18 @@ class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(indented(NSMenuItem(title: "Open in Terminal") { _ in
             self.delegate?.menuControllerDidOpenTerminal(for: workspace)
         }))
+
+        if let project = workspace.projectURL {
+            menu.addItem(indented(NSMenuItem(title: "Reveal Derived Data") { _ in
+                let derivedDataFolderURLs = self.xcodeController.derivedDataFolderURLs(forProjectAt: project)
+                if !derivedDataFolderURLs.isEmpty {
+                    NSWorkspace.shared.activateFileViewerSelecting(derivedDataFolderURLs)
+                }
+            }))
+        }
+        else {
+            menu.addItem(indented(NSMenuItem(title: "Reveal Derived Data")))
+        }
 
         let hasMetadata = workspace.pullRequest != nil || workspace.ticket != nil
         
