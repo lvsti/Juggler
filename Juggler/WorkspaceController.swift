@@ -84,7 +84,7 @@ class WorkspaceController {
                 }
             }
             
-            self.workspaces = foundWorkspaces
+            self.workspaces = foundWorkspaces.sorted(by: { $0.name < $1.name })
             
             DispatchQueue.main.async {
                 self.isReloading = false
