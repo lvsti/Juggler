@@ -94,11 +94,18 @@ final class JIRADataProvider {
     }
 
     func ticketID(from url: URL) -> String? {
-        guard url.host == baseURL.host, url.pathComponents.dropLast() == ["/", "browse"] else {
+        guard url.host == baseURL.host else {
             return nil
         }
         
-        return url.lastPathComponent
+        if url.pathComponents.dropLast() == ["/", "browse"] {
+            return url.lastPathComponent
+        }
+        
+        return URLComponents(url: url, resolvingAgainstBaseURL: true)?
+            .queryItems?
+            .first(where: { $0.name == "selectedIssue" })?
+            .value
     }
     
     func fetchTicket(for ticketID: String, completion: @escaping (JIRATicket?, Error?) -> Void) {

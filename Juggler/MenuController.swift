@@ -382,6 +382,8 @@ final class MenuController: NSObject, NSMenuDelegate {
     private func promptForJIRATicket(completion: @escaping (JIRATicket?) -> Void) {
         let alert = NSAlert()
         let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+        ticketField.maximumNumberOfLines = 1
+        ticketField.cell?.isScrollable = true
         ticketField.placeholderString = "Ticket ID or URL"
         
         if let candidate = stringValueOfCurrentPasteboardItem(),
@@ -429,6 +431,8 @@ final class MenuController: NSObject, NSMenuDelegate {
     private func promptForGitHubPullRequest(remote: Git.Remote, completion: @escaping (GitHubPullRequest?) -> Void) {
         let alert = NSAlert()
         let prField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
+        prField.maximumNumberOfLines = 1
+        prField.cell?.isScrollable = true
         prField.placeholderString = "PR number or URL"
         
         if let candidate = stringValueOfCurrentPasteboardItem(),

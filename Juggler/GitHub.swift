@@ -130,13 +130,14 @@ final class GitHubDataProvider {
     func pullRequestID(from url: URL, in remote: Git.Remote) -> String? {
         guard
             url.host == "github.com",
-            url.pathComponents.dropLast() == ["/", remote.orgName, remote.repoName, "pull"],
-            Int(url.lastPathComponent) != nil
+            url.pathComponents.starts(with: ["/", remote.orgName, remote.repoName, "pull"]),
+            url.pathComponents.count >= 5,
+            Int(url.pathComponents[4]) != nil
         else {
             return nil
         }
         
-        return url.lastPathComponent
+        return url.pathComponents[4]
     }
     
     func fetchPullRequest(for prID: String, in remote: Git.Remote, completion: @escaping (GitHubPullRequest?, Error?) -> Void) {
