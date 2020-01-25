@@ -334,6 +334,18 @@ final class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(colorItem)
 
         menu.addItem(NSMenuItem.separator())
+        if let pr = workspace.pullRequest {
+            menu.addItem(NSMenuItem(title: "Pull Upstream PR Changes") { _ in
+                self.workspaceController.setUpWorkspace(workspace, forReviewing: pr) { ws, error in
+                    guard let ws = ws else { return }
+                    
+                    let noti = NSUserNotification()
+                    noti.title = ws.folderURL.lastPathComponent
+                    noti.subtitle = "Workspace has been updated with upstream changes in PR #\(pr.id)."
+                    NSUserNotificationCenter.default.deliver(noti)
+                }
+            })
+        }
         menu.addItem(NSMenuItem(title: "Reset Contents") { _ in
             self.workspaceController.resetWorkspace(workspace, metadataOnly: false, discardChangesHandler: {
                 return self.showConfirmDiscardChangesAlert(for: workspace)
