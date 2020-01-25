@@ -140,7 +140,14 @@ final class MenuController: NSObject, NSMenuDelegate {
                 ticketItem.setHandler { _ in
                     self.promptForJIRATicket { ticket in
                         guard let ticket = ticket else { return }
-                        self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket)
+                        self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket) { ws, error in
+                            guard let ws = ws else { return }
+                            
+                            let noti = NSUserNotification()
+                            noti.title = ws.folderURL.lastPathComponent
+                            noti.subtitle = "Workspace set up for \(ticket.id)"
+                            NSUserNotificationCenter.default.deliver(noti)
+                        }
                     }
                 }
                 reviewItem.setHandler { _ in
@@ -149,6 +156,11 @@ final class MenuController: NSObject, NSMenuDelegate {
                         self.workspaceController.setUpWorkspace(availableWorkspace, forReviewing: pr) { ws, err in
                             guard let ws = ws else { return }
                             
+                            let noti = NSUserNotification()
+                            noti.title = ws.folderURL.lastPathComponent
+                            noti.subtitle = "Workspace set up for PR #\(pr.id)"
+                            NSUserNotificationCenter.default.deliver(noti)
+
                             guard
                                 let prTitle = pr.title,
                                 let regex = self.gitHubDataProvider.ticketIDFromPRTitleRegex,
@@ -325,6 +337,13 @@ final class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: "Reset Contents") { _ in
             self.workspaceController.resetWorkspace(workspace, metadataOnly: false, discardChangesHandler: {
                 return self.showConfirmDiscardChangesAlert(for: workspace)
+            }, completion: { ws, error in
+                guard let ws = ws else { return }
+                
+                let noti = NSUserNotification()
+                noti.title = ws.folderURL.lastPathComponent
+                noti.subtitle = "Workspace contents have been reset."
+                NSUserNotificationCenter.default.deliver(noti)
             })
         })
 
