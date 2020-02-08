@@ -152,6 +152,12 @@ final class GitHubDataProvider {
         return url.pathComponents[4]
     }
     
+    func pullRequestTitle(forTicket ticket: Ticket) -> String? {
+        return newPRTitlePattern?
+            .replacingOccurrences(of: "{TICKET_ID}", with: ticket.id)
+            .replacingOccurrences(of: "{TICKET_TITLE}", with: ticket.title ?? "")
+    }
+    
     func fetchPullRequest(for prID: String, in remote: Git.Remote, completion: @escaping (GitHubPullRequest?, Error?) -> Void) {
         guard
             let token = credentials?.secret, !token.isEmpty,
@@ -187,6 +193,22 @@ final class GitHubDataProvider {
             }
         }
         task.resume()
+    }
+    
+    func urlForCompareAndPullRequest(withTitle title: String?,
+                                     from sourceBranch: Git.Branch,
+                                     to targetBranch: Git.Branch,
+                                     in remote: Git.Remote) -> URL {
+        let titleQuery: String
+        if let titleValue = title?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            titleQuery = "&title=\(titleValue)"
+        }
+        else {
+            titleQuery = ""
+        }
+        
+        return URL(string: "https://github.com/\(remote.orgName)/\(remote.repoName)/compare/" +
+                           "\(targetBranch.name)...\(sourceBranch.name)?expand=1\(titleQuery)")!
     }
 }
 

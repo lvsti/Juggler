@@ -9,11 +9,11 @@
 import Foundation
 
 enum Git {
-    struct Commit {
+    struct Commit: Equatable {
         let sha: String
     }
     
-    struct Branch {
+    struct Branch: Equatable {
         let name: String
     }
     

@@ -311,6 +311,27 @@ final class MenuController: NSObject, NSMenuDelegate {
             }
         }
         
+        if workspace.pullRequest == nil,
+            let remote = workspace.gitStatus.remote,
+            let sourceBranch = workspace.gitStatus.currentBranch,
+            sourceBranch != gitHubDataProvider.integrationBranch {
+
+            var title: String?
+            if let ticket = workspace.ticket {
+                title = gitHubDataProvider.pullRequestTitle(forTicket: ticket)
+            }
+            let compareURL = gitHubDataProvider.urlForCompareAndPullRequest(withTitle: title,
+                                                                            from: sourceBranch,
+                                                                            to: gitHubDataProvider.integrationBranch,
+                                                                            in: remote)
+
+            menu.addItem(NSMenuItem.separator())
+            menu.addItem(NSMenuItem(title: "GitHub"))
+            menu.addItem(indented(NSMenuItem(title: "Create PR") { _ in
+                NSWorkspace.shared.open(compareURL)
+            }))
+        }
+        
         menu.addItem(NSMenuItem.separator())
 
         menu.addItem(NSMenuItem(title: "Link to JIRA ticket...") { _ in
