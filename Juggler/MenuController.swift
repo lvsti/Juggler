@@ -145,7 +145,7 @@ final class MenuController: NSObject, NSMenuDelegate {
                             
                             let noti = NSUserNotification()
                             noti.title = ws.folderURL.lastPathComponent
-                            noti.subtitle = "Workspace set up for \(ticket.id)"
+                            noti.informativeText = "Workspace set up for \(ticket.id)"
                             NSUserNotificationCenter.default.deliver(noti)
                         }
                     }
@@ -158,7 +158,7 @@ final class MenuController: NSObject, NSMenuDelegate {
                             
                             let noti = NSUserNotification()
                             noti.title = ws.folderURL.lastPathComponent
-                            noti.subtitle = "Workspace set up for PR #\(pr.id)"
+                            noti.informativeText = "Workspace set up for PR #\(pr.id)"
                             NSUserNotificationCenter.default.deliver(noti)
 
                             guard
@@ -341,7 +341,7 @@ final class MenuController: NSObject, NSMenuDelegate {
                     
                     let noti = NSUserNotification()
                     noti.title = ws.folderURL.lastPathComponent
-                    noti.subtitle = "Workspace has been updated with upstream changes in PR #\(pr.id)."
+                    noti.informativeText = "Workspace has been updated with upstream changes in PR #\(pr.id)."
                     NSUserNotificationCenter.default.deliver(noti)
                 }
             })
@@ -354,7 +354,7 @@ final class MenuController: NSObject, NSMenuDelegate {
                 
                 let noti = NSUserNotification()
                 noti.title = ws.folderURL.lastPathComponent
-                noti.subtitle = "Workspace contents have been reset."
+                noti.informativeText = "Workspace contents have been reset."
                 NSUserNotificationCenter.default.deliver(noti)
             })
         })
