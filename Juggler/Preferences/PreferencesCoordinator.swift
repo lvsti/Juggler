@@ -144,6 +144,14 @@ extension PreferencesCoordinator: GitHubPreferencesViewDelegate {
         return gitHubDataProvider.ticketIDFromPRTitlePattern ?? ""
     }
     
+    var gitHubNewPRTitlePattern: String {
+        return gitHubDataProvider.newPRTitlePattern ?? ""
+    }
+
+    var gitHubNewPRBranchName: String {
+        return gitHubDataProvider.integrationBranch.name
+    }
+
     func gitHubPreferencesDidChangeAPIToken(to token: String) {
         gitHubDataProvider.apiToken = token
     }
@@ -152,4 +160,15 @@ extension PreferencesCoordinator: GitHubPreferencesViewDelegate {
         gitHubDataProvider.ticketIDFromPRTitlePattern = pattern.isEmpty ? nil : pattern
     }
     
+    func gitHubPreferencesDidChangeNewPRTitlePattern(to pattern: String) {
+        gitHubDataProvider.newPRTitlePattern = pattern.isEmpty ? nil : pattern
+    }
+
+    func gitHubPreferencesDidChangeNewPRBranch(to branchName: String) {
+        guard !branchName.isEmpty else {
+            return
+        }
+        gitHubDataProvider.integrationBranch = Git.Branch(name: branchName)
+    }
+
 }

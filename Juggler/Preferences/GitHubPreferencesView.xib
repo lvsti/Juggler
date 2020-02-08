@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15702" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15702"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GitHubPreferencesViewController" customModule="Juggler" customModuleProvider="target">
             <connections>
                 <outlet property="gitHubAPITokenField" destination="ukC-hI-M3B" id="rP2-CL-Gd0"/>
+                <outlet property="gitHubNewPRBranchField" destination="HGo-hb-Ug1" id="td5-d2-zee"/>
+                <outlet property="gitHubNewPRTitlePatternField" destination="JUK-df-Jyf" id="Oon-6d-XHS"/>
                 <outlet property="gitHubTicketIDPatternField" destination="yvn-Yy-KWl" id="spz-OZ-Akh"/>
                 <outlet property="view" destination="c22-O7-iKe" id="aHp-WS-qR7"/>
             </connections>
@@ -16,10 +18,10 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="480" height="134"/>
+            <rect key="frame" x="0.0" y="0.0" width="480" height="248"/>
             <subviews>
                 <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ukC-hI-M3B">
-                    <rect key="frame" x="130" y="92" width="330" height="22"/>
+                    <rect key="frame" x="130" y="207" width="330" height="21"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="TXQ-0z-JFX">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -30,7 +32,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cMF-c7-Rlh">
-                    <rect key="frame" x="56" y="95" width="68" height="17"/>
+                    <rect key="frame" x="56" y="210" width="68" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="API Token:" id="a3Q-aD-41z">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -38,7 +40,7 @@
                     </textFieldCell>
                 </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KjT-2c-Xr9">
-                    <rect key="frame" x="274" y="73" width="186" height="14"/>
+                    <rect key="frame" x="274" y="188" width="186" height="14"/>
                     <buttonCell key="cell" type="roundTextured" title="https://github.com/settings/tokens" bezelStyle="texturedRounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="SeN-4i-fLI">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="smallSystem"/>
@@ -49,7 +51,7 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nQs-MY-Clc">
-                    <rect key="frame" x="155" y="73" width="119" height="14"/>
+                    <rect key="frame" x="155" y="188" width="119" height="14"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="To set up tokens, visit" id="HAC-J1-DTj">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -57,7 +59,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rVq-ez-be9">
-                    <rect key="frame" x="25" y="42" width="99" height="17"/>
+                    <rect key="frame" x="25" y="158" width="99" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Ticket ID regex:" id="psU-6T-WfA">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -65,7 +67,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yvn-Yy-KWl">
-                    <rect key="frame" x="130" y="39" width="330" height="22"/>
+                    <rect key="frame" x="130" y="155" width="330" height="21"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="gss-H9-Vw0">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -76,34 +78,98 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LFo-Ve-emo">
-                    <rect key="frame" x="124" y="20" width="338" height="14"/>
+                    <rect key="frame" x="124" y="136" width="338" height="14"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Pattern with a single capture group to match ticket ID in PR title" id="5bp-Hk-ADk">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OiG-T6-iWo">
+                    <rect key="frame" x="42" y="75" width="82" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="New PR title:" id="xm8-1S-aJZ">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JUK-df-Jyf">
+                    <rect key="frame" x="130" y="72" width="330" height="21"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Exi-GK-ftb">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="gitHubNewPRTitlePatternChanged:" target="-2" id="86T-fe-aWE"/>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v5r-nF-bcO">
+                    <rect key="frame" x="183" y="53" width="279" height="14"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Available placeholders: {TICKET_ID}, {TICKET_TITLE}" id="24D-jX-sdV">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RYQ-0M-qOL">
+                    <rect key="frame" x="23" y="23" width="101" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="New PR branch:" id="OjN-49-DxD">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HGo-hb-Ug1">
+                    <rect key="frame" x="130" y="20" width="330" height="21"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="1r3-t2-IqY">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="gitHubNewPRBranchChanged:" target="-2" id="6nr-3U-yQT"/>
+                    </connections>
+                </textField>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="GyP-Jd-CZ3">
+                    <rect key="frame" x="20" y="113" width="440" height="5"/>
+                </box>
             </subviews>
             <constraints>
+                <constraint firstItem="GyP-Jd-CZ3" firstAttribute="top" secondItem="LFo-Ve-emo" secondAttribute="bottom" constant="20" id="02r-wU-PQf"/>
+                <constraint firstItem="JUK-df-Jyf" firstAttribute="firstBaseline" secondItem="OiG-T6-iWo" secondAttribute="firstBaseline" id="1Qy-yT-SLs"/>
+                <constraint firstItem="JUK-df-Jyf" firstAttribute="leading" secondItem="OiG-T6-iWo" secondAttribute="trailing" constant="8" id="3KJ-K3-GDK"/>
                 <constraint firstAttribute="trailing" secondItem="KjT-2c-Xr9" secondAttribute="trailing" constant="20" id="3bd-c4-G1c"/>
                 <constraint firstAttribute="trailing" secondItem="LFo-Ve-emo" secondAttribute="trailing" constant="20" id="6I0-Ao-s3L"/>
+                <constraint firstAttribute="bottom" secondItem="HGo-hb-Ug1" secondAttribute="bottom" constant="20" id="A1C-IZ-qGp"/>
+                <constraint firstItem="GyP-Jd-CZ3" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" id="Azj-zb-gER"/>
+                <constraint firstAttribute="trailing" secondItem="GyP-Jd-CZ3" secondAttribute="trailing" constant="20" id="Bgz-Yl-CeQ"/>
                 <constraint firstItem="nQs-MY-Clc" firstAttribute="top" secondItem="ukC-hI-M3B" secondAttribute="bottom" constant="5" id="Bni-cd-s1y"/>
                 <constraint firstItem="rVq-ez-be9" firstAttribute="trailing" secondItem="cMF-c7-Rlh" secondAttribute="trailing" id="C2R-YX-SLe"/>
+                <constraint firstItem="HGo-hb-Ug1" firstAttribute="top" secondItem="v5r-nF-bcO" secondAttribute="bottom" constant="12" id="HoY-Rd-78w"/>
+                <constraint firstItem="OiG-T6-iWo" firstAttribute="trailing" secondItem="cMF-c7-Rlh" secondAttribute="trailing" id="Ku4-Kb-5JQ"/>
+                <constraint firstItem="HGo-hb-Ug1" firstAttribute="leading" secondItem="RYQ-0M-qOL" secondAttribute="trailing" constant="8" id="PEV-23-MVp"/>
                 <constraint firstItem="ukC-hI-M3B" firstAttribute="leading" secondItem="cMF-c7-Rlh" secondAttribute="trailing" constant="8" id="Rm1-Qk-INd"/>
-                <constraint firstAttribute="bottom" secondItem="LFo-Ve-emo" secondAttribute="bottom" constant="20" id="Sye-Ij-RyY"/>
+                <constraint firstAttribute="trailing" secondItem="HGo-hb-Ug1" secondAttribute="trailing" constant="20" id="RsL-mW-GFE"/>
                 <constraint firstItem="ukC-hI-M3B" firstAttribute="firstBaseline" secondItem="cMF-c7-Rlh" secondAttribute="firstBaseline" id="Wo5-gR-1cU"/>
+                <constraint firstItem="v5r-nF-bcO" firstAttribute="top" secondItem="JUK-df-Jyf" secondAttribute="bottom" constant="5" id="XOJ-Lv-9er"/>
+                <constraint firstItem="cMF-c7-Rlh" firstAttribute="trailing" secondItem="RYQ-0M-qOL" secondAttribute="trailing" id="XPp-3W-V3a"/>
                 <constraint firstItem="yvn-Yy-KWl" firstAttribute="leading" secondItem="rVq-ez-be9" secondAttribute="trailing" constant="8" id="YeT-An-EDf"/>
+                <constraint firstAttribute="trailing" secondItem="v5r-nF-bcO" secondAttribute="trailing" constant="20" id="ZEm-HK-brz"/>
                 <constraint firstAttribute="trailing" secondItem="ukC-hI-M3B" secondAttribute="trailing" constant="20" id="aBN-EL-XGo"/>
                 <constraint firstItem="KjT-2c-Xr9" firstAttribute="leading" secondItem="nQs-MY-Clc" secondAttribute="trailing" constant="2" id="aEW-sd-iKf"/>
+                <constraint firstAttribute="trailing" secondItem="JUK-df-Jyf" secondAttribute="trailing" constant="20" id="bEn-jG-Fl9"/>
+                <constraint firstItem="JUK-df-Jyf" firstAttribute="top" secondItem="GyP-Jd-CZ3" secondAttribute="bottom" constant="22" id="dd4-2D-1qs"/>
                 <constraint firstAttribute="trailing" secondItem="yvn-Yy-KWl" secondAttribute="trailing" constant="20" id="fdg-VK-Pmn"/>
                 <constraint firstItem="yvn-Yy-KWl" firstAttribute="top" secondItem="KjT-2c-Xr9" secondAttribute="bottom" constant="12" id="fnM-NV-C5M"/>
                 <constraint firstItem="yvn-Yy-KWl" firstAttribute="firstBaseline" secondItem="rVq-ez-be9" secondAttribute="firstBaseline" id="fne-uT-UyK"/>
                 <constraint firstItem="cMF-c7-Rlh" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="58" id="mNo-jd-C8D"/>
+                <constraint firstItem="HGo-hb-Ug1" firstAttribute="firstBaseline" secondItem="RYQ-0M-qOL" secondAttribute="firstBaseline" id="mPG-Yg-GFp"/>
                 <constraint firstItem="KjT-2c-Xr9" firstAttribute="firstBaseline" secondItem="nQs-MY-Clc" secondAttribute="firstBaseline" id="mnT-9G-jgn"/>
                 <constraint firstItem="ukC-hI-M3B" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="20" id="t8w-Mf-ynF"/>
                 <constraint firstItem="LFo-Ve-emo" firstAttribute="top" secondItem="yvn-Yy-KWl" secondAttribute="bottom" constant="5" id="uG1-Y5-p2f"/>
             </constraints>
-            <point key="canvasLocation" x="139" y="96.5"/>
+            <point key="canvasLocation" x="139" y="182"/>
         </customView>
     </objects>
 </document>

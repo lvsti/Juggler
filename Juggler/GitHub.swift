@@ -60,6 +60,8 @@ final class GitHubDataProvider {
     private static let gitHubKeychainItemLabel = "GitHub API Access"
     private static let gitHubKeychainItemService = "me.cocoagrinder.Juggler.GitHub"
     private static let gitHubTicketIDFromPRTitlePatternKey = "GitHubTicketIDFromPRTitlePattern"
+    private static let gitHubIntegrationBranchKey = "GitHubIntegrationBranch"
+    private static let gitHubNewPRTitlePatternKey = "GitHubNewPRTitlePattern"
 
     private let userDefaults: UserDefaults
     private let keychainManager: KeychainManager
@@ -84,6 +86,16 @@ final class GitHubDataProvider {
                 credentials = KeychainManager.Credentials(account: "OAuth", secret: newValue!)
             }
         }
+    }
+    
+    var integrationBranch: Git.Branch {
+        get { return Git.Branch(name: userDefaults.string(forKey: GitHubDataProvider.gitHubIntegrationBranchKey) ?? "master") }
+        set { userDefaults.set(newValue.name, forKey: GitHubDataProvider.gitHubIntegrationBranchKey) }
+    }
+    
+    var newPRTitlePattern: String? {
+        get { return userDefaults.string(forKey: GitHubDataProvider.gitHubNewPRTitlePatternKey) }
+        set { userDefaults.set(newValue, forKey: GitHubDataProvider.gitHubNewPRTitlePatternKey) }
     }
     
     private var _ticketIDFromPRTitleRegex: NSRegularExpression?
