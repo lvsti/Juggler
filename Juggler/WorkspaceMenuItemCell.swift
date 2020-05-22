@@ -8,7 +8,7 @@
 
 import Cocoa
 
-final class WorkspaceMenuItemCell: NSVisualEffectView {
+final class WorkspaceMenuItemCell: NSView {
     @IBOutlet weak var badge: NSView!
     @IBOutlet weak var badgeTitle: NSTextField!
     @IBOutlet weak var titleLabel: NSTextField!
@@ -29,9 +29,12 @@ final class WorkspaceMenuItemCell: NSVisualEffectView {
     }
     
     override func draw(_ dirtyRect: NSRect) {
-        isEmphasized = enclosingMenuItem?.isHighlighted ?? false
-        material = isEmphasized ? .selection : .menu
-        state = .active
-        super.draw(dirtyRect)
+        if enclosingMenuItem?.isHighlighted ?? false {
+            NSColor.selectedMenuItemColor.setFill()
+            dirtyRect.fill()
+        }
+        else {
+            super.draw(dirtyRect)
+        }
     }
 }
