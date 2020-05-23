@@ -197,6 +197,7 @@ class WorkspaceController {
                 newWorkspace.gitStatus = gitStatus
                 if err == nil {
                     newWorkspace.ticket = ticket
+                    newWorkspace.checkoutType = .ticket
                 }
 
                 DispatchQueue.main.async {
@@ -247,6 +248,7 @@ class WorkspaceController {
                 newWorkspace.gitStatus = gitStatus
                 if err == nil {
                     newWorkspace.pullRequest = pr
+                    newWorkspace.checkoutType = .codeReview
                 }
 
                 DispatchQueue.main.async {
@@ -278,7 +280,8 @@ class WorkspaceController {
                          ticket: nil,
                          pullRequest: nil,
                          projectURL: xcodeProjectURL(for: url),
-                         color: nil)
+                         color: nil,
+                         checkoutType: nil)
     }
     
     private func loadWorkspace(at url: URL, with gitStatus: Git.WorkingCopyStatus) -> Workspace? {
@@ -296,7 +299,8 @@ class WorkspaceController {
                          ticket: meta.ticket,
                          pullRequest: meta.pullRequest,
                          projectURL: meta.projectURL,
-                         color: meta.color)
+                         color: meta.color,
+                         checkoutType: meta.checkoutType)
     }
     
     private func saveWorkspace(_ workspace: Workspace) {
