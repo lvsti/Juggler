@@ -184,6 +184,9 @@ class WorkspaceController {
                     try self.gitController.removeUntrackedFiles(at: workspace.folderURL)
                     try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
                                                                           toExisting: Git.Branch(name: "master"))
+                    if let branch = currentStatus.currentBranch, branch.name != "master", branch.name != "release" {
+                        try self.gitController.deleteBranchForWorkingCopy(at: workspace.folderURL, branch: branch)
+                    }
                     try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
                 }
             }

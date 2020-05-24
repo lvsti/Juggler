@@ -158,6 +158,10 @@ class GitController {
     func removeUntrackedFiles(at folderURL: URL) throws {
         try executeGitCommand("clean", args: ["-f", "-d"], in: folderURL)
     }
+    
+    func deleteBranchForWorkingCopy(at folderURL: URL, branch: Git.Branch) throws {
+        try executeGitCommand("branch", args: ["-d", branch.name], in: folderURL)
+    }
 
     private func gitFolderExists(in folderURL: URL) -> Bool {
         var isDirectory: ObjCBool = false
