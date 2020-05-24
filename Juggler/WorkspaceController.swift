@@ -130,6 +130,50 @@ class WorkspaceController {
         queue.async {
             var err: Error?
             do {
+                if let checkoutType = workspace.checkoutType {
+                    let scriptName: String
+                    switch checkoutType {
+                    case .ticket: scriptName = "ticket-teardown.sh"
+                    case .codeReview: scriptName = "codereview-teardown.sh"
+                    }
+                    
+                    let teardownScriptURL = self.rootFolderURL.appendingPathComponent(".juggler").appendingPathComponent(scriptName)
+                    if self.fileManager.fileExists(atPath: teardownScriptURL.path) {
+                        var envVars: [String: String] = [
+                            "WORKSPACE_DIR": workspace.folderURL.path,
+                            "PROJECT_PATH": workspace.projectURL?.path ?? "",
+                            "DERIVED_DATA_DIR": workspace.projectURL != nil ? self.xcodeController.derivedDataFolderURLs(forProjectAt: workspace.projectURL!).first?.path ?? "" : ""
+                        ]
+                        
+                        if let pr = workspace.pullRequest {
+                            envVars.merge([
+                                "PR_ID": pr.id,
+                                "PR_TITLE": pr.title ?? "",
+                                "PR_URL": pr.url.absoluteString,
+                                "PR_SOURCE_BRANCH": pr.sourceBranch.name,
+                                "PR_TARGET_BRANCH": pr.targetBranch.name
+                            ], uniquingKeysWith: { $1 })
+                        }
+                        if let ticket = workspace.ticket {
+                            envVars.merge([
+                                "TICKET_ID": ticket.id,
+                                "TICKET_TITLE": ticket.title ?? "",
+                                "TICKET_URL": ticket.url.absoluteString,
+                            ], uniquingKeysWith: { $1 })
+                        }
+                        
+                        let envStr = envVars.map { $0.key + "=\"" + $0.value + "\""}.joined(separator: " ")
+                        
+                        do {
+                            let log = try shell("/bin/bash", args: ["-l", "-c", "cd \"\(workspace.folderURL.path)\" ; " + envStr + " " + teardownScriptURL.path])
+                            try log.write(to: workspace.folderURL.appendingPathComponent("log.txt"), atomically: false, encoding: .utf8)
+                        }
+                        catch {
+                            err = error
+                        }
+                    }
+                }
+                
                 if let currentStatus = self.gitController.workingCopyStatus(at: workspace.folderURL),
                     currentStatus.localChanges.isEmpty || DispatchQueue.main.sync(execute: discardChangesHandler) {
                     self.userDefaults.set(nil, forKey: workspace.folderURL.path)
@@ -193,6 +237,28 @@ class WorkspaceController {
                     return
                 }
 
+                let setupScriptURL = self.rootFolderURL.appendingPathComponent(".juggler").appendingPathComponent("ticket-setup.sh")
+                if self.fileManager.fileExists(atPath: setupScriptURL.path) {
+                    let envVars: [String: String] = [
+                        "WORKSPACE_DIR": workspace.folderURL.path,
+                        "PROJECT_PATH": workspace.projectURL?.path ?? "",
+                        "DERIVED_DATA_DIR": workspace.projectURL != nil ? self.xcodeController.derivedDataFolderURLs(forProjectAt: workspace.projectURL!).first?.path ?? "" : "",
+                        "TICKET_ID": ticket.id,
+                        "TICKET_TITLE": ticket.title ?? "",
+                        "TICKET_URL": ticket.url.absoluteString
+                    ]
+                    
+                    let envStr = envVars.map { $0.key + "=\"" + $0.value + "\""}.joined(separator: " ")
+                    
+                    do {
+                        let log = try shell("/bin/bash", args: ["-l", "-c", "cd \"\(workspace.folderURL.path)\" ; " + envStr + " " + setupScriptURL.path])
+                        try log.write(to: workspace.folderURL.appendingPathComponent("log.txt"), atomically: false, encoding: .utf8)
+                    }
+                    catch {
+                        err = error
+                    }
+                }
+
                 var newWorkspace = ws
                 newWorkspace.gitStatus = gitStatus
                 if err == nil {
@@ -242,6 +308,30 @@ class WorkspaceController {
                         completion?(nil, NSError(domain: "", code: -1, userInfo: nil))
                     }
                     return
+                }
+                
+                let setupScriptURL = self.rootFolderURL.appendingPathComponent(".juggler").appendingPathComponent("codereview-setup.sh")
+                if self.fileManager.fileExists(atPath: setupScriptURL.path) {
+                    let envVars: [String: String] = [
+                        "WORKSPACE_DIR": workspace.folderURL.path,
+                        "PROJECT_PATH": workspace.projectURL?.path ?? "",
+                        "DERIVED_DATA_DIR": workspace.projectURL != nil ? self.xcodeController.derivedDataFolderURLs(forProjectAt: workspace.projectURL!).first?.path ?? "" : "",
+                        "PR_ID": pr.id,
+                        "PR_TITLE": pr.title ?? "",
+                        "PR_URL": pr.url.absoluteString,
+                        "PR_SOURCE_BRANCH": pr.sourceBranch.name,
+                        "PR_TARGET_BRANCH": pr.targetBranch.name
+                    ]
+                    
+                    let envStr = envVars.map { $0.key + "=\"" + $0.value + "\""}.joined(separator: " ")
+                    
+                    do {
+                        let log = try shell("/bin/bash", args: ["-l", "-c", "cd \"\(workspace.folderURL.path)\" ; " + envStr + " " + setupScriptURL.path])
+                        try log.write(to: workspace.folderURL.appendingPathComponent("log.txt"), atomically: false, encoding: .utf8)
+                    }
+                    catch {
+                        err = error
+                    }
                 }
 
                 var newWorkspace = ws
