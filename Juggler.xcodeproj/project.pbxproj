@@ -38,6 +38,7 @@
 		BEC0430922A2FB9F00EFF50C /* JIRA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430822A2FB9F00EFF50C /* JIRA.swift */; };
 		BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430A22A300BB00EFF50C /* GitHub.swift */; };
 		BED59DE122BE30EC0056451B /* NSColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = BED59DE022BE30EC0056451B /* NSColor+Extensions.m */; };
+		BED7766E247A976700108329 /* HooksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED7766D247A976700108329 /* HooksController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,7 @@
 		BED59DDE22BE2EF20056451B /* NSColor+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSColor+Extensions.h"; sourceTree = "<group>"; };
 		BED59DDF22BE2FC20056451B /* Juggler-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Juggler-Bridging-Header.h"; sourceTree = "<group>"; };
 		BED59DE022BE30EC0056451B /* NSColor+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSColor+Extensions.m"; sourceTree = "<group>"; };
+		BED7766D247A976700108329 /* HooksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HooksController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 				BEC0430A22A300BB00EFF50C /* GitHub.swift */,
 				BEC042F122A2CCD700EFF50C /* Info.plist */,
 				BEC0430822A2FB9F00EFF50C /* JIRA.swift */,
+				BED7766D247A976700108329 /* HooksController.swift */,
 				BE64940622ADAC2E00474D62 /* KeychainManager.swift */,
 				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
 				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
@@ -246,6 +249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BED7766E247A976700108329 /* HooksController.swift in Sources */,
 				BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */,
 				BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */,
 				BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */,

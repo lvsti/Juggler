@@ -20,6 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private let gitController: GitController
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
+    private let hooksController: HooksController
     private let terminalController: TerminalController
     private let xcodeController: XcodeController
     private let keychainManager: KeychainManager
@@ -41,6 +42,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         xcodeController = XcodeController(scriptingBridge: scriptingBridge,
                                           userDefaults: UserDefaults.standard,
                                           fileManager: FileManager.default)
+        hooksController = HooksController(fileManager: FileManager.default,
+                                          xcodeController: xcodeController)
         workspaceController = WorkspaceController(fileManager: FileManager.default,
                                                   gitController: gitController,
                                                   userDefaults: UserDefaults.standard,
@@ -65,7 +68,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                         workspaceController: workspaceController,
                                         jiraDataProvider: jiraDataProvider,
                                         gitHubDataProvider: gitHubDataProvider,
-                                        xcodeController: xcodeController)
+                                        xcodeController: xcodeController,
+                                        hooksController: hooksController)
         menuController.delegate = self
     }
     

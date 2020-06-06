@@ -22,6 +22,7 @@ final class MenuController: NSObject, NSMenuDelegate {
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
     private let xcodeController: XcodeController
+    private let hooksController: HooksController
 
     // state
     private var menuItems: [NSMenuItem]
@@ -32,12 +33,14 @@ final class MenuController: NSObject, NSMenuDelegate {
          workspaceController: WorkspaceController,
          jiraDataProvider: JIRADataProvider,
          gitHubDataProvider: GitHubDataProvider,
-         xcodeController: XcodeController) {
+         xcodeController: XcodeController,
+         hooksController: HooksController) {
         self.menu = menu
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
         self.gitHubDataProvider = gitHubDataProvider
         self.xcodeController = xcodeController
+        self.hooksController = hooksController
 
         menuItems = []
         
