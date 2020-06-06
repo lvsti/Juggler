@@ -315,22 +315,22 @@ final class MenuController: NSObject, NSMenuDelegate {
         }
         
         if workspace.pullRequest == nil,
+            workspace.checkoutType == .ticket,
             let remote = workspace.gitStatus.remote,
             let sourceBranch = workspace.gitStatus.currentBranch,
             sourceBranch != gitHubDataProvider.integrationBranch {
 
-            var title: String?
-            if let ticket = workspace.ticket {
-                title = gitHubDataProvider.pullRequestTitle(forTicket: ticket)
-            }
-            let compareURL = gitHubDataProvider.urlForCompareAndPullRequest(withTitle: title,
-                                                                            from: sourceBranch,
-                                                                            to: gitHubDataProvider.integrationBranch,
-                                                                            in: remote)
-
             menu.addItem(NSMenuItem.separator())
             menu.addItem(NSMenuItem(title: "GitHub"))
             menu.addItem(indented(NSMenuItem(title: "Create PR") { _ in
+                let title = self.hooksController.newPullRequestTitle(for: workspace) ?? workspace.resolvedTitle
+                let body = self.hooksController.newPullRequestBody(for: workspace)
+
+                let compareURL = self.gitHubDataProvider.urlForCompareAndPullRequest(withTitle: title,
+                                                                                     body: body,
+                                                                                     from: sourceBranch,
+                                                                                     to: self.gitHubDataProvider.integrationBranch,
+                                                                                     in: remote)
                 NSWorkspace.shared.open(compareURL)
             }))
         }

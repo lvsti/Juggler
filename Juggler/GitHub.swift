@@ -196,19 +196,77 @@ final class GitHubDataProvider {
     }
     
     func urlForCompareAndPullRequest(withTitle title: String?,
+                                     body: String?,
                                      from sourceBranch: Git.Branch,
                                      to targetBranch: Git.Branch,
                                      in remote: Git.Remote) -> URL {
-        let titleQuery: String
+        var query = "expand=1"
         if let titleValue = title?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            titleQuery = "&title=\(titleValue)"
+            query.append("&title=\(titleValue)")
         }
+
+        if let bodyValue = body?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            query.append("&body=\(bodyValue)")
+        }
+
+        return URL(string: "https://github.com/\(remote.orgName)/\(remote.repoName)/compare/" +
+                           "\(targetBranch.name)...\(sourceBranch.name)?\(query)")!
+    }
+    
+    func createPullRequest(withTitle title: String,
+                           body: String?,
+                           from sourceBranch: Git.Branch,
+                           to targetBranch: Git.Branch,
+                           in remote: Git.Remote,
+                           completion: @escaping (GitHubPullRequest?, Error?) -> Void) {
+        guard
+            let token = credentials?.secret, !token.isEmpty,
+            let requestURL = URL(string: "https://api.github.com/repos/\(remote.orgName)/\(remote.repoName)/pulls")
         else {
-            titleQuery = ""
+            completion(nil, nil)
+            return
         }
         
-        return URL(string: "https://github.com/\(remote.orgName)/\(remote.repoName)/compare/" +
-                           "\(targetBranch.name)...\(sourceBranch.name)?expand=1\(titleQuery)")!
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "POST"
+        request.setValue("Token \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        let params: [String: String] = ["title": title,
+                                        "body": body ?? "",
+                                        "head": sourceBranch.name,
+                                        "base": targetBranch.name]
+        request.httpBody = params
+            .map { key, value in
+                let keyString = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                let valueString = value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                return keyString + "=" + valueString
+            }
+            .joined(separator: "&")
+            .data(using: .utf8)
+        
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        let task = session.dataTask(with: request) { data, response, error in
+            guard
+                let data = data,
+                let result = try? JSONDecoder().decode(GitHubGetPullRequestResult.self, from: data)
+            else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+                return
+            }
+            
+            let pr = GitHubPullRequest(id: "\(result.number)",
+                                       title: result.title,
+                                       url: self.pullRequestURL(for: "\(result.number)", in: remote),
+                                       remote: remote,
+                                       sourceBranch: Git.Branch(name: result.head.ref),
+                                       targetBranch: Git.Branch(name: result.base.ref))
+            DispatchQueue.main.async {
+                completion(pr, nil)
+            }
+        }
+        task.resume()
     }
 }
 
