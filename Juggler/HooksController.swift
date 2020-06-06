@@ -17,7 +17,40 @@ final class HooksController {
         self.fileManager = fileManager
         self.xcodeController = xcodeController
     }
+    
+    func setUp(_ workspace: Workspace, forTicket ticket: Ticket) {
+        let envVars = commonEnvVars(for: workspace).merging(ticketEnvVars(for: ticket), uniquingKeysWith: { $1 })
+        let scriptURL = hooksFolderURL(for: workspace).appendingPathComponent("ticket-setup.sh")
+        executeScript(scriptURL, inFolder: workspace.folderURL, withEnvVars: envVars)
+    }
+
+    func setUp(_ workspace: Workspace, forReviewing pr: PullRequest) {
+        let envVars = commonEnvVars(for: workspace).merging(pullRequestEnvVars(for: pr), uniquingKeysWith: { $1 })
+        let scriptURL = hooksFolderURL(for: workspace).appendingPathComponent("codereview-setup.sh")
+        executeScript(scriptURL, inFolder: workspace.folderURL, withEnvVars: envVars)
+    }
+
+    func tearDown(_ workspace: Workspace) {
+        guard let checkoutType = workspace.checkoutType else {
+            return
+        }
         
+        let scriptName: String
+        var envVars = commonEnvVars(for: workspace)
+        
+        switch checkoutType {
+        case .ticket:
+            scriptName = "ticket-teardown.sh"
+            envVars.merge(ticketEnvVars(for: workspace.ticket!), uniquingKeysWith: { $1 })
+        case .codeReview:
+            scriptName = "codereview-teardown.sh"
+            envVars.merge(pullRequestEnvVars(for: workspace.pullRequest!), uniquingKeysWith: { $1 })
+        }
+        
+        let scriptURL = hooksFolderURL(for: workspace).appendingPathComponent(scriptName)
+        executeScript(scriptURL, inFolder: workspace.folderURL, withEnvVars: envVars)
+    }
+
     func newPullRequestTitle(for workspace: Workspace) -> String? {
         guard let ticket = workspace.ticket else {
             return nil
@@ -70,6 +103,7 @@ final class HooksController {
         ]
     }
 
+    @discardableResult
     private func executeScript(_ scriptURL: URL, inFolder folderURL: URL, withEnvVars envVars: [String: String]) -> String? {
         guard fileManager.fileExists(atPath: scriptURL.path) else {
             return nil
