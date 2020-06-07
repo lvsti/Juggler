@@ -87,9 +87,56 @@ class WorkspaceController {
                 }
             }
             
+            let needsPRUpdate: (Workspace) -> Bool = {
+                $0.pullRequest == nil && $0.checkoutType != .codeReview && $0.gitStatus.remote != nil
+            }
+            
+            var updatedWorkspaces: [Workspace] = []
+            
+            let wssNeedingUpdate = foundWorkspaces.filter(needsPRUpdate)
+            if !wssNeedingUpdate.isEmpty {
+                let remotes = Set(wssNeedingUpdate.compactMap { $0.gitStatus.remote })
+                if !remotes.isEmpty {
+                    var prsForRemote: [Git.Remote: [PullRequest]] = [:]
+                    let group = DispatchGroup()
+                    remotes.forEach { remote in
+                        group.enter()
+                        self.gitHubDataProvider.fetchActivePullRequests(in: remote) { prs, error in
+                            if let prs = prs, !prs.isEmpty {
+                                prsForRemote[remote] = prs
+                            }
+                            group.leave()
+                        }
+                    }
+                    group.wait()
+                    
+                    if !prsForRemote.isEmpty {
+                        foundWorkspaces = foundWorkspaces.map { ws in
+                            guard
+                                needsPRUpdate(ws),
+                                let prs = prsForRemote[ws.gitStatus.remote!],
+                                let branch = ws.gitStatus.currentBranch,
+                                let index = prs.firstIndex(where: { $0.sourceBranch == branch })
+                            else {
+                                return ws
+                            }
+                            
+                            var updatedWS = ws
+                            updatedWS.pullRequest = prs[index]
+                            updatedWorkspaces.append(updatedWS)
+                            return updatedWS
+                        }
+                    }
+                }
+            }
+            
             self.workspaces = foundWorkspaces.sorted(by: { $0.name < $1.name })
             
             DispatchQueue.main.async {
+                updatedWorkspaces.forEach { ws in
+                    self.saveWorkspace(ws)
+                }
+                
                 self.isReloading = false
                 completion?(self.workspaces)
             }

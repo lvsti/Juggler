@@ -158,6 +158,43 @@ final class GitHubDataProvider {
             .replacingOccurrences(of: "{TICKET_TITLE}", with: ticket.title ?? "")
     }
     
+    func fetchActivePullRequests(in remote: Git.Remote, completion: @escaping ([GitHubPullRequest]?, Error?) -> Void) {
+        guard
+            let token = credentials?.secret, !token.isEmpty,
+            let requestURL = URL(string: "https://api.github.com/repos/\(remote.orgName)/\(remote.repoName)/pulls")
+        else {
+            completion(nil, nil)
+            return
+        }
+        
+        var request = URLRequest(url: requestURL)
+        request.addValue("Token \(token)", forHTTPHeaderField: "Authorization")
+
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        let task = session.dataTask(with: request) { data, response, error in
+            guard
+                let data = data,
+                let results = try? JSONDecoder().decode([GitHubGetPullRequestResult].self, from: data)
+            else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+                return
+            }
+            
+            let prs = results.map { GitHubPullRequest(id: "\($0.number)",
+                                                      title: $0.title,
+                                                      url: self.pullRequestURL(for: "\($0.number)", in: remote),
+                                                      remote: remote,
+                                                      sourceBranch: Git.Branch(name: $0.head.ref),
+                                                      targetBranch: Git.Branch(name: $0.base.ref)) }
+            DispatchQueue.main.async {
+                completion(prs, nil)
+            }
+        }
+        task.resume()
+    }
+    
     func fetchPullRequest(for prID: String, in remote: Git.Remote, completion: @escaping (GitHubPullRequest?, Error?) -> Void) {
         guard
             let token = credentials?.secret, !token.isEmpty,
