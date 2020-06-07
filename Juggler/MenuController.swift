@@ -89,9 +89,9 @@ final class MenuController: NSObject, NSMenuDelegate {
             for remote in allRemotes {
                 if let availableWorkspace = workspaceController.firstAvailableWorkspace(for: remote) {
                     ticketMenu.addItem(NSMenuItem(title: "In \(remote.orgName)/\(remote.repoName)...") { _ in
-                        self.promptForJIRATicket { ticket in
+                        self.promptForJIRATicket(withIntegrationBranchOption: true) { ticket, branch in
                             guard let ticket = ticket else { return }
-                            self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket)
+                            self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket, integrationBranch: branch)
                         }
                     })
                     
@@ -141,9 +141,9 @@ final class MenuController: NSObject, NSMenuDelegate {
             let remote = allRemotes.first!
             if let availableWorkspace = workspaceController.firstAvailableWorkspace(for: remote) {
                 ticketItem.setHandler { _ in
-                    self.promptForJIRATicket { ticket in
+                    self.promptForJIRATicket(withIntegrationBranchOption: true) { ticket, branch in
                         guard let ticket = ticket else { return }
-                        self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket) { ws, error in
+                        self.workspaceController.setUpWorkspace(availableWorkspace, forTicket: ticket, integrationBranch: branch) { ws, error in
                             guard let ws = ws else { return }
                             
                             let noti = NSUserNotification()
@@ -338,7 +338,7 @@ final class MenuController: NSObject, NSMenuDelegate {
         menu.addItem(NSMenuItem.separator())
 
         menu.addItem(NSMenuItem(title: "Link to JIRA ticket...") { _ in
-            self.promptForJIRATicket { ticket in
+            self.promptForJIRATicket { ticket, _ in
                 guard let ticket = ticket else { return }
                 self.workspaceController.setTicket(ticket, for: workspace)
             }
@@ -434,7 +434,7 @@ final class MenuController: NSObject, NSMenuDelegate {
         return nil
     }
     
-    private func promptForJIRATicket(completion: @escaping (JIRATicket?) -> Void) {
+    private func promptForJIRATicket(withIntegrationBranchOption flag: Bool = false, completion: @escaping (JIRATicket?, Git.Branch?) -> Void) {
         let alert = NSAlert()
         let ticketField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 22))
         ticketField.maximumNumberOfLines = 1
@@ -449,13 +449,47 @@ final class MenuController: NSObject, NSMenuDelegate {
         }
 
         alert.messageText = "Enter JIRA ticket ID or URL:"
-        alert.accessoryView = ticketField
+
+        let branchField: NSTextField!
+        if flag {
+            ticketField.frame = NSRect(x: 0, y: 52, width: 300, height: 22)
+            
+            let checkBox = NSButton(checkboxWithTitle: "Custom integration branch:", target: nil, action: nil)
+            checkBox.frame = NSRect(x: 0, y: 22, width: 300, height: 22)
+            checkBox.state = .off
+            
+            branchField = NSTextField(frame: NSRect(x: 20, y: 0, width: 280, height: 22))
+            branchField.maximumNumberOfLines = 1
+            branchField.cell?.isScrollable = true
+            branchField.placeholderString = "Branch name"
+            branchField.isEnabled = false
+            
+            let container = NSView(frame: NSRect(x: 0, y: 0, width: 300, height: 74))
+            container.addSubview(ticketField)
+            container.addSubview(checkBox)
+            container.addSubview(branchField)
+            checkBox.setHandler { _ in
+                branchField.isEnabled = checkBox.state == .on
+                if branchField.isEnabled {
+                    branchField.becomeFirstResponder()
+                }
+                else {
+                    branchField.resignFirstResponder()
+                }
+            }
+            alert.accessoryView = container
+        }
+        else {
+            branchField = nil
+            alert.accessoryView = ticketField
+        }
+        
         alert.addButton(withTitle: "OK")
         alert.addButton(withTitle: "Cancel")
         alert.window.initialFirstResponder = ticketField
         
         if alert.runModal() != .alertFirstButtonReturn {
-            completion(nil)
+            completion(nil, nil)
             return
         }
         
@@ -466,12 +500,14 @@ final class MenuController: NSObject, NSMenuDelegate {
         else {
             ticketID = ticketField.stringValue
         }
-        
+
+        let branch = branchField?.stringValue.isEmpty ?? true ? nil : Git.Branch(name: branchField!.stringValue)
+
         jiraDataProvider.fetchTicket(for: ticketID) { ticket, _ in
             if ticket == nil {
                 self.showTicketFetchFailedAlert()
             }
-            completion(ticket)
+            completion(ticket, branch)
         }
     }
     

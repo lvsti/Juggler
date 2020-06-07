@@ -171,7 +171,10 @@ class WorkspaceController {
         return busyWorkspaceFolderURLs.contains(workspace.folderURL)
     }
     
-    func setUpWorkspace(_ workspace: Workspace, forTicket ticket: Ticket, completion: ((Workspace?, Error?) -> Void)? = nil) {
+    func setUpWorkspace(_ workspace: Workspace,
+                        forTicket ticket: Ticket,
+                        integrationBranch: Git.Branch? = nil,
+                        completion: ((Workspace?, Error?) -> Void)? = nil) {
         resetWorkspace(workspace, metadataOnly: false, discardChangesHandler: { return true }) { ws, err in
             guard let ws = ws else {
                 completion?(nil, err)
@@ -183,6 +186,11 @@ class WorkspaceController {
             self.queue.async {
                 var err: Error?
                 do {
+                    if let customIntegrationBranch = integrationBranch {
+                        try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
+                                                                              toExisting: customIntegrationBranch)
+                        try self.gitController.pullCurrentBranchForWorkingCopy(at: workspace.folderURL)
+                    }
                     let branch = try self.gitController.createBranchForWorkingCopy(at: workspace.folderURL,
                                                                                    branchName: ticket.preferredBranchName)
                     try self.gitController.setCurrentBranchForWorkingCopy(at: workspace.folderURL,
