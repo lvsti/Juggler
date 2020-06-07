@@ -49,7 +49,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                   userDefaults: UserDefaults.standard,
                                                   jiraDataProvider: jiraDataProvider,
                                                   gitHubDataProvider: gitHubDataProvider,
-                                                  xcodeController: xcodeController)
+                                                  xcodeController: xcodeController,
+                                                  hooksController: hooksController)
         workspaceController.reload()
         super.init()
     }
@@ -69,6 +70,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                         jiraDataProvider: jiraDataProvider,
                                         gitHubDataProvider: gitHubDataProvider,
                                         xcodeController: xcodeController,
+                                        gitController: gitController,
                                         hooksController: hooksController)
         menuController.delegate = self
     }

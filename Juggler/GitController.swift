@@ -159,6 +159,13 @@ class GitController {
         try executeGitCommand("clean", args: ["-f", "-d"], in: folderURL)
     }
     
+    func pushCurrentBranchForWorkingCopy(at folderURL: URL) throws {
+        guard let branch = try currentBranch(in: folderURL) else {
+            return
+        }
+        try executeGitCommand("push", args: ["origin", branch.name], in: folderURL)
+    }
+    
     func deleteBranchForWorkingCopy(at folderURL: URL, branch: Git.Branch) throws {
         try executeGitCommand("branch", args: ["-D", branch.name], in: folderURL)
     }

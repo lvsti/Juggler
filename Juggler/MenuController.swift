@@ -22,6 +22,7 @@ final class MenuController: NSObject, NSMenuDelegate {
     private let jiraDataProvider: JIRADataProvider
     private let gitHubDataProvider: GitHubDataProvider
     private let xcodeController: XcodeController
+    private let gitController: GitController
     private let hooksController: HooksController
 
     // state
@@ -34,12 +35,14 @@ final class MenuController: NSObject, NSMenuDelegate {
          jiraDataProvider: JIRADataProvider,
          gitHubDataProvider: GitHubDataProvider,
          xcodeController: XcodeController,
+         gitController: GitController,
          hooksController: HooksController) {
         self.menu = menu
         self.workspaceController = workspaceController
         self.jiraDataProvider = jiraDataProvider
         self.gitHubDataProvider = gitHubDataProvider
         self.xcodeController = xcodeController
+        self.gitController = gitController
         self.hooksController = hooksController
 
         menuItems = []
@@ -323,6 +326,8 @@ final class MenuController: NSObject, NSMenuDelegate {
             menu.addItem(NSMenuItem.separator())
             menu.addItem(NSMenuItem(title: "GitHub"))
             menu.addItem(indented(NSMenuItem(title: "Create PR") { _ in
+                _ = try? self.gitController.pushCurrentBranchForWorkingCopy(at: workspace.folderURL)
+                
                 let title = self.hooksController.newPullRequestTitle(for: workspace) ?? workspace.resolvedTitle
                 let body = self.hooksController.newPullRequestBody(for: workspace)
 
