@@ -417,6 +417,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.Juggler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Juggler/Juggler-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -433,6 +434,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.Juggler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Juggler/Juggler-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
