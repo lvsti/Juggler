@@ -387,6 +387,21 @@ final class MenuController: NSObject, NSMenuDelegate {
                 NSUserNotificationCenter.default.deliver(noti)
             })
         })
+        let alternateReset = NSMenuItem(title: "Reset Metadata") { _ in
+            self.workspaceController.resetWorkspace(workspace, metadataOnly: true, discardChangesHandler: {
+                return false
+            }, completion: { ws, error in
+                guard let ws = ws else { return }
+                
+                let noti = NSUserNotification()
+                noti.title = ws.folderURL.lastPathComponent
+                noti.informativeText = "Workspace metadata has been reset."
+                NSUserNotificationCenter.default.deliver(noti)
+            })
+        }
+        alternateReset.isAlternate = true
+        alternateReset.keyEquivalentModifierMask = .option
+        menu.addItem(alternateReset)
 
         return menu
     }
