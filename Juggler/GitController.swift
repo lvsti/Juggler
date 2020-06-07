@@ -160,7 +160,7 @@ class GitController {
     }
     
     func deleteBranchForWorkingCopy(at folderURL: URL, branch: Git.Branch) throws {
-        try executeGitCommand("branch", args: ["-d", branch.name], in: folderURL)
+        try executeGitCommand("branch", args: ["-D", branch.name], in: folderURL)
     }
 
     private func gitFolderExists(in folderURL: URL) -> Bool {
