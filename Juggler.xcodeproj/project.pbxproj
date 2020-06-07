@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE04FFB3248C29B9006B27CA /* ActionTrampoline.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE04FFB2248C29B9006B27CA /* ActionTrampoline.swift */; };
 		BE16280622AEE516000DC138 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE16280522AEE516000DC138 /* Workspace.swift */; };
 		BE16280822AEEAA2000DC138 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE16280722AEEAA2000DC138 /* Ticket.swift */; };
 		BE16280A22AEEAB5000DC138 /* PullRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE16280922AEEAB5000DC138 /* PullRequest.swift */; };
@@ -30,7 +31,6 @@
 		BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */; };
 		BEC042ED22A2CCD700EFF50C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC042EC22A2CCD700EFF50C /* Assets.xcassets */; };
 		BEC042F022A2CCD700EFF50C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC042EE22A2CCD700EFF50C /* MainMenu.xib */; };
-		BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */; };
 		BEC042FB22A2D12700EFF50C /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042FA22A2D12700EFF50C /* MenuController.swift */; };
 		BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430222A2E2D100EFF50C /* ShellUtils.swift */; };
 		BEC0430522A2EB6700EFF50C /* WorkspaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC0430422A2EB6700EFF50C /* WorkspaceController.swift */; };
@@ -42,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE04FFB2248C29B9006B27CA /* ActionTrampoline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTrampoline.swift; sourceTree = "<group>"; };
 		BE16280522AEE516000DC138 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		BE16280722AEEAA2000DC138 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		BE16280922AEEAB5000DC138 /* PullRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullRequest.swift; sourceTree = "<group>"; };
@@ -67,7 +68,6 @@
 		BEC042EC22A2CCD700EFF50C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BEC042EF22A2CCD700EFF50C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		BEC042F122A2CCD700EFF50C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMenuItem+Handler.swift"; sourceTree = "<group>"; };
 		BEC042FA22A2D12700EFF50C /* MenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		BEC0430222A2E2D100EFF50C /* ShellUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellUtils.swift; sourceTree = "<group>"; };
 		BEC0430422A2EB6700EFF50C /* WorkspaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkspaceController.swift; sourceTree = "<group>"; };
@@ -148,6 +148,7 @@
 				BE851FDB22A463A80031E2DA /* Preferences */,
 				BE6493C322AC679A00474D62 /* Scripting */,
 				BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */,
+				BE04FFB2248C29B9006B27CA /* ActionTrampoline.swift */,
 				BED59DDE22BE2EF20056451B /* NSColor+Extensions.h */,
 				BED59DE022BE30EC0056451B /* NSColor+Extensions.m */,
 				BED59DDF22BE2FC20056451B /* Juggler-Bridging-Header.h */,
@@ -160,7 +161,6 @@
 				BE64940622ADAC2E00474D62 /* KeychainManager.swift */,
 				BEC042EE22A2CCD700EFF50C /* MainMenu.xib */,
 				BEC042FA22A2D12700EFF50C /* MenuController.swift */,
-				BEC042F822A2D0DB00EFF50C /* NSMenuItem+Handler.swift */,
 				BE16280922AEEAB5000DC138 /* PullRequest.swift */,
 				BEC0430222A2E2D100EFF50C /* ShellUtils.swift */,
 				BE64940422AD99C500474D62 /* TerminalController.swift */,
@@ -253,6 +253,7 @@
 				BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */,
 				BEC0430322A2E2D100EFF50C /* ShellUtils.swift in Sources */,
 				BE696DDC22A6F6CD004E2BEF /* WorkspaceMenuItemCell.swift in Sources */,
+				BE04FFB3248C29B9006B27CA /* ActionTrampoline.swift in Sources */,
 				BE25DA0122A4557D008142F4 /* PreferencesWindowController.swift in Sources */,
 				BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */,
 				BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */,
@@ -263,7 +264,6 @@
 				BE16280822AEEAA2000DC138 /* Ticket.swift in Sources */,
 				BE81D59F22B5214F00873343 /* XcodeController.swift in Sources */,
 				BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */,
-				BEC042F922A2D0DB00EFF50C /* NSMenuItem+Handler.swift in Sources */,
 				BED59DE122BE30EC0056451B /* NSColor+Extensions.m in Sources */,
 				BE16280A22AEEAB5000DC138 /* PullRequest.swift in Sources */,
 				BE64940722ADAC2E00474D62 /* KeychainManager.swift in Sources */,

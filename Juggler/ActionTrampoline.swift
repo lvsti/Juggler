@@ -1,15 +1,15 @@
 //
-//  NSMenuItem+Handler.swift
+//  ActionTrampoline.swift
 //  Juggler
 //
-//  Created by Tamas Lustyik on 2019. 06. 01..
-//  Copyright © 2019. Tamas Lustyik. All rights reserved.
+//  Created by Tamas Lustyik on 2020. 06. 06..
+//  Copyright © 2020. Tamas Lustyik. All rights reserved.
 //
 
 import Foundation
 import AppKit
 
-class ActionTrampoline<T>: NSObject {
+final class ActionTrampoline<T>: NSObject {
     private let _action: (T) -> Void
     
     init(action: @escaping (T) -> Void) {
@@ -38,5 +38,18 @@ extension NSMenuItem {
         objc_setAssociatedObject(self, NSMenuItemHandlerTrampolineKey, trampoline, .OBJC_ASSOCIATION_RETAIN)
         self.target = trampoline
         self.action = handler != nil ? #selector(ActionTrampoline<NSMenuItem>.action(_:)) : nil
+    }
+}
+
+private let NSControlHandlerTrampolineKey = UnsafeMutablePointer<Int8>.allocate(capacity: 1)
+
+extension NSControl {
+    typealias Handler = (NSControl) -> Void
+    
+    func setHandler(_ handler: Handler?) {
+        let trampoline: ActionTrampoline<NSControl>? = handler != nil ? ActionTrampoline<NSControl>(action: handler!) : nil
+        objc_setAssociatedObject(self, NSControlHandlerTrampolineKey, trampoline, .OBJC_ASSOCIATION_RETAIN)
+        self.target = trampoline
+        self.action = handler != nil ? #selector(ActionTrampoline<NSControl>.action(_:)) : nil
     }
 }
