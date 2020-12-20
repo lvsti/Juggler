@@ -13,6 +13,7 @@ protocol MenuControllerDelegate: class {
     func menuControllerDidInvokePreferences()
     func menuControllerDidFocus(_ workspace: Workspace)
     func menuControllerDidOpenTerminal(for workspace: Workspace)
+    func menuControllerDidInvokeXcodeWorkspaceIdentification()
 }
 
 final class MenuController: NSObject, NSMenuDelegate {
@@ -61,6 +62,10 @@ final class MenuController: NSObject, NSMenuDelegate {
         buildWorkspaceMenuItems()
         menuItems.append(NSMenuItem.separator())
 
+        
+        menuItems.append(NSMenuItem(title: "Identify Active Xcode Workspace", keyEquivalent: "H") { _ in
+            self.delegate?.menuControllerDidInvokeXcodeWorkspaceIdentification()
+        })
         menuItems.append(NSMenuItem(title: "Refresh") { _ in
             self.workspaceController.reload { _ in
                 self.rebuildMenu()

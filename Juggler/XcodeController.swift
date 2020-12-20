@@ -38,6 +38,11 @@ final class XcodeController {
         NSWorkspace.shared.openFile(projectURL.path, withApplication: appPath)
     }
     
+    func getActiveProjectURL() -> URL? {
+        guard let path = scriptingBridge.getActiveXcodeProjectPath() else { return nil }
+        return URL(fileURLWithPath: path)
+    }
+    
     func removeUserData(forProjectAt url: URL) {
         let urls: [URL]
         if isWorkspaceURL(url) {

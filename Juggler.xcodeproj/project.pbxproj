@@ -28,6 +28,7 @@
 		BE851FD622A456840031E2DA /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */; };
 		BE851FD822A456900031E2DA /* GeneralPreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE851FD722A456900031E2DA /* GeneralPreferencesView.xib */; };
 		BE851FDA22A45F7E0031E2DA /* PreferencesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE851FD922A45F7E0031E2DA /* PreferencesCoordinator.swift */; };
+		BEBF86BD258FA96B00F4C278 /* GlobalHotKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEBF86BC258FA96B00F4C278 /* GlobalHotKeys.swift */; };
 		BEC042EB22A2CCD600EFF50C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */; };
 		BEC042ED22A2CCD700EFF50C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEC042EC22A2CCD700EFF50C /* Assets.xcassets */; };
 		BEC042F022A2CCD700EFF50C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BEC042EE22A2CCD700EFF50C /* MainMenu.xib */; };
@@ -63,6 +64,7 @@
 		BE851FD522A456840031E2DA /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
 		BE851FD722A456900031E2DA /* GeneralPreferencesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GeneralPreferencesView.xib; sourceTree = "<group>"; };
 		BE851FD922A45F7E0031E2DA /* PreferencesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesCoordinator.swift; sourceTree = "<group>"; };
+		BEBF86BC258FA96B00F4C278 /* GlobalHotKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotKeys.swift; sourceTree = "<group>"; };
 		BEC042E722A2CCD600EFF50C /* Juggler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Juggler.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEC042EA22A2CCD600EFF50C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BEC042EC22A2CCD700EFF50C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				BEC042EC22A2CCD700EFF50C /* Assets.xcassets */,
 				BEC0430622A2EB6F00EFF50C /* GitController.swift */,
 				BEC0430A22A300BB00EFF50C /* GitHub.swift */,
+				BEBF86BC258FA96B00F4C278 /* GlobalHotKeys.swift */,
 				BEC042F122A2CCD700EFF50C /* Info.plist */,
 				BEC0430822A2FB9F00EFF50C /* JIRA.swift */,
 				BED7766D247A976700108329 /* HooksController.swift */,
@@ -256,6 +259,7 @@
 				BE04FFB3248C29B9006B27CA /* ActionTrampoline.swift in Sources */,
 				BE25DA0122A4557D008142F4 /* PreferencesWindowController.swift in Sources */,
 				BEC0430722A2EB6F00EFF50C /* GitController.swift in Sources */,
+				BEBF86BD258FA96B00F4C278 /* GlobalHotKeys.swift in Sources */,
 				BEC0430B22A300BB00EFF50C /* GitHub.swift in Sources */,
 				BEC0430522A2EB6700EFF50C /* WorkspaceController.swift in Sources */,
 				BE64940522AD99C500474D62 /* TerminalController.swift in Sources */,

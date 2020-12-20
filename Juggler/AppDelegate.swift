@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Carbon
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -51,8 +52,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                                   gitHubDataProvider: gitHubDataProvider,
                                                   xcodeController: xcodeController,
                                                   hooksController: hooksController)
-        workspaceController.reload()
         super.init()
+
+        _ = GlobalHotKeys.addHandler(for: kVK_ANSI_H, modifiers: [.command, .shift]) { [weak self] in
+            self?.menuControllerDidInvokeXcodeWorkspaceIdentification()
+        }
+        workspaceController.reload()
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -102,6 +107,21 @@ extension AppDelegate: MenuControllerDelegate {
     
     func menuControllerDidOpenTerminal(for workspace: Workspace) {
         terminalController.open(at: workspace.folderURL)
+    }
+    
+    func menuControllerDidInvokeXcodeWorkspaceIdentification() {
+        guard let projectURL = xcodeController.getActiveProjectURL() else {
+            return
+        }
+
+        if let ws = workspaceController.workspaces.first(where: { $0.projectURL == projectURL }) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                let noti = NSUserNotification()
+                noti.title = ws.folderURL.lastPathComponent
+                noti.subtitle = ws.resolvedTitle
+                NSUserNotificationCenter.default.deliver(noti)
+            }
+        }
     }
 }
 

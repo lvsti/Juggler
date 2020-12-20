@@ -23,4 +23,13 @@ script ScriptingBridge
         end repeat
     end doCloseAllXcodeProjectsWithExcept_xcodePath_
     
+    on doGetActiveXcodeProjectPath()
+        set p to ""
+        tell application "Xcode"
+            set p to file of document of the front window as text
+        end tell
+        
+        return p as text
+    end doGetActiveXcodeProjectPath
+    
 end script
